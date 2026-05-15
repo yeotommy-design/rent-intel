@@ -1872,8 +1872,21 @@ function renderRecord(record) {
 }
 
 function renderQuickPicks() {
+  const curatedIds = [
+    "chinatown-shophouse",
+    "orchard-mall",
+    "bedok-hdb",
+    "paya-lebar-retail",
+    "novena-retail",
+    "marina-bay-retail",
+    "yishun-retail",
+    "tiong-bahru-shophouse"
+  ];
+  const curatedRecords = curatedIds
+    .map((id) => toolbenchRecords.find((record) => record.id === id))
+    .filter(Boolean);
   toolbenchEl.picks.replaceChildren();
-  toolbenchRecords.forEach((record) => {
+  curatedRecords.forEach((record) => {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = record.title;

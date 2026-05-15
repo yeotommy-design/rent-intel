@@ -23,22 +23,42 @@ Updated: 2026-05-15
 - Marine Parade retail
 - Pasir Ris retail
 - Hougang retail
+- Yishun retail
+- Sengkang retail
+- Punggol retail
+- Marina Bay retail
+- City Hall retail
+- Raffles Place retail
+- Bras Basah retail
+- Bukit Batok retail
+- Bukit Panjang retail
+- Tiong Bahru shophouse retail
 
 ## Priority 1 Added In Current Build
+- Yishun retail
+- Sengkang retail
+- Punggol retail
+- Marina Bay retail
+- City Hall retail
+- Raffles Place retail
+- Bras Basah retail
+- Bukit Batok retail
+- Bukit Panjang retail
+- Tiong Bahru shophouse retail
+
+## Priority 1 Added In Previous Build
 - Novena retail
 - Bukit Timah retail
 - Marine Parade retail
 - Pasir Ris retail
 - Hougang retail
 
-## Priority 1 Added In Previous Build
+## Priority 1 Added In Earlier Build
 - Paya Lebar retail
 - Bugis retail
 - Clementi retail
 - Tiong Bahru retail
 - Woodlands retail
-
-## Priority 1 Added In Earlier Build
 - Bedok HDB retail
 - Ang Mo Kio retail
 - Bishan retail
@@ -49,17 +69,10 @@ Updated: 2026-05-15
 - None
 
 ## Prime And Central Comparison Areas
-- Marina Bay retail
-- Raffles Place retail
-- City Hall retail
-- Bras Basah retail
+- None in current launch-priority batch
 
 ## Heartland Town Retail Coverage
-- Yishun retail
-- Sengkang retail
-- Punggol retail
-- Bukit Batok retail
-- Bukit Panjang retail
+- None in current launch-priority batch
 
 ## Mall Coverage To Expand
 - Tampines Mall retail
@@ -71,7 +84,6 @@ Updated: 2026-05-15
 - Waterway Point retail
 
 ## Shophouse And Streetfront Clusters
-- Tiong Bahru shophouse retail
 - Katong shophouse retail
 - East Coast Road retail
 - Arab Street retail
@@ -92,16 +104,16 @@ Updated: 2026-05-15
 - Non-retail commercial uses without comparison basis
 
 ## Suggested Next 10 Additions
-1. Yishun retail
-2. Sengkang retail
-3. Punggol retail
-4. Marina Bay retail
-5. City Hall retail
-6. Raffles Place retail
-7. Bras Basah retail
-8. Bukit Batok retail
-9. Bukit Panjang retail
-10. Tiong Bahru shophouse retail
+1. Tampines Mall retail
+2. VivoCity retail
+3. PLQ Mall retail
+4. Junction 8 retail
+5. Northpoint retail
+6. Century Square retail
+7. Waterway Point retail
+8. Katong shophouse retail
+9. East Coast Road retail
+10. Arab Street retail
 
 ## Notes
 - Direct search coverage means a named record is already available in the main public search flow.

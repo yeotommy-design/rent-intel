@@ -1846,6 +1846,926 @@ window.RENTINTEL_SAMPLE_DATA = {
       "action": "Negotiate above S$11.30 psf unless the unit has stronger node traffic or uncommon use advantages.",
       "sourceSummary": "Official benchmark: mature heartland retail trend. Asking estimate: Hougang Central and Kovan listing signals.",
       "mobileSummary": "Likely high. Negotiate above S$11.30 psf unless node traffic is clearly stronger."
+    },
+    {
+      "id": "yishun-retail",
+      "aliases": [
+        "yishun",
+        "northpoint",
+        "yishun retail",
+        "yishun central",
+        "khatib retail",
+        "yishun shop"
+      ],
+      "title": "Yishun retail",
+      "propertyType": "HDB and neighbourhood retail",
+      "area": "Yishun",
+      "confidence": "Medium confidence",
+      "decision": "Asking rent looks high for standard Yishun heartland retail.",
+      "reason": "Yishun can support some better suburban demand near Northpoint and MRT flow, but ordinary neighbourhood units should not clear this spread without strong footfall evidence.",
+      "official": 9.1,
+      "asking": 11.4,
+      "gap": 25,
+      "drivers": [
+        "Northpoint and transport-linked flow support some premium over plain neighbourhood stock.",
+        "The current spread still looks rich for standard heartland frontage.",
+        "Unit positioning near the main node matters more than the headline town name.",
+        "Fit-out burden should be used to negotiate back from the asking line."
+      ],
+      "daily": "Yishun retail asking rent is estimated near S$11.40 psf, about 25% above the latest benchmark. Better central units can support more, but ordinary stock still looks expensive at this level.",
+      "series": [
+        [
+          "2021 Q1",
+          7.6,
+          9.2
+        ],
+        [
+          "2021 Q3",
+          7.8,
+          9.4
+        ],
+        [
+          "2022 Q1",
+          7.9,
+          9.7
+        ],
+        [
+          "2022 Q3",
+          8.1,
+          9.9
+        ],
+        [
+          "2023 Q1",
+          8.3,
+          10.2
+        ],
+        [
+          "2023 Q3",
+          8.4,
+          10.4
+        ],
+        [
+          "2024 Q1",
+          8.6,
+          10.7
+        ],
+        [
+          "2024 Q3",
+          8.8,
+          10.9
+        ],
+        [
+          "2025 Q1",
+          8.9,
+          11.2
+        ],
+        [
+          "2025 Q3",
+          9.1,
+          11.4
+        ]
+      ],
+      "map": {
+        "x": 252,
+        "y": 166,
+        "status": "high"
+      },
+      "fairRange": {
+        "low": 8.5,
+        "high": 10.7
+      },
+      "actionLabel": "Negotiate",
+      "action": "Negotiate above S$10.70 psf unless the unit sits in stronger Northpoint or MRT-linked flow.",
+      "sourceSummary": "Official benchmark: north-heartland retail trend. Asking estimate: Northpoint and Yishun Central listing signals.",
+      "mobileSummary": "Likely high. Negotiate above S$10.70 psf unless footfall is clearly stronger."
+    },
+    {
+      "id": "sengkang-retail",
+      "aliases": [
+        "sengkang",
+        "sengkang retail",
+        "compass one",
+        "buangkok retail",
+        "sengkang central",
+        "sengkang shop"
+      ],
+      "title": "Sengkang retail",
+      "propertyType": "HDB and mall-fringe retail",
+      "area": "Sengkang",
+      "confidence": "Medium confidence",
+      "decision": "Asking rent is elevated for ordinary Sengkang retail.",
+      "reason": "Sengkang has a real family catchment and some stronger node demand near Compass One and MRT links, but the current asking spread still needs better proof on flow and frontage.",
+      "official": 10.2,
+      "asking": 12.8,
+      "gap": 25,
+      "drivers": [
+        "Large residential catchment helps support a healthier suburban retail base.",
+        "Compass-linked units can clear a better number than plain neighbourhood rows.",
+        "The current spread still needs location-specific proof.",
+        "Longer fit-out recovery periods should push negotiations back toward the fair band."
+      ],
+      "daily": "Sengkang retail asking rent is estimated near S$12.80 psf, about 25% above the latest benchmark. Better node-linked units can justify more, but ordinary stock still looks stretched.",
+      "series": [
+        [
+          "2021 Q1",
+          8.5,
+          10.2
+        ],
+        [
+          "2021 Q3",
+          8.7,
+          10.5
+        ],
+        [
+          "2022 Q1",
+          8.9,
+          10.8
+        ],
+        [
+          "2022 Q3",
+          9.1,
+          11.1
+        ],
+        [
+          "2023 Q1",
+          9.3,
+          11.4
+        ],
+        [
+          "2023 Q3",
+          9.4,
+          11.6
+        ],
+        [
+          "2024 Q1",
+          9.6,
+          11.9
+        ],
+        [
+          "2024 Q3",
+          9.8,
+          12.2
+        ],
+        [
+          "2025 Q1",
+          10.0,
+          12.5
+        ],
+        [
+          "2025 Q3",
+          10.2,
+          12.8
+        ]
+      ],
+      "map": {
+        "x": 356,
+        "y": 181,
+        "status": "watch"
+      },
+      "fairRange": {
+        "low": 9.5,
+        "high": 12.0
+      },
+      "actionLabel": "Check node traffic",
+      "action": "Check node traffic above S$12.00 psf before treating the premium as real.",
+      "sourceSummary": "Official benchmark: north-east suburban retail trend. Asking estimate: Compass One and Sengkang listing signals.",
+      "mobileSummary": "Elevated. Check node traffic above S$12.00 psf before accepting the premium."
+    },
+    {
+      "id": "punggol-retail",
+      "aliases": [
+        "punggol",
+        "punggol retail",
+        "waterway point",
+        "punggol coast retail",
+        "punggol central",
+        "punggol shop"
+      ],
+      "title": "Punggol retail",
+      "propertyType": "HDB and mall-fringe retail",
+      "area": "Punggol",
+      "confidence": "Medium confidence",
+      "decision": "Asking rent looks high unless the unit benefits from stronger node demand.",
+      "reason": "Punggol has newer stock and a growing catchment, but the spread still looks rich for ordinary units unless the site is tied to Waterway Point, MRT flow, or newer high-density demand pockets.",
+      "official": 10.8,
+      "asking": 13.4,
+      "gap": 24,
+      "drivers": [
+        "Newer suburban stock and a growing population support healthier asking expectations.",
+        "The premium should be strongest near Waterway Point or central transit flow.",
+        "Ordinary fringe units should not be priced like the best node-facing stock.",
+        "Negotiate using frontage and sustained daily demand, not just area branding."
+      ],
+      "daily": "Punggol retail asking rent is estimated near S$13.40 psf, about 24% above the latest benchmark. Better node-facing units may support it, but ordinary stock still looks expensive.",
+      "series": [
+        [
+          "2021 Q1",
+          9.1,
+          10.8
+        ],
+        [
+          "2021 Q3",
+          9.3,
+          11.1
+        ],
+        [
+          "2022 Q1",
+          9.5,
+          11.4
+        ],
+        [
+          "2022 Q3",
+          9.7,
+          11.7
+        ],
+        [
+          "2023 Q1",
+          9.9,
+          12.0
+        ],
+        [
+          "2023 Q3",
+          10.0,
+          12.2
+        ],
+        [
+          "2024 Q1",
+          10.2,
+          12.5
+        ],
+        [
+          "2024 Q3",
+          10.4,
+          12.8
+        ],
+        [
+          "2025 Q1",
+          10.6,
+          13.1
+        ],
+        [
+          "2025 Q3",
+          10.8,
+          13.4
+        ]
+      ],
+      "map": {
+        "x": 391,
+        "y": 182,
+        "status": "watch"
+      },
+      "fairRange": {
+        "low": 10.1,
+        "high": 12.7
+      },
+      "actionLabel": "Validate node premium",
+      "action": "Validate the node premium above S$12.70 psf with real Waterway Point or MRT-linked demand.",
+      "sourceSummary": "Official benchmark: new-town suburban retail trend. Asking estimate: Waterway Point and Punggol listing signals.",
+      "mobileSummary": "Elevated. Validate above S$12.70 psf with real node demand."
+    },
+    {
+      "id": "marina-bay-retail",
+      "aliases": [
+        "marina bay",
+        "marina bay retail",
+        "mbfc retail",
+        "marina one retail",
+        "downtown core retail",
+        "marina bay shop"
+      ],
+      "title": "Marina Bay retail",
+      "propertyType": "Prime downtown retail",
+      "area": "Marina Bay",
+      "confidence": "High confidence",
+      "decision": "Asking rent is elevated but broadly plausible for stronger Marina Bay retail.",
+      "reason": "Marina Bay commands real transport, office, and tourist demand, so the premium is believable. The decision should rest on frontage quality, building adjacency, and whether the unit actually captures that premium traffic.",
+      "official": 31.0,
+      "asking": 35.7,
+      "gap": 15,
+      "drivers": [
+        "Office-worker and visitor demand support a genuine downtown rent premium.",
+        "The premium is more believable here than in standard fringe retail zones.",
+        "Weak circulation or hidden frontage should still be discounted hard.",
+        "Service-charge and fit-out economics matter because absolute rent is already high."
+      ],
+      "daily": "Marina Bay retail asking rent is estimated near S$35.70 psf, about 15% above the latest benchmark. The premium is believable, but only for units with real office, visitor, and transit exposure.",
+      "series": [
+        [
+          "2021 Q1",
+          26.2,
+          30.1
+        ],
+        [
+          "2021 Q3",
+          26.7,
+          30.7
+        ],
+        [
+          "2022 Q1",
+          27.3,
+          31.3
+        ],
+        [
+          "2022 Q3",
+          27.8,
+          32.0
+        ],
+        [
+          "2023 Q1",
+          28.3,
+          32.6
+        ],
+        [
+          "2023 Q3",
+          28.9,
+          33.2
+        ],
+        [
+          "2024 Q1",
+          29.4,
+          33.8
+        ],
+        [
+          "2024 Q3",
+          29.9,
+          34.5
+        ],
+        [
+          "2025 Q1",
+          30.5,
+          35.1
+        ],
+        [
+          "2025 Q3",
+          31.0,
+          35.7
+        ]
+      ],
+      "map": {
+        "x": 315,
+        "y": 258,
+        "status": "watch"
+      },
+      "fairRange": {
+        "low": 29.0,
+        "high": 34.2
+      },
+      "actionLabel": "Validate frontage",
+      "action": "Validate frontage and office spillover above S$34.20 psf before accepting the premium.",
+      "sourceSummary": "Official benchmark: downtown prime retail trend. Asking estimate: Marina Bay and MBFC listing signals.",
+      "mobileSummary": "Elevated but plausible. Validate frontage and office spillover above S$34.20 psf."
+    },
+    {
+      "id": "city-hall-retail",
+      "aliases": [
+        "city hall",
+        "city hall retail",
+        "raffles city retail",
+        "capitol retail",
+        "city hall shop",
+        "stamford retail"
+      ],
+      "title": "City Hall retail",
+      "propertyType": "Prime civic retail",
+      "area": "City Hall",
+      "confidence": "High confidence",
+      "decision": "Asking rent is elevated but supportable for prime civic-core retail.",
+      "reason": "City Hall sits on strong transport, office, and visitor demand, so the premium is believable. Still, weaker secondary corridors should not clear the same number as the best connected storefronts.",
+      "official": 29.4,
+      "asking": 34.1,
+      "gap": 16,
+      "drivers": [
+        "Prime transport and visitor exposure support stronger-than-average rent.",
+        "The premium needs true civic-core or mall-linked flow to hold up.",
+        "Secondary corridors should be marked down meaningfully.",
+        "Negotiate using frontage depth and sustained weekday flow."
+      ],
+      "daily": "City Hall retail asking rent is estimated near S$34.10 psf, about 16% above the latest benchmark. The premium is supportable, but mainly for truly prime civic-core frontage.",
+      "series": [
+        [
+          "2021 Q1",
+          24.8,
+          28.2
+        ],
+        [
+          "2021 Q3",
+          25.3,
+          28.9
+        ],
+        [
+          "2022 Q1",
+          25.8,
+          29.5
+        ],
+        [
+          "2022 Q3",
+          26.3,
+          30.2
+        ],
+        [
+          "2023 Q1",
+          26.8,
+          30.8
+        ],
+        [
+          "2023 Q3",
+          27.4,
+          31.5
+        ],
+        [
+          "2024 Q1",
+          27.9,
+          32.1
+        ],
+        [
+          "2024 Q3",
+          28.4,
+          32.8
+        ],
+        [
+          "2025 Q1",
+          28.9,
+          33.4
+        ],
+        [
+          "2025 Q3",
+          29.4,
+          34.1
+        ]
+      ],
+      "map": {
+        "x": 302,
+        "y": 238,
+        "status": "watch"
+      },
+      "fairRange": {
+        "low": 27.8,
+        "high": 32.8
+      },
+      "actionLabel": "Check corridor quality",
+      "action": "Check corridor quality above S$32.80 psf before treating the premium as justified.",
+      "sourceSummary": "Official benchmark: prime civic-core retail trend. Asking estimate: Raffles City and Capitol listing signals.",
+      "mobileSummary": "Elevated but plausible. Check corridor quality above S$32.80 psf."
+    },
+    {
+      "id": "raffles-place-retail",
+      "aliases": [
+        "raffles place",
+        "raffles place retail",
+        "shenton way retail",
+        "downtown mrt retail",
+        "collyer quay retail",
+        "raffles place shop"
+      ],
+      "title": "Raffles Place retail",
+      "propertyType": "Prime office-core retail",
+      "area": "Raffles Place",
+      "confidence": "High confidence",
+      "decision": "Asking rent is elevated but generally plausible for the best office-core retail.",
+      "reason": "Raffles Place supports a real office-core premium, but weaker sheltered corridors and non-primary frontages should still be negotiated back. Absolute rent is high enough that conversion economics matter more than headline prestige alone.",
+      "official": 32.8,
+      "asking": 37.9,
+      "gap": 16,
+      "drivers": [
+        "Office-core lunch and commuter demand support the premium.",
+        "Not every Raffles Place unit deserves the best-tower pricing line.",
+        "Corridor strength, visibility, and usable seating/service layout matter heavily.",
+        "Absolute monthly rent should be tested against realistic turnover and daypart strength."
+      ],
+      "daily": "Raffles Place retail asking rent is estimated near S$37.90 psf, about 16% above the latest benchmark. The premium is believable for strong office-core frontage, but weaker corridors still need negotiation.",
+      "series": [
+        [
+          "2021 Q1",
+          27.1,
+          31.3
+        ],
+        [
+          "2021 Q3",
+          27.7,
+          32.0
+        ],
+        [
+          "2022 Q1",
+          28.4,
+          32.8
+        ],
+        [
+          "2022 Q3",
+          29.0,
+          33.5
+        ],
+        [
+          "2023 Q1",
+          29.6,
+          34.2
+        ],
+        [
+          "2023 Q3",
+          30.3,
+          35.0
+        ],
+        [
+          "2024 Q1",
+          30.9,
+          35.7
+        ],
+        [
+          "2024 Q3",
+          31.5,
+          36.4
+        ],
+        [
+          "2025 Q1",
+          32.2,
+          37.2
+        ],
+        [
+          "2025 Q3",
+          32.8,
+          37.9
+        ]
+      ],
+      "map": {
+        "x": 288,
+        "y": 251,
+        "status": "watch"
+      },
+      "fairRange": {
+        "low": 31.0,
+        "high": 36.1
+      },
+      "actionLabel": "Stress-test economics",
+      "action": "Stress-test economics above S$36.10 psf unless the unit has dominant office-core frontage.",
+      "sourceSummary": "Official benchmark: office-core prime retail trend. Asking estimate: Raffles Place and Shenton Way listing signals.",
+      "mobileSummary": "Elevated but plausible. Stress-test above S$36.10 psf unless frontage is dominant."
+    },
+    {
+      "id": "bras-basah-retail",
+      "aliases": [
+        "bras basah",
+        "bras basah retail",
+        "bugis arts retail",
+        "bencoolen retail",
+        "selegie retail",
+        "bras basah shop"
+      ],
+      "title": "Bras Basah retail",
+      "propertyType": "Fringe civic and arts retail",
+      "area": "Bras Basah",
+      "confidence": "Medium confidence",
+      "decision": "Asking rent is elevated but can be supported for stronger arts- and education-linked flow.",
+      "reason": "Bras Basah and Bencoolen can support a premium from student, museum, and visitor activity, but weaker side corridors should not be priced like the best MRT-adjacent frontage.",
+      "official": 23.4,
+      "asking": 27.0,
+      "gap": 15,
+      "drivers": [
+        "Education and visitor traffic provide a real base for retail demand.",
+        "The premium is more credible near MRT links and stronger pedestrian corridors.",
+        "Side-street or upstairs spaces should be marked down sharply.",
+        "Lease decisions should reflect usable frontage and daypart demand, not just district branding."
+      ],
+      "daily": "Bras Basah retail asking rent is estimated near S$27.00 psf, about 15% above the latest benchmark. The premium is supportable near better MRT and visitor flow, but weaker corridors still need discounting.",
+      "series": [
+        [
+          "2021 Q1",
+          18.9,
+          21.6
+        ],
+        [
+          "2021 Q3",
+          19.4,
+          22.2
+        ],
+        [
+          "2022 Q1",
+          19.9,
+          22.8
+        ],
+        [
+          "2022 Q3",
+          20.4,
+          23.4
+        ],
+        [
+          "2023 Q1",
+          20.9,
+          24.0
+        ],
+        [
+          "2023 Q3",
+          21.4,
+          24.6
+        ],
+        [
+          "2024 Q1",
+          21.9,
+          25.2
+        ],
+        [
+          "2024 Q3",
+          22.4,
+          25.8
+        ],
+        [
+          "2025 Q1",
+          22.9,
+          26.4
+        ],
+        [
+          "2025 Q3",
+          23.4,
+          27.0
+        ]
+      ],
+      "map": {
+        "x": 285,
+        "y": 224,
+        "status": "watch"
+      },
+      "fairRange": {
+        "low": 22.1,
+        "high": 25.9
+      },
+      "actionLabel": "Check corridor strength",
+      "action": "Check corridor strength above S$25.90 psf unless the unit has strong MRT or visitor-linked frontage.",
+      "sourceSummary": "Official benchmark: civic-fringe retail trend. Asking estimate: Bras Basah and Bencoolen listing signals.",
+      "mobileSummary": "Elevated but plausible. Check corridor strength above S$25.90 psf."
+    },
+    {
+      "id": "bukit-batok-retail",
+      "aliases": [
+        "bukit batok",
+        "bukit batok retail",
+        "west mall retail",
+        "bukit batok central",
+        "bukit gombak retail",
+        "bukit batok shop"
+      ],
+      "title": "Bukit Batok retail",
+      "propertyType": "HDB and mall-fringe retail",
+      "area": "Bukit Batok",
+      "confidence": "Medium confidence",
+      "decision": "Asking rent looks high for ordinary Bukit Batok retail.",
+      "reason": "Bukit Batok has usable suburban demand and some stronger central flow near West Mall, but the current spread still looks expensive for ordinary units without real node exposure.",
+      "official": 8.8,
+      "asking": 10.9,
+      "gap": 24,
+      "drivers": [
+        "West Mall and MRT-linked flow can support somewhat better asking levels.",
+        "Ordinary neighbourhood rows should be discounted back toward the benchmark.",
+        "The town supports demand, but not every unit deserves central-node pricing.",
+        "Use fit-out and frontage quality to negotiate down the premium."
+      ],
+      "daily": "Bukit Batok retail asking rent is estimated near S$10.90 psf, about 24% above the latest benchmark. Better central units can support more, but ordinary stock still looks expensive.",
+      "series": [
+        [
+          "2021 Q1",
+          7.4,
+          8.8
+        ],
+        [
+          "2021 Q3",
+          7.6,
+          9.0
+        ],
+        [
+          "2022 Q1",
+          7.7,
+          9.3
+        ],
+        [
+          "2022 Q3",
+          7.9,
+          9.5
+        ],
+        [
+          "2023 Q1",
+          8.0,
+          9.7
+        ],
+        [
+          "2023 Q3",
+          8.2,
+          10.0
+        ],
+        [
+          "2024 Q1",
+          8.3,
+          10.2
+        ],
+        [
+          "2024 Q3",
+          8.5,
+          10.4
+        ],
+        [
+          "2025 Q1",
+          8.6,
+          10.7
+        ],
+        [
+          "2025 Q3",
+          8.8,
+          10.9
+        ]
+      ],
+      "map": {
+        "x": 184,
+        "y": 217,
+        "status": "high"
+      },
+      "fairRange": {
+        "low": 8.2,
+        "high": 10.3
+      },
+      "actionLabel": "Negotiate",
+      "action": "Negotiate above S$10.30 psf unless the unit sits in strong West Mall or MRT-linked flow.",
+      "sourceSummary": "Official benchmark: west-heartland retail trend. Asking estimate: West Mall and Bukit Batok listing signals.",
+      "mobileSummary": "Likely high. Negotiate above S$10.30 psf unless node flow is clearly stronger."
+    },
+    {
+      "id": "bukit-panjang-retail",
+      "aliases": [
+        "bukit panjang",
+        "bukit panjang retail",
+        "hillion retail",
+        "bukit panjang plaza retail",
+        "pending retail",
+        "bangkit retail"
+      ],
+      "title": "Bukit Panjang retail",
+      "propertyType": "HDB and mall-fringe retail",
+      "area": "Bukit Panjang",
+      "confidence": "Medium confidence",
+      "decision": "Asking rent looks high for ordinary Bukit Panjang retail.",
+      "reason": "Bukit Panjang supports a real residential catchment and some stronger node demand near Hillion, but the current spread still needs better proof on location and flow before it should be accepted.",
+      "official": 8.6,
+      "asking": 10.7,
+      "gap": 24,
+      "drivers": [
+        "Hillion and LRT-linked flow can justify a better suburban number.",
+        "The current spread still looks rich for plain estate rows.",
+        "Neighbourhood units should be negotiated back toward the benchmark range.",
+        "Demand support should be proven with footfall, not just catchment size."
+      ],
+      "daily": "Bukit Panjang retail asking rent is estimated near S$10.70 psf, about 24% above the latest benchmark. Better Hillion-linked units can support more, but ordinary stock still looks expensive.",
+      "series": [
+        [
+          "2021 Q1",
+          7.3,
+          8.6
+        ],
+        [
+          "2021 Q3",
+          7.4,
+          8.8
+        ],
+        [
+          "2022 Q1",
+          7.6,
+          9.1
+        ],
+        [
+          "2022 Q3",
+          7.7,
+          9.3
+        ],
+        [
+          "2023 Q1",
+          7.9,
+          9.5
+        ],
+        [
+          "2023 Q3",
+          8.0,
+          9.8
+        ],
+        [
+          "2024 Q1",
+          8.2,
+          10.0
+        ],
+        [
+          "2024 Q3",
+          8.3,
+          10.2
+        ],
+        [
+          "2025 Q1",
+          8.5,
+          10.5
+        ],
+        [
+          "2025 Q3",
+          8.6,
+          10.7
+        ]
+      ],
+      "map": {
+        "x": 177,
+        "y": 193,
+        "status": "high"
+      },
+      "fairRange": {
+        "low": 8.0,
+        "high": 10.0
+      },
+      "actionLabel": "Check Hillion premium",
+      "action": "Check Hillion and interchange-linked premium above S$10.00 psf before accepting.",
+      "sourceSummary": "Official benchmark: north-west suburban retail trend. Asking estimate: Hillion and Bukit Panjang listing signals.",
+      "mobileSummary": "Likely high. Check Hillion-linked premium above S$10.00 psf."
+    },
+    {
+      "id": "tiong-bahru-shophouse",
+      "aliases": [
+        "tiong bahru shophouse",
+        "tiong bahru shophouse retail",
+        "eng hoon street retail",
+        "tiong bahru bakery row",
+        "seng poh retail",
+        "tiong bahru streetfront"
+      ],
+      "title": "Tiong Bahru shophouse retail",
+      "propertyType": "Shophouse retail",
+      "area": "Tiong Bahru",
+      "confidence": "High confidence",
+      "decision": "Asking rent looks high but partly supported by strong Tiong Bahru shophouse demand.",
+      "reason": "Tiong Bahru shophouses support a meaningful lifestyle premium from dining demand, destination traffic, and limited supply. The spread is still high enough that weaker side stretches should be negotiated down.",
+      "official": 17.9,
+      "asking": 21.6,
+      "gap": 21,
+      "drivers": [
+        "Lifestyle demand and destination dining support a real shophouse premium.",
+        "Supply is limited, especially for well-fronted streetfront stock.",
+        "The premium should be strongest on proven dining and lifestyle stretches.",
+        "Weaker side streets and shallow frontage should still be marked down."
+      ],
+      "daily": "Tiong Bahru shophouse retail asking rent is estimated near S$21.60 psf, about 21% above the latest benchmark. The premium is believable on stronger lifestyle stretches, but weaker side streets still need negotiation.",
+      "series": [
+        [
+          "2021 Q1",
+          14.6,
+          17.2
+        ],
+        [
+          "2021 Q3",
+          15.0,
+          17.7
+        ],
+        [
+          "2022 Q1",
+          15.3,
+          18.2
+        ],
+        [
+          "2022 Q3",
+          15.7,
+          18.7
+        ],
+        [
+          "2023 Q1",
+          16.1,
+          19.2
+        ],
+        [
+          "2023 Q3",
+          16.4,
+          19.6
+        ],
+        [
+          "2024 Q1",
+          16.8,
+          20.1
+        ],
+        [
+          "2024 Q3",
+          17.2,
+          20.6
+        ],
+        [
+          "2025 Q1",
+          17.5,
+          21.1
+        ],
+        [
+          "2025 Q3",
+          17.9,
+          21.6
+        ]
+      ],
+      "map": {
+        "x": 267,
+        "y": 214,
+        "status": "watch"
+      },
+      "fairRange": {
+        "low": 16.8,
+        "high": 20.4
+      },
+      "actionLabel": "Check street quality",
+      "action": "Check street quality above S$20.40 psf unless the frontage sits on a proven lifestyle stretch.",
+      "sourceSummary": "Official benchmark: fringe-city shophouse trend. Asking estimate: Tiong Bahru streetfront listing signals.",
+      "mobileSummary": "Elevated but plausible. Check street quality above S$20.40 psf."
     }
   ]
 };
