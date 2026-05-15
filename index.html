@@ -101,47 +101,71 @@
           </div>
         </div>
 
-        <aside class="rent-pressure-panel" aria-label="Comparable rent pressure">
-          <div class="pressure-heading">
-            <div>
-              <span>Comparable rent pressure</span>
-              <strong id="pressurePanelTitle">Current search</strong>
+        <div class="hero-rail">
+          <article class="hero-brief-panel" id="heroBriefPanel" aria-label="Current search pulse" data-status="high">
+            <div class="hero-brief-topline">
+              <span>Current search pulse</span>
+              <strong id="heroBriefTitle">Likely high. Defend the fair range first.</strong>
             </div>
-            <small id="dataFreshness">Updated weekly</small>
-          </div>
-
-          <div class="pressure-focus" id="pressureFocus" data-status="high">
-            <div class="pressure-focus-top">
-              <span id="pressureSignal">High</span>
-              <strong id="pressureGap">+20%</strong>
-            </div>
-            <div class="pressure-metric-grid">
+            <p id="heroBriefCopy">Use the benchmarked range as the main anchor before comparing pressure across nearby areas.</p>
+            <div class="hero-brief-metrics">
               <article>
-                <span>Current asking</span>
-                <strong id="pressureAsking">S$15.40 psf</strong>
+                <span>Trust read</span>
+                <strong id="heroBriefTrust">Medium confidence</strong>
               </article>
               <article>
                 <span>Fair range</span>
-                <strong id="pressureFairRange">S$11.80-S$14.60 psf</strong>
+                <strong id="heroBriefRange">S$11.80-S$14.60 psf</strong>
+              </article>
+              <article>
+                <span>Current gap</span>
+                <strong id="heroBriefGap">+20%</strong>
               </article>
             </div>
-            <div class="fair-range-gauge" id="pressureGauge">
-              <div class="gauge-track">
-                <span class="gauge-fair-band" id="pressureFairBand"></span>
-                <i class="gauge-marker benchmark" id="pressureBenchmarkMarker"><b>Benchmark</b></i>
-                <i class="gauge-marker asking" id="pressureAskingMarker"><b>Asking</b></i>
+          </article>
+
+          <aside class="rent-pressure-panel" aria-label="Comparable rent pressure">
+            <div class="pressure-heading">
+              <div>
+                <span>Comparable rent pressure</span>
+                <strong id="pressurePanelTitle">Current search</strong>
+              </div>
+              <small id="dataFreshness">Updated weekly</small>
+            </div>
+
+            <div class="pressure-focus" id="pressureFocus" data-status="high">
+              <div class="pressure-focus-top">
+                <span id="pressureSignal">High</span>
+                <strong id="pressureGap">+20%</strong>
+              </div>
+              <div class="pressure-metric-grid">
+                <article>
+                  <span>Current asking</span>
+                  <strong id="pressureAsking">S$15.40 psf</strong>
+                </article>
+                <article>
+                  <span>Fair range</span>
+                  <strong id="pressureFairRange">S$11.80-S$14.60 psf</strong>
+                </article>
+              </div>
+              <div class="fair-range-gauge" id="pressureGauge">
+                <div class="gauge-track">
+                  <span class="gauge-fair-band" id="pressureFairBand"></span>
+                  <i class="gauge-marker benchmark" id="pressureBenchmarkMarker"><b>Benchmark</b></i>
+                  <i class="gauge-marker asking" id="pressureAskingMarker"><b>Asking</b></i>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="pressure-board">
-            <div class="pressure-board-title">
-              <span>Comparable areas</span>
-              <strong id="pressureBoardSummary">Ranked by asking premium</strong>
+            <div class="pressure-board">
+              <div class="pressure-board-title">
+                <span>Comparable areas</span>
+                <strong id="pressureBoardSummary">Ranked by asking premium</strong>
+              </div>
+              <div class="pressure-list" id="pressureList"></div>
             </div>
-            <div class="pressure-list" id="pressureList"></div>
-          </div>
-        </aside>
+          </aside>
+        </div>
       </section>
 
       <section class="results-shell" id="search" aria-label="Search results">

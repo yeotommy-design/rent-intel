@@ -65,6 +65,12 @@ const el = {
   heroAnswerTitle: document.getElementById("heroAnswerTitle"),
   heroAnswerCopy: document.getElementById("heroAnswerCopy"),
   heroToolbenchLink: document.getElementById("heroToolbenchLink"),
+  heroBriefPanel: document.getElementById("heroBriefPanel"),
+  heroBriefTitle: document.getElementById("heroBriefTitle"),
+  heroBriefCopy: document.getElementById("heroBriefCopy"),
+  heroBriefTrust: document.getElementById("heroBriefTrust"),
+  heroBriefRange: document.getElementById("heroBriefRange"),
+  heroBriefGap: document.getElementById("heroBriefGap"),
   pulseHeroLabel: document.getElementById("pulseHeroLabel"),
   pulseHeroTitle: document.getElementById("pulseHeroTitle"),
   pulseHeroCopy: document.getElementById("pulseHeroCopy"),
@@ -523,6 +529,20 @@ function renderPulseGuide(record) {
     el.pulseNextTitle.textContent = pulse.next.title;
     el.pulseNextCopy.textContent = pulse.next.copy;
   }
+}
+
+function renderHeroBrief(record) {
+  if (!record || !el.heroBriefTitle) return;
+  const pulse = pulseGuideProfile(record);
+  const status = pressureStatus(record);
+  if (el.heroBriefPanel) {
+    el.heroBriefPanel.dataset.status = status.key;
+  }
+  el.heroBriefTitle.textContent = pulse.hero.title;
+  el.heroBriefCopy.textContent = `${record.actionLabel || "Use the fair range first."} ${pulse.next.copy}`;
+  el.heroBriefTrust.textContent = record.confidence;
+  el.heroBriefRange.textContent = moneyRange(record.fairRange);
+  el.heroBriefGap.textContent = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
 }
 
 function setupPulseInteractions(root = document) {
@@ -1722,6 +1742,7 @@ function updateResult(record) {
   el.heroAnswerTitle.textContent = record.title;
   el.heroAnswerCopy.textContent = record.mobileSummary;
   renderPulseGuide(record);
+  renderHeroBrief(record);
   renderDecisionNotePreview(record);
   el.chartTitle.textContent = `${record.title}: historical rent psf`;
   updateCurrentMemberReport();

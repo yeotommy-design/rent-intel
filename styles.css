@@ -7920,6 +7920,12 @@ h1 {
   margin-top: 0;
 }
 
+.hero-rail {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+}
+
 .hero-answer-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
@@ -8294,6 +8300,91 @@ h1 {
   color: var(--green);
 }
 
+.hero-brief-panel {
+  display: grid;
+  gap: 12px;
+  border: 1px solid rgba(53, 93, 124, 0.16);
+  border-radius: 8px;
+  padding: 18px 20px;
+  background:
+    radial-gradient(circle at top right, rgba(244, 227, 178, 0.24), transparent 40%),
+    linear-gradient(180deg, rgba(255, 253, 249, 0.98), rgba(244, 249, 246, 0.96));
+  box-shadow: var(--shadow);
+}
+
+.hero-brief-panel[data-status="fair"] {
+  background:
+    radial-gradient(circle at top right, rgba(198, 244, 221, 0.28), transparent 42%),
+    linear-gradient(180deg, rgba(246, 252, 248, 0.98), rgba(240, 249, 245, 0.96));
+}
+
+.hero-brief-panel[data-status="watch"] {
+  background:
+    radial-gradient(circle at top right, rgba(244, 227, 178, 0.24), transparent 40%),
+    linear-gradient(180deg, rgba(255, 251, 242, 0.98), rgba(250, 246, 235, 0.96));
+}
+
+.hero-brief-panel[data-status="high"] {
+  background:
+    radial-gradient(circle at top right, rgba(246, 212, 206, 0.34), transparent 40%),
+    linear-gradient(180deg, rgba(255, 252, 249, 0.98), rgba(251, 241, 238, 0.96));
+}
+
+.hero-brief-topline {
+  display: grid;
+  gap: 6px;
+}
+
+.hero-brief-topline span {
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hero-brief-topline strong {
+  color: var(--ink);
+  font-size: 26px;
+  line-height: 1.08;
+}
+
+.hero-brief-panel p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.hero-brief-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hero-brief-metrics article {
+  border: 1px solid rgba(35, 31, 24, 0.08);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.hero-brief-metrics span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero-brief-metrics strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.08;
+}
+
 .rent-pressure-panel,
 .result-card,
 .chart-shell,
@@ -8312,10 +8403,6 @@ h1 {
   padding: 20px;
   background:
     linear-gradient(180deg, #fffdf9 0%, #f9f6ee 100%);
-}
-
-.hero > .rent-pressure-panel {
-  margin-top: 278px;
 }
 
 .pressure-heading,
@@ -10173,6 +10260,7 @@ h1 {
 
   .search-panel,
   .hero-answer-card,
+  .hero-brief-panel,
   .rent-pressure-panel,
   .public-scope-strip {
     border-radius: 12px;
@@ -10200,6 +10288,7 @@ h1 {
   }
 
   .coverage-rules-panel,
+  .hero-brief-metrics,
   .pressure-metric-grid,
   .coverage-highlight-stats,
   .rentintel-path-strip,
