@@ -12329,6 +12329,12 @@ h1 {
   grid-template-columns: 1.4fr 1fr 1fr 1fr;
 }
 
+.market-notes-section {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 8px 0 16px;
+}
+
 .market-notes-feature,
 .market-note-card,
 .market-note-entry,
