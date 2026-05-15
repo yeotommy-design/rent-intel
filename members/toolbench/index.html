@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RentIntel Workspace</title>
+    <meta
+      name="description"
+      content="RentIntel Workspace for rent psf trend charts, saved reports, watchlist actions, and negotiation note export."
+    >
+    <link rel="icon" href="../../pulse-shared-transparent.png">
+    <link rel="stylesheet" href="../../styles.css?v=20260510-syncschedule">
+  </head>
+  <body>
+    <header class="site-header" aria-label="RentIntel workspace navigation">
+      <div class="product-header-card">
+        <a class="brand" href="../../index.html" aria-label="RentIntel home">
+          <img src="../../pulse-shared-transparent.png" alt="" aria-hidden="true">
+          <span class="brand-product">
+            <strong>RentIntel</strong>
+            <em>Singapore Rent Intelligence</em>
+          </span>
+        </a>
+      </div>
+    </header>
+
+    <main class="member-toolbench-shell">
+      <section class="member-toolbench-hero" aria-label="RentIntel workspace">
+        <div>
+          <p class="eyebrow">RentIntel Workspace</p>
+          <h1>Deeper rent check for one area.</h1>
+          <p>
+            Search an area, review the transaction-backed benchmark against asking rent,
+            save the decision, watch the area, and prepare the negotiation note.
+          </p>
+        </div>
+      </section>
+
+      <nav class="rentintel-path-strip" aria-label="RentIntel page path">
+        <div class="rentintel-path-copy">
+          <span>RentIntel Path</span>
+          <strong>The workspace sits between public search and saved tools, so you can check, refine, and keep any rent decision in one flow.</strong>
+        </div>
+        <div class="rentintel-path-links">
+          <a href="../../index.html#search">Public Search</a>
+          <a href="./index.html" aria-current="page">Workspace</a>
+          <a href="../account/">Saved Tools</a>
+        </div>
+      </nav>
+
+      <section class="toolbench-search-panel" aria-label="Rent benchmark search">
+        <form id="memberToolbenchSearch" class="search-panel" role="search">
+          <label for="memberToolbenchInput">Search one retail area</label>
+          <div class="search-row">
+            <input
+              id="memberToolbenchInput"
+              name="search"
+              type="search"
+              placeholder="Try Ang Mo Kio shop, Bedok HDB retail, Toa Payoh HDB, Orchard mall"
+              autocomplete="off"
+            >
+            <button type="submit">Search</button>
+          </div>
+          <div class="quick-picks" id="memberToolbenchPicks" aria-label="Workspace benchmark quick picks"></div>
+          <p class="search-coverage-note">Direct records load first. Other recognized Singapore areas open as comparable estimates until direct coverage is added.</p>
+          <p class="account-status" id="memberToolbenchSearchStatus" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <article class="member-toolbench-access workspace-access-strip" id="toolbenchAccessCard" data-access="active">
+        <div class="workspace-access-copy">
+          <span id="toolbenchAccessLabel">Workspace</span>
+          <strong id="toolbenchAccessTitle">Workspace ready</strong>
+          <p id="toolbenchAccessCopy">Run a deeper rent check here, then save the result or return to public search when you want another area.</p>
+        </div>
+        <div class="workspace-access-actions">
+          <a id="toolbenchAccountLink" href="../account/">Open Saved Tools</a>
+          <a href="../../index.html#search">Back to Public Search</a>
+        </div>
+      </article>
+
+      <section class="member-toolbench-grid-main" aria-label="Rent result and workspace chart">
+        <article class="member-toolbench-result">
+          <div class="card-label">
+            <span id="toolbenchConfidence">Loading</span>
+            <strong id="toolbenchResultTitle">Pick an area to start the workspace</strong>
+          </div>
+          <h2 id="toolbenchDecision">Search one retail area to open the benchmark, chart, and negotiation brief.</h2>
+          <p id="toolbenchReason">Start with a town, mall, or shophouse. RentIntel will load the benchmark, source read, and next move in one workspace view.</p>
+          <section class="workspace-brief-card" aria-label="Rent brief">
+            <div class="workspace-brief-copy">
+              <span id="pulseToolbenchLabel">Rent brief</span>
+              <strong id="pulseToolbenchTitle">Use the evidence layer before acting.</strong>
+              <p id="pulseToolbenchCopy">Once you search, the workspace will condense the rent read, source state, and next action into one brief.</p>
+            </div>
+            <div class="workspace-brief-next">
+              <span id="toolbenchActionLabel">Next action</span>
+              <p id="toolbenchActionCopy">Start with one benchmark search to see the fair range, current gap, and next move.</p>
+            </div>
+          </section>
+          <dl class="toolbench-metrics">
+            <div>
+              <dt>Official median</dt>
+              <dd id="toolbenchOfficialMetric">-</dd>
+            </div>
+            <div>
+              <dt>Current asking</dt>
+              <dd id="toolbenchAskingMetric">-</dd>
+            </div>
+            <div>
+              <dt>Fair range</dt>
+              <dd id="toolbenchFairRangeMetric">-</dd>
+            </div>
+            <div>
+              <dt>Gap</dt>
+              <dd id="toolbenchGapMetric">-</dd>
+            </div>
+          </dl>
+        </article>
+
+        <article class="member-chart-card" id="memberChartCard" data-access="locked">
+          <div class="chart-topline">
+            <div>
+              <span id="memberChartKicker">Workspace chart</span>
+              <strong id="memberChartTitle">Benchmark and asking-rent history</strong>
+            </div>
+            <div class="range-toggle" aria-label="Workspace chart range">
+              <button type="button" class="active" data-member-range="5">5Y</button>
+              <button type="button" data-member-range="3">3Y</button>
+              <button type="button" data-member-range="all">All</button>
+            </div>
+          </div>
+          <div class="chart-context-rail" aria-label="Chart context summary">
+            <article>
+              <span>Fair range</span>
+              <strong id="chartFairRangeMetric">-</strong>
+            </article>
+            <article>
+              <span>Current gap</span>
+              <strong id="chartGapMetric">-</strong>
+            </article>
+            <article>
+              <span>Read</span>
+              <strong id="chartReadMetric">Search to load</strong>
+            </article>
+          </div>
+          <canvas id="memberRentChart" width="1120" height="340" aria-label="Historical rent psf chart"></canvas>
+          <p class="chart-context-note" id="chartContextNote">Search a benchmark to compare the official curve against current asking-rent movement.</p>
+          <div class="chart-lock" id="memberChartLock">
+            <strong>Search to load the full chart.</strong>
+            <span>Pick one retail area and RentIntel will open the full transaction-backed chart, source read, and saved-tools actions.</span>
+            <a href="../account/">Open Saved Tools</a>
+          </div>
+        </article>
+      </section>
+
+      <section class="member-decision-spine" aria-label="RentIntel Workspace decision layer">
+        <article>
+          <span>Signal confidence</span>
+            <strong id="spineConfidenceTitle">Confidence follows the selected area</strong>
+          <p id="spineConfidenceCopy">Search first, then check how strongly the benchmark and asking layer support the result.</p>
+        </article>
+        <article>
+          <span>Benchmark trust</span>
+          <strong id="spineBenchmarkTrust">Benchmark trust follows the selected area</strong>
+          <p id="spineBenchmarkCopy">RentIntel will show whether the read is direct, pilot-verified, comparable, or still under source review.</p>
+        </article>
+        <article>
+          <span>Negotiation workflow</span>
+          <strong id="spineNegotiationPosition">Negotiation workflow starts after search</strong>
+          <p id="spineNegotiationCopy">The workspace turns the signal into an offer range, walk-away line, and decision note.</p>
+        </article>
+        <article>
+          <span>Saved tools</span>
+          <strong id="spineMemberAccess">Free tools active</strong>
+          <p id="spineMemberCopy">Save, watch, export, and review evidence rows from the free workspace.</p>
+        </article>
+      </section>
+
+      <details class="workspace-detail-group" open>
+        <summary>
+          <span>Source Context</span>
+          <strong>Trust, source state, and release readiness</strong>
+        </summary>
+        <div class="toolbench-source-copy workspace-source-summary">
+          <strong>Source split</strong>
+          <p id="toolbenchSourceCopy">The benchmark basis, asking-rent source state, and release readiness will appear here after the first search.</p>
+          <div class="source-qa-panel toolbench-source-qa" id="toolbenchSourceQaPanel" data-ready="false">
+            <div>
+              <span>Status</span>
+              <strong id="toolbenchSourceQaStatus">Sample/manual</strong>
+            </div>
+            <div>
+              <span>Asking checks</span>
+              <strong id="toolbenchSourceQaChecks">0</strong>
+            </div>
+            <div>
+              <span>Captured</span>
+              <strong id="toolbenchSourceQaCaptured">Not connected</strong>
+            </div>
+            <div>
+              <span>Production</span>
+              <strong id="toolbenchSourceQaProduction">Not ready</strong>
+            </div>
+            <p id="toolbenchSourceQaWarning">Connect and QA the asking-rent source before using this as a final rent position.</p>
+          </div>
+        </div>
+        <div class="signal-depth member-signal-depth workspace-signal-depth">
+          <strong>Why this signal</strong>
+          <ul id="toolbenchSignalDrivers">
+                <li>Area demand, supply, approvals, momentum, and frontage premium will appear here after the first search.</li>
+          </ul>
+        </div>
+        <section class="workspace-evidence-pack" id="workspaceEvidencePack" aria-label="Workspace evidence pack">
+          <div class="card-label">
+            <span>Evidence Pack</span>
+            <strong id="workspaceEvidencePackSummary">Search to build the evidence pack</strong>
+          </div>
+          <div class="workspace-evidence-pack-grid">
+            <article>
+              <span>Trust Badge</span>
+              <strong id="evidencePackTrust">Sample</strong>
+              <p id="evidencePackTrustCopy">Public trust level will update with the selected benchmark.</p>
+            </article>
+            <article>
+              <span>Benchmark Basis</span>
+              <strong id="evidencePackBenchmark">Transaction benchmark</strong>
+              <p id="evidencePackBenchmarkCopy">Official benchmark layer and comparable source logic.</p>
+            </article>
+            <article>
+              <span>Asking Source</span>
+              <strong id="evidencePackAsking">Listing signal</strong>
+              <p id="evidencePackAskingCopy">Asking-rent source state and capture notes.</p>
+            </article>
+            <article>
+              <span>Negotiation Note</span>
+              <strong id="evidencePackAction">Draft position</strong>
+              <p id="evidencePackActionCopy">Offer, walk-away, and landlord discussion basis.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="workspace-source-timeline" id="workspaceSourceTimeline" aria-label="Workspace source timeline">
+          <div class="card-label">
+            <span>Source Timeline</span>
+            <strong id="workspaceSourceTimelineSummary">Source timeline starts after the first search</strong>
+          </div>
+          <ol id="workspaceSourceTimelineList">
+            <li data-state="pending"><span>Start</span><strong>Search a benchmark to begin the source timeline</strong></li>
+          </ol>
+        </section>
+      </details>
+
+      <details class="workspace-detail-group">
+        <summary>
+          <span>Evidence Table</span>
+          <strong>Transaction history and period-by-period spread</strong>
+        </summary>
+        <section class="member-evidence-panel" id="memberEvidencePanel" data-access="locked" aria-label="Transaction evidence table">
+        <div class="card-label">
+          <span>Transaction Evidence</span>
+          <strong id="evidenceSummary">0 periods loaded</strong>
+        </div>
+        <p class="workspace-section-intro">Start with the source state and latest spread. Open the full transaction rows only when you need period-by-period detail.</p>
+        <div class="member-evidence-readiness" aria-label="Evidence readiness checklist">
+          <article id="evidenceSourceStateItem" data-state="review">
+            <span>Source state</span>
+            <strong id="evidenceSourceStateMetric">Pending</strong>
+            <small id="evidenceSourceStateCopy">Search to see whether the asking layer is sample, pilot, or closer to production.</small>
+          </article>
+          <article id="evidenceBenchmarkTrustItem" data-state="review">
+            <span>Benchmark trust</span>
+            <strong id="evidenceBenchmarkTrustMetric">Pending</strong>
+            <small id="evidenceBenchmarkTrustCopy">Search to see whether this result is direct, comparable, or still under review.</small>
+          </article>
+          <article id="evidenceAskingSourceItem" data-state="review">
+            <span>Asking source</span>
+            <strong id="evidenceAskingSourceMetric">Pending</strong>
+            <small id="evidenceAskingSourceCopy">Search to load the asking-rent source path and capture state.</small>
+          </article>
+          <article id="evidenceProductionReadinessItem" data-state="review">
+            <span>Production readiness</span>
+            <strong id="evidenceProductionReadinessMetric">Pending</strong>
+            <small id="evidenceProductionReadinessCopy">Search to see whether this source is public-ready or still needs QA.</small>
+          </article>
+          <article id="evidenceLastCheckedItem" data-state="review">
+            <span>Last checked</span>
+            <strong id="evidenceLastCheckedMetric">Pending</strong>
+            <small id="evidenceLastCheckedCopy">Search to load the latest capture date and freshness read.</small>
+          </article>
+        </div>
+        <div class="member-evidence-metrics">
+          <article>
+            <span>Visible periods</span>
+            <strong id="evidencePeriodMetric">0</strong>
+          </article>
+          <article>
+            <span>Latest spread</span>
+            <strong id="evidenceSpreadMetric">-</strong>
+          </article>
+          <article>
+            <span>Latest official</span>
+            <strong id="evidenceOfficialMetric">-</strong>
+          </article>
+          <article>
+            <span>Latest asking</span>
+            <strong id="evidenceAskingMetric">-</strong>
+          </article>
+        </div>
+        <details class="workspace-subdetail">
+          <summary>
+            <span>Open transaction rows</span>
+            <strong>Layer breakdown, export, and period-by-period table</strong>
+          </summary>
+          <div class="evidence-structure-grid" aria-label="Benchmark trust structure">
+            <article>
+              <span>Official layer</span>
+              <strong id="evidenceBenchmarkLayer">Transaction benchmark</strong>
+            </article>
+            <article>
+              <span>Asking layer</span>
+              <strong id="evidenceAskingLayer">Listing signal</strong>
+            </article>
+            <article>
+              <span>Coverage</span>
+              <strong id="evidenceCoverageLayer">Selected range</strong>
+            </article>
+            <article>
+              <span>Trust note</span>
+              <strong id="evidenceTrustNote">Confirm unit-specific premium</strong>
+            </article>
+          </div>
+          <div class="member-evidence-actions">
+            <button type="button" id="exportEvidenceButton">Export CSV</button>
+            <p class="account-status" id="evidenceStatus" aria-live="polite"></p>
+          </div>
+          <div class="member-evidence-table-wrap">
+            <table class="member-evidence-table">
+              <thead>
+                <tr>
+                  <th scope="col">Period</th>
+                  <th scope="col">Official median</th>
+                  <th scope="col">Asking median</th>
+                  <th scope="col">Spread</th>
+                  <th scope="col">Signal</th>
+                </tr>
+              </thead>
+              <tbody id="evidenceTableBody">
+                <tr>
+                  <td colspan="5">Evidence rows will load after the workspace benchmark opens.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        </section>
+      </details>
+
+      <details class="workspace-detail-group">
+        <summary>
+          <span>Offer Builder</span>
+          <strong>Negotiation calculator, scenarios, and rent targets</strong>
+        </summary>
+        <section class="negotiation-calculator-panel" id="negotiationCalculatorPanel" data-access="locked" aria-label="Rent negotiation calculator">
+        <div class="negotiation-workflow">
+          <article data-step="1">
+            <span>Check</span>
+            <strong id="workflowCheckStep">Benchmark confidence</strong>
+          </article>
+          <article data-step="2">
+            <span>Set</span>
+            <strong id="workflowTargetStep">Target psf range</strong>
+          </article>
+          <article data-step="3">
+            <span>Draft</span>
+            <strong id="workflowOfferStep">Offer and walk-away</strong>
+          </article>
+          <article data-step="4">
+            <span>Act</span>
+            <strong id="workflowActionStep">Save or export note</strong>
+          </article>
+        </div>
+        <div class="card-label">
+          <span>Negotiation Calculator</span>
+          <strong id="calculatorSummary">Select benchmark</strong>
+        </div>
+        <form id="negotiationCalculatorForm" class="negotiation-calculator-form">
+          <label for="calculatorUnitSize">Unit size sq ft</label>
+          <input id="calculatorUnitSize" type="number" min="50" step="10" value="1000">
+          <label for="calculatorAskingPsf">Asking psf</label>
+          <input id="calculatorAskingPsf" type="number" min="0" step="0.10">
+          <label for="calculatorTargetPsf">Target psf</label>
+          <input id="calculatorTargetPsf" type="number" min="0" step="0.10">
+          <button type="submit">Calculate</button>
+        </form>
+        <div class="calculator-presets">
+          <button type="button" id="useFairHighButton">Use Fair High</button>
+          <button type="button" id="useOfficialButton">Use Official Median</button>
+        </div>
+        <div class="calculator-metrics">
+          <article>
+            <span>Current monthly</span>
+            <strong id="calculatorCurrentMonthly">-</strong>
+          </article>
+          <article>
+            <span>Target monthly</span>
+            <strong id="calculatorTargetMonthly">-</strong>
+          </article>
+          <article>
+            <span>Monthly impact</span>
+            <strong id="calculatorMonthlyImpact">-</strong>
+          </article>
+          <article>
+            <span>Annual impact</span>
+            <strong id="calculatorAnnualImpact">-</strong>
+          </article>
+        </div>
+        <details class="workspace-subdetail">
+          <summary>
+            <span>Open planning tools</span>
+            <strong>Scenario board, offer planner, and note actions</strong>
+          </summary>
+          <div class="scenario-board">
+            <div class="card-label">
+              <span>Scenario Board</span>
+              <strong id="scenarioSummary">0 scenarios</strong>
+            </div>
+            <div class="scenario-table-wrap">
+              <table class="scenario-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Scenario</th>
+                    <th scope="col">Target psf</th>
+                    <th scope="col">Monthly rent</th>
+                    <th scope="col">Annual impact</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="scenarioTableBody">
+                  <tr>
+                    <td colspan="5">Scenarios will load after the benchmark opens.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="offer-builder">
+            <div class="card-label">
+              <span>Offer Builder</span>
+              <strong id="offerSummary">Draft offer not ready</strong>
+            </div>
+            <form id="offerBuilderForm" class="offer-builder-form">
+              <label for="offerPsfInput">Offer psf</label>
+              <input id="offerPsfInput" type="number" min="0" step="0.10">
+              <label for="walkAwayPsfInput">Walk-away psf</label>
+              <input id="walkAwayPsfInput" type="number" min="0" step="0.10">
+              <label for="leaseMonthsInput">Lease months</label>
+              <input id="leaseMonthsInput" type="number" min="1" step="1" value="36">
+              <label for="rentFreeMonthsInput">Rent-free months</label>
+              <input id="rentFreeMonthsInput" type="number" min="0" step="0.5" value="1">
+              <button type="submit">Update Offer</button>
+            </form>
+            <div class="offer-builder-actions">
+              <button type="button" id="useFairLowOfferButton">Offer Fair Low</button>
+              <button type="button" id="useFairHighWalkButton">Walk Away Fair High</button>
+              <button type="button" id="appendOfferNoteButton">Append to Note</button>
+            </div>
+            <div class="offer-metrics">
+              <article>
+                <span>Offer monthly</span>
+                <strong id="offerMonthlyMetric">-</strong>
+              </article>
+              <article>
+                <span>Walk-away monthly</span>
+                <strong id="walkAwayMonthlyMetric">-</strong>
+              </article>
+              <article>
+                <span>Rent-free value</span>
+                <strong id="rentFreeValueMetric">-</strong>
+              </article>
+              <article>
+                <span>Lease exposure</span>
+                <strong id="leaseExposureMetric">-</strong>
+              </article>
+            </div>
+            <p class="account-status" id="offerBuilderStatus" aria-live="polite"></p>
+          </div>
+        </details>
+        <p class="account-status" id="calculatorStatus" aria-live="polite"></p>
+        </section>
+      </details>
+
+      <details class="workspace-detail-group">
+        <summary>
+          <span>Saved Tools</span>
+          <strong>Save reports, alerts, notes, and watched areas</strong>
+        </summary>
+        <section class="member-toolbench-actions-panel" aria-label="Workspace actions">
+        <div class="save-report-state">
+          <article>
+            <span>Save state</span>
+            <strong id="saveStateMetric">Not saved</strong>
+          </article>
+          <article>
+            <span>Confidence</span>
+            <strong id="saveConfidenceMetric">-</strong>
+          </article>
+          <article>
+            <span>Target psf</span>
+            <strong id="saveTargetMetric">-</strong>
+          </article>
+          <article>
+            <span>Offer psf</span>
+            <strong id="saveOfferMetric">-</strong>
+          </article>
+          <article>
+            <span>Note</span>
+            <strong id="saveNoteMetric">Draft</strong>
+          </article>
+        </div>
+        <div class="workspace-action-buttons">
+          <button type="button" id="toolbenchSaveReportButton">Save Report</button>
+          <button type="button" id="toolbenchWatchAreaButton">Watch Area</button>
+          <button type="button" id="toolbenchExportButton">Prepare Note</button>
+          <a id="toolbenchPublicResultLink" href="../../index.html#search">Public Result</a>
+          <a href="../account/#accountSavedReports">Saved Reports</a>
+        </div>
+        <p class="account-status" id="toolbenchActionStatus" aria-live="polite"></p>
+        </section>
+
+        <section class="member-alert-rule-panel" id="memberAlertRulePanel" data-access="locked" aria-label="Area alert rule">
+        <div class="card-label">
+          <span>Area Alert Rule</span>
+          <strong id="alertRuleSummary">Select benchmark</strong>
+        </div>
+        <form id="alertRuleForm" class="alert-rule-form">
+          <label for="alertTriggerSelect">Trigger</label>
+          <select id="alertTriggerSelect">
+            <option value="asking-below-target">Asking rent falls to target</option>
+            <option value="gap-above-limit">Asking premium rises above limit</option>
+            <option value="benchmark-changed">Official benchmark changes</option>
+            <option value="source-connected">Asking source sync connected</option>
+          </select>
+          <label for="alertTargetPsfInput">Target psf</label>
+          <input id="alertTargetPsfInput" type="number" min="0" step="0.10">
+          <label for="alertGapLimitInput">Gap limit</label>
+          <input id="alertGapLimitInput" type="number" min="0" step="1" value="20">
+          <label for="alertCadenceSelect">Check</label>
+          <select id="alertCadenceSelect">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="source-refresh">When source refreshes</option>
+          </select>
+          <button type="submit">Save Alert Rule</button>
+        </form>
+        <div class="alert-rule-actions">
+          <button type="button" id="useWalkAwayAlertButton">Use Walk-Away Target</button>
+          <button type="button" id="useAskingGapAlertButton">Use Current Gap</button>
+          <button type="button" id="appendAlertRuleNoteButton">Append to Note</button>
+        </div>
+        <div class="alert-rule-output">
+          <article>
+            <span>Alert condition</span>
+            <strong id="alertConditionMetric">-</strong>
+          </article>
+          <article>
+            <span>Update cadence</span>
+            <strong id="alertCadenceMetric">-</strong>
+          </article>
+          <article>
+            <span>Stored rule</span>
+            <strong id="alertStoredMetric">Not saved</strong>
+          </article>
+        </div>
+        <p class="account-status" id="alertRuleStatus" aria-live="polite"></p>
+        </section>
+
+        <section class="member-toolbench-detail-grid" aria-label="Saved reports and negotiation note">
+        <article class="account-panel">
+          <div class="card-label">
+            <span>Saved Reports</span>
+            <strong id="toolbenchSavedCount">0 saved</strong>
+          </div>
+          <div class="saved-reports" id="toolbenchSavedReports">
+            <p>No saved reports yet.</p>
+          </div>
+        </article>
+
+        <article class="account-panel">
+          <div class="card-label">
+            <span>Watchlist</span>
+            <strong id="toolbenchWatchCount">0 watching</strong>
+          </div>
+          <div class="watchlist-items" id="toolbenchWatchlist">
+            <p>No watchlist areas yet.</p>
+          </div>
+        </article>
+
+        <article class="account-panel negotiation-note-panel">
+          <div class="card-label">
+            <span>Negotiation Note</span>
+            <strong id="toolbenchNoteLabel">Select benchmark</strong>
+          </div>
+          <textarea id="toolbenchNegotiationNote" readonly>Search or select a benchmark to generate the decision note.</textarea>
+          <div class="negotiation-note-actions">
+            <button type="button" id="toolbenchCopyNoteButton">Copy Note</button>
+            <button type="button" id="toolbenchDownloadNoteButton">Download Note</button>
+          </div>
+          <p class="account-status" id="toolbenchNoteStatus" aria-live="polite"></p>
+        </article>
+        </section>
+      </details>
+    </main>
+
+    <script src="../../data/rentintel-sample-data.js"></script>
+    <script src="../../data/sources/asking-rent-feed.js?v=20260509-asking-pilot"></script>
+    <script src="../../data/sources/onemap-enrichment.js?v=20260512-onemap"></script>
+    <script src="../../asking-feed-adapter.js?v=20260510-feedhardening"></script>
+    <script src="../../onemap-enrichment-adapter.js?v=20260512-onemap"></script>
+    <script src="../../source-trust.js?v=20260510-next5i"></script>
+    <script src="../../auth-client.js?v=20260510-authcutover"></script>
+    <script src="../../member-toolbench.js?v=20260510-feedhardening"></script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "rentintel-prototype",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RentIntel prototype with a lightweight auth backend",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

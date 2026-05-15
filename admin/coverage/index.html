@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RentIntel Admin | Coverage Review</title>
+    <link rel="icon" href="../../pulse-shared-transparent.png">
+    <link rel="stylesheet" href="../../styles.css?v=20260510-syncschedule">
+  </head>
+  <body>
+    <header class="site-header" aria-label="RentIntel admin coverage review">
+      <div class="product-header-card">
+        <a class="brand" href="../../index.html" aria-label="RentIntel home">
+          <img src="../../pulse-shared-transparent.png" alt="" aria-hidden="true">
+          <span class="brand-product">
+            <strong>RentIntel</strong>
+            <em>Admin Coverage Review</em>
+          </span>
+        </a>
+        <a class="members-login-button" href="../../members/account/?loggedIn=active#accountManualReview">
+          <small>Members</small>
+          <span>Manual Queue</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="admin-coverage-page">
+      <section class="admin-coverage-hero" aria-label="Coverage review summary">
+        <div>
+          <p>Admin Review</p>
+          <h1>Classify public rent searches before they become pilot samples.</h1>
+          <span>
+            Public no-match searches should move through classification, QA decision, approval, and sample creation.
+            Blocked locations stay out of public answers.
+          </span>
+        </div>
+        <nav aria-label="Admin coverage links">
+          <a href="../../index.html#search">Public Search</a>
+          <a href="../ops/">Ops Dashboard</a>
+          <a href="../../backend/routes/#get-api-sources-coverage-requests">Backend Routes</a>
+        </nav>
+      </section>
+
+      <section class="admin-coverage-metrics" aria-label="Coverage review metrics">
+        <article>
+          <span>Total</span>
+          <strong id="adminCoverageTotal">0</strong>
+          <em>Coverage requests</em>
+        </article>
+        <article>
+          <span>Manual</span>
+          <strong id="adminCoverageManual">0</strong>
+          <em>Needs source classification</em>
+        </article>
+        <article>
+          <span>QA Ready</span>
+          <strong id="adminCoverageQaReady">0</strong>
+          <em>Can create sample</em>
+        </article>
+        <article>
+          <span>Samples</span>
+          <strong id="adminCoverageSamples">0</strong>
+          <em>Public pilot records</em>
+        </article>
+      </section>
+
+      <section class="admin-coverage-toolbar" aria-label="Coverage queue controls">
+        <div>
+          <label for="adminCoverageSearch">Search queue</label>
+          <input id="adminCoverageSearch" type="search" placeholder="Filter by area, property type, email, or status">
+        </div>
+        <div>
+          <label for="adminCoverageFilter">Status filter</label>
+          <select id="adminCoverageFilter">
+            <option value="all">All requests</option>
+            <option value="manual">Manual review</option>
+            <option value="pending">Pending</option>
+            <option value="qa-ready">QA ready</option>
+            <option value="sample">Sample created</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <button type="button" id="adminCoverageSeed">Add Test Request</button>
+        <button type="button" id="adminCoverageExport">Copy Review Payload</button>
+      </section>
+
+      <section class="admin-coverage-board" aria-label="Coverage review board">
+        <div class="admin-coverage-list" id="adminCoverageList">
+          <p>Loading coverage requests...</p>
+        </div>
+        <aside class="admin-coverage-side" aria-label="Coverage review side panel">
+          <article>
+            <span>Review Rule</span>
+            <strong>No public sample without retail classification and QA pass.</strong>
+            <p>
+              This page is for operational review. It does not connect real source data yet; it prepares the backend handoff and prevents impossible locations from becoming samples.
+            </p>
+          </article>
+          <article>
+            <span>API Payload</span>
+            <strong id="adminCoveragePayloadTitle">0 records ready</strong>
+            <pre id="adminCoveragePayload">{}</pre>
+          </article>
+          <article>
+            <span>Audit Trail</span>
+            <strong id="adminCoverageHistoryTitle">No admin actions yet</strong>
+            <ol class="admin-coverage-history" id="adminCoverageHistory"></ol>
+          </article>
+        </aside>
+      </section>
+
+      <p class="admin-coverage-status" id="adminCoverageStatus" aria-live="polite"></p>
+    </main>
+
+    <script src="../../auth-client.js?v=20260510-authcutover"></script>
+    <script src="../../admin-coverage.js?v=20260510-authcutover"></script>
+  </body>
+</html>

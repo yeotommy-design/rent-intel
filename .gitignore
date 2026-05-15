@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+
+backend/data/prototype.sqlite
+backend/data/prototype-db.json
+backend/data/alert-deliveries/
+
+*.log

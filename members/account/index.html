@@ -1,0 +1,1276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RentIntel Saved Tools</title>
+    <meta
+      name="description"
+      content="RentIntel Saved Tools lets you save rent checks, watched areas, alerts, and analysis history while the public site stays free."
+    >
+    <link rel="icon" href="../../pulse-shared-transparent.png">
+    <link rel="stylesheet" href="../../styles.css?v=20260514-freepublic">
+  </head>
+  <body>
+    <header class="site-header" aria-label="RentIntel account navigation">
+      <div class="product-header-card">
+        <a class="brand" href="../../index.html" aria-label="RentIntel home">
+          <img src="../../pulse-shared-transparent.png" alt="" aria-hidden="true">
+          <span class="brand-product">
+            <strong>RentIntel</strong>
+            <em>Singapore Rent Intelligence</em>
+          </span>
+        </a>
+      </div>
+    </header>
+
+    <main class="account-shell">
+      <section class="account-hero">
+        <div>
+          <p class="eyebrow">RentIntel Saved Tools</p>
+          <h1>Save checks, watched areas, and analysis history.</h1>
+          <p>
+            Use this page for saved reports, watched areas, alerts, source status,
+            and analysis history. The core RentIntel product stays public, and these
+            saved tools are free to use during the early launch stage.
+          </p>
+        </div>
+      </section>
+
+      <nav class="rentintel-path-strip" aria-label="RentIntel page path">
+        <div class="rentintel-path-copy">
+          <span>RentIntel Path</span>
+          <strong>Saved tools are the place to keep the public checks and workspace briefs you want to return to later.</strong>
+        </div>
+        <div class="rentintel-path-links">
+          <a href="../../index.html#search">Public Search</a>
+          <a href="../toolbench/">Workspace</a>
+          <a href="./index.html" aria-current="page">Saved Tools</a>
+        </div>
+      </nav>
+
+      <section class="account-grid" aria-label="RentIntel account login and status">
+        <article class="account-panel" id="emailStep">
+          <div class="card-label">
+            <span>Optional Sign-In</span>
+            <strong>Add your own email later</strong>
+          </div>
+          <form id="emailLoginForm" class="account-form">
+            <label for="accountEmail">Email address</label>
+            <div>
+              <input id="accountEmail" type="email" placeholder="active@rent-intel.com" required>
+              <button type="submit">Send Login Code</button>
+            </div>
+            <p class="account-status" id="emailStatus" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <article class="account-panel" id="codeStep" hidden>
+          <div class="card-label">
+            <span>Step 2</span>
+            <strong>Enter login code</strong>
+          </div>
+          <form id="codeLoginForm" class="account-form">
+            <label for="loginCode">6-digit code</label>
+            <div>
+              <input id="loginCode" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="123456" required>
+              <button type="submit">Verify Code</button>
+            </div>
+            <p class="account-status" id="codeStatus" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <article class="account-panel join-member-panel" id="joinMemberPanel" hidden>
+          <div class="card-label">
+            <span>Optional Sign-In</span>
+            <strong>Add another email later</strong>
+          </div>
+          <form id="joinMemberForm" class="account-form">
+            <label for="joinEmail">Email to add</label>
+            <div>
+              <input id="joinEmail" type="email" placeholder="you@example.com" required>
+              <button type="submit">Save Email</button>
+            </div>
+            <p class="account-status" id="joinStatus" aria-live="polite"></p>
+          </form>
+        </article>
+
+        <article class="account-panel public-intent-panel" id="publicIntentPanel" hidden>
+          <div class="card-label">
+            <span>Public Rent Check</span>
+            <strong id="publicIntentTitle">Nothing handed off from public search yet</strong>
+          </div>
+          <p id="publicIntentCopy">A public RentIntel check will appear here after you save it to Saved Tools.</p>
+          <dl class="public-intent-metrics">
+            <div>
+              <dt>Current asking</dt>
+              <dd id="publicIntentAskingMetric">-</dd>
+            </div>
+            <div>
+              <dt>Fair range</dt>
+              <dd id="publicIntentRangeMetric">-</dd>
+            </div>
+            <div>
+              <dt>Gap</dt>
+              <dd id="publicIntentGapMetric">-</dd>
+            </div>
+            <div>
+              <dt>Trust</dt>
+              <dd id="publicIntentTrustMetric">-</dd>
+            </div>
+          </dl>
+          <div class="public-intent-actions">
+            <a id="openPublicIntentWorkspace" href="../toolbench/">Open Workspace</a>
+            <button type="button" id="requestPublicIntentButton">Keep for Later</button>
+            <button type="button" id="savePublicIntentButton">Save as Report</button>
+            <button type="button" id="clearPublicIntentButton">Clear Handoff</button>
+          </div>
+          <p class="account-status" id="publicIntentStatus" aria-live="polite"></p>
+        </article>
+      </section>
+
+      <section class="account-dashboard" id="accountDashboard" hidden aria-label="RentIntel saved tools dashboard">
+        <div class="section-heading compact">
+          <p>Saved Tools</p>
+        <h2>Saved tools, area watch, and workspace access</h2>
+        </div>
+
+        <article class="account-access-banner" id="accountAccessBanner" data-access="locked">
+          <div>
+            <span id="accountAccessLabel">Free saved tools</span>
+            <strong id="accountAccessTitle">Workspace ready</strong>
+            <p id="accountAccessCopy">
+              Free saved tools are open. Use this page to save reports, watch areas, and return to the workspace.
+            </p>
+            <small id="accountSessionMeta">Sign in only if you want your saved tools linked to an email.</small>
+          </div>
+          <div class="account-session-actions">
+            <a id="accountAccessAction" href="../toolbench/">Open Workspace</a>
+            <button type="button" id="switchAccountButton">Switch Account</button>
+            <button type="button" id="signOutButton">Sign Out</button>
+          </div>
+        </article>
+
+        <nav class="account-section-nav" aria-label="Saved tools sections">
+          <a href="#accountSavedReports">Reports</a>
+          <a href="#watchlistForm">Watchlist</a>
+          <a href="#toolbenchPanel">Workspace</a>
+          <a href="#accountSourceCoverage">Coverage</a>
+        </nav>
+
+        <details class="account-detail-group" open>
+          <summary>
+            <span>Saved Tools Summary</span>
+            <strong id="memberCommandSummary">Saved tools ready</strong>
+          </summary>
+          <section class="member-command-panel" aria-label="RentIntel saved tools command center">
+            <div class="member-command-grid">
+              <article>
+                <span>Saved reports</span>
+                <strong id="commandSavedMetric">0</strong>
+              </article>
+              <article>
+                <span>Watched areas</span>
+                <strong id="commandWatchMetric">0</strong>
+              </article>
+              <article>
+                <span>Evidence status</span>
+                <strong id="commandSourceMetric">Not ready</strong>
+              </article>
+              <article>
+                <span>Access state</span>
+                <strong id="commandAccessMetric">Locked</strong>
+              </article>
+            </div>
+            <div class="member-command-actions">
+              <button type="button" id="commandSaveBriefButton" disabled>Save Brief</button>
+              <button type="button" id="commandWatchAreaButton" disabled>Watch Area</button>
+              <button type="button" id="commandRunSyncButton" disabled>Refresh Evidence</button>
+              <a id="commandOpenToolbenchButton" href="../toolbench/" aria-disabled="true">Open Workspace</a>
+            </div>
+            <p class="account-status" id="memberCommandStatus" aria-live="polite"></p>
+          </section>
+        </details>
+
+        <details class="account-detail-group">
+          <summary>
+            <span>Saved Tools Path</span>
+            <strong id="membershipTimelineSummary">Free tools are live</strong>
+          </summary>
+          <section class="membership-timeline-panel" aria-label="Saved tools journey">
+            <div class="membership-timeline" id="membershipTimeline">
+              <p class="empty-state-note">Use public search, save a report, or watch an area. Your saved-tools journey will build itself here as you use RentIntel.</p>
+            </div>
+          </section>
+          <article class="account-next-action-panel" id="accountNextActionPanel">
+            <div>
+              <span id="accountNextActionLabel">Next Action</span>
+              <strong id="accountNextActionTitle">Login to continue</strong>
+              <p id="accountNextActionCopy">Your next RentIntel account action will show after login.</p>
+            </div>
+            <a id="accountNextActionLink" href="#accountEmail">Go</a>
+          </article>
+        </details>
+
+        <details class="account-detail-group">
+          <summary>
+            <span>Coverage Queue</span>
+            <strong id="coverageShortcutSummary">Coverage queue is empty right now</strong>
+          </summary>
+          <section class="coverage-shortcut-panel" aria-label="Coverage review shortcut">
+            <div class="coverage-shortcut-grid">
+              <article>
+                <span>Pending</span>
+                <strong id="coverageShortcutPendingMetric">0</strong>
+              </article>
+              <article>
+                <span>Pilot verified</span>
+                <strong id="coverageShortcutPilotMetric">0</strong>
+              </article>
+              <article>
+                <span>Public samples live</span>
+                <strong id="coverageShortcutLiveMetric">0</strong>
+              </article>
+            </div>
+            <div class="coverage-shortcut-actions">
+              <button type="button" id="coverageShortcutReviewButton">Review Coverage</button>
+              <a id="coverageShortcutPublicButton" href="../../index.html#search">Open Public Queue</a>
+              <button type="button" id="coverageShortcutSourceSyncButton">Open Source Sync</button>
+              <a id="coverageShortcutLiveLink" href="../../index.html#search" hidden>Public Sample Live</a>
+            </div>
+            <p class="account-status" id="coverageShortcutStatus" aria-live="polite">Coverage requests from public no-match searches will appear here.</p>
+          </section>
+        </details>
+
+        <details class="account-detail-group">
+          <summary>
+            <span>Internal Ops</span>
+            <strong>Restricted workflow area</strong>
+          </summary>
+          <article class="account-panel account-internal-note">
+            <p>Everything below this point is for internal source review, admin operations, release checks, and backend handoff. Public free tools stay in the sections above.</p>
+          </article>
+          <nav class="account-section-nav account-section-nav-internal" aria-label="Internal tools sections">
+            <a href="#accountManualReview">Manual Review</a>
+            <a href="#accountDeliveryAdmin">Delivery Admin</a>
+            <a href="../../admin/coverage/">Admin Review</a>
+            <a href="../../admin/ops/">Ops Dashboard</a>
+            <a href="#accountSourceQa">Source QA</a>
+            <a href="#backendHandoffPanel">Backend</a>
+          </nav>
+        </details>
+
+        <div class="account-status-grid">
+          <article class="account-panel">
+            <span>Session</span>
+            <strong id="memberStatus">Free tools</strong>
+          </article>
+          <article class="account-panel">
+            <span>Access model</span>
+            <strong id="subscriptionStatus">Free access</strong>
+          </article>
+          <article class="account-panel">
+            <span>Workspace access</span>
+            <strong id="toolbenchStatus">Free</strong>
+          </article>
+        </div>
+
+        <article class="today-brief-panel" aria-label="Today rent brief">
+          <div>
+            <p class="eyebrow">Today Rent Brief</p>
+            <h2 id="todayBriefTitle">Loading rent signal</h2>
+            <p id="todayBriefCopy">RentIntel is preparing the saved-tools brief.</p>
+          </div>
+          <dl class="today-brief-metrics">
+            <div>
+              <dt>Current asking</dt>
+              <dd id="todayAskingMetric">-</dd>
+            </div>
+            <div>
+              <dt>Fair range</dt>
+              <dd id="todayFairRangeMetric">-</dd>
+            </div>
+            <div>
+              <dt>Gap</dt>
+              <dd id="todayGapMetric">-</dd>
+            </div>
+          </dl>
+          <div class="today-brief-actions">
+            <button type="button" id="saveTodayBriefButton">Save Today's Brief</button>
+            <button type="button" id="watchTodayBriefButton">Watch This Area</button>
+            <a id="openTodayBriefButton" href="../toolbench/">Open Workspace</a>
+          </div>
+          <span class="member-action-status" id="todayBriefStatus" aria-live="polite"></span>
+        </article>
+
+        <section class="member-toolbench-grid" aria-label="RentIntel saved tools">
+          <article class="member-tool-card" id="benchmarkToolCard">
+            <span>Workspace</span>
+            <strong>Rent search workspace</strong>
+            <p>Open the RentIntel workspace, review chart context, and save the rent decision for later.</p>
+            <a href="../toolbench/">Open Workspace</a>
+          </article>
+          <article class="member-tool-card" id="savedToolCard">
+            <span>Saved Reports</span>
+            <strong>Decision history</strong>
+            <p>Review saved rent checks and return to the Workspace when you need the underlying chart.</p>
+            <a href="#accountSavedReports">View saved reports</a>
+          </article>
+          <article class="member-tool-card" id="alertToolCard">
+            <span>Area Alerts</span>
+            <strong>Rent signal monitoring</strong>
+            <p>Track one or more areas and receive a future alert when the benchmark signal changes.</p>
+            <button type="button" id="previewAlertButton">Preview alerts</button>
+          </article>
+          <article class="member-tool-card" id="exportToolCard">
+            <span>Export</span>
+            <strong>Negotiation summary</strong>
+            <p>Prepare a short rent decision note for team review, landlord discussion, or tenant-rep work.</p>
+            <button type="button" id="previewExportButton">Preview export</button>
+          </article>
+        </section>
+
+        <div class="account-grid">
+          <article class="account-panel activation-request-panel">
+            <div class="card-label">
+              <span>Future Reports</span>
+              <strong id="activationRequestLabel">Not requested</strong>
+            </div>
+            <form id="activationRequestForm" class="account-form">
+              <label for="activationPlan">Register interest for future reports</label>
+              <div>
+                <select id="activationPlan">
+                  <option value="Market reports">Market reports</option>
+                  <option value="Team reports">Team reports</option>
+                </select>
+                <input id="activationUseCase" type="text" placeholder="Use case or company">
+                <button type="submit">Register interest</button>
+              </div>
+              <p class="account-status" id="activationRequestStatus" aria-live="polite"></p>
+            </form>
+            <div class="activation-request-list" id="activationRequestList">
+              <p class="empty-state-note">No future report interest yet. Register here if you want updates when market or team report packs are introduced later.</p>
+            </div>
+          </article>
+
+          <article class="account-panel notification-preferences-panel">
+            <div class="card-label">
+              <span>Notifications</span>
+              <strong id="notificationPreferenceSummary">Not set</strong>
+            </div>
+            <form id="notificationPreferenceForm" class="preference-form">
+              <label>
+                <input id="preferenceDailyBrief" type="checkbox">
+                <span>Daily RentIntel brief</span>
+              </label>
+              <label>
+                <input id="preferenceActivationUpdates" type="checkbox">
+                <span>Product and launch updates</span>
+              </label>
+              <label>
+                <input id="preferenceWatchlistAlerts" type="checkbox">
+                <span>Watchlist rent alerts</span>
+              </label>
+              <label>
+                <input id="preferenceSourceSyncAlerts" type="checkbox">
+                <span>Evidence refresh alerts</span>
+              </label>
+              <button type="submit">Save Preferences</button>
+              <p class="account-status" id="notificationPreferenceStatus" aria-live="polite"></p>
+            </form>
+          </article>
+
+          <article class="account-panel">
+            <div class="card-label">
+              <span>Saved reports</span>
+              <strong id="accountSavedCount">0 saved</strong>
+            </div>
+            <div class="backend-report-mock">
+              <strong id="backendReportSummary">Report store: not refreshed</strong>
+              <button type="button" id="syncBackendReportsButton">Refresh Reports</button>
+              <p class="account-status" id="backendReportStatus" aria-live="polite"></p>
+            </div>
+            <div class="saved-report-filters" aria-label="Saved report filters">
+              <input id="savedReportSearch" type="search" placeholder="Filter by area or report">
+              <select id="savedReportTrustFilter" aria-label="Filter by trust level">
+                <option value="all">All trust</option>
+                <option value="production">Production</option>
+                <option value="pilot">Pilot/direct</option>
+                <option value="comparable">Comparable</option>
+              </select>
+              <select id="savedReportGapFilter" aria-label="Filter by rent gap">
+                <option value="all">All gaps</option>
+                <option value="high">High gap 20%+</option>
+                <option value="watch">Watch 10%+</option>
+              </select>
+            </div>
+            <div class="saved-reports" id="accountSavedReports">
+              <p class="empty-state-note">No saved reports yet. Save any public result or workspace brief to start your library.</p>
+            </div>
+          </article>
+        </div>
+
+        <section class="member-detail-grid" aria-label="Saved report detail and watchlist">
+          <article class="account-panel report-detail-panel">
+            <div class="card-label">
+              <span>Report Detail</span>
+              <strong id="reportDetailTitle">Select a saved report</strong>
+            </div>
+            <p id="reportDetailDecision">Saved report details will appear here after the first report is selected.</p>
+            <div class="report-pulse-summary" id="reportPulseSummary" aria-label="Saved Pulse summary">
+              <img src="../../pulse-shared-transparent.png" alt="" aria-hidden="true">
+              <div>
+                <span id="reportPulseLabel">Pulse Summary</span>
+                <strong id="reportPulseTitle">Your first saved report will turn this into a reusable rent brief.</strong>
+                <p id="reportPulseCopy">Save one report from Workspace or public search to get a ready-made decision guide, warning, and next step.</p>
+                <small id="reportPulseNext">Best first move: save a result that you want to revisit or compare later.</small>
+              </div>
+            </div>
+            <dl class="report-detail-metrics">
+              <div>
+                <dt>Official median</dt>
+                <dd id="reportOfficialMetric">-</dd>
+              </div>
+              <div>
+                <dt>Current asking</dt>
+                <dd id="reportAskingMetric">-</dd>
+              </div>
+              <div>
+                <dt>Fair range</dt>
+                <dd id="reportFairRangeMetric">-</dd>
+              </div>
+              <div>
+                <dt>Gap</dt>
+                <dd id="reportGapMetric">-</dd>
+              </div>
+            </dl>
+            <div class="report-pack-grid" aria-label="Saved decision pack">
+              <article>
+                <span>Unit size</span>
+                <strong id="reportPackSizeMetric">-</strong>
+              </article>
+              <article>
+                <span>Target monthly</span>
+                <strong id="reportPackTargetMetric">-</strong>
+              </article>
+              <article>
+                <span>Offer position</span>
+                <strong id="reportPackOfferMetric">-</strong>
+              </article>
+              <article>
+                <span>Alert rule</span>
+                <strong id="reportPackAlertMetric">-</strong>
+              </article>
+            </div>
+            <div class="report-evidence-pack" aria-label="Saved report evidence pack">
+              <article>
+                <span>Trust badge</span>
+                <strong id="reportPackTrustMetric">-</strong>
+                <p id="reportPackTrustCopy">The saved report trust level will appear after you store your first report.</p>
+              </article>
+              <article>
+                <span>Benchmark basis</span>
+                <strong id="reportPackBenchmarkMetric">-</strong>
+                <p id="reportPackBenchmarkCopy">The benchmark basis will appear after you save a report from search or workspace.</p>
+              </article>
+              <article>
+                <span>Asking source</span>
+                <strong id="reportPackAskingMetric">-</strong>
+                <p id="reportPackAskingCopy">The asking-rent source status will appear after you save a report.</p>
+              </article>
+            </div>
+            <div class="report-detail-copy" data-role="evidence">
+              <strong>Source split</strong>
+              <p id="reportSourceCopy">Save a report to keep the benchmark basis, asking source read, and trust context together in one place.</p>
+            </div>
+            <div class="report-detail-copy" data-role="next">
+              <strong>Next action</strong>
+              <p id="reportActionCopy">Save a report from the RentIntel Workspace to view the negotiation note.</p>
+            </div>
+            <div class="report-detail-actions">
+              <a id="openReportToolbenchButton" href="../toolbench/">Open in Workspace</a>
+              <button type="button" id="watchReportAreaButton">Watch Area</button>
+              <button type="button" id="previewReportExportButton">Preview Brief</button>
+              <button type="button" id="downloadReportTxtButton">Download TXT</button>
+              <button type="button" id="downloadReportJsonButton">Download JSON</button>
+              <button type="button" id="deleteReportButton">Remove Report</button>
+            </div>
+            <p class="account-status" id="reportDetailStatus" aria-live="polite"></p>
+          </article>
+
+          <article class="account-panel watchlist-panel">
+            <div class="card-label">
+              <span>Watchlist Queue</span>
+              <strong id="watchlistCount">0 watching</strong>
+            </div>
+            <form id="watchlistForm" class="account-form">
+              <label for="watchlistArea">Add area alert</label>
+              <div>
+                <select id="watchlistArea"></select>
+                <button type="submit">Add Alert</button>
+              </div>
+              <p class="account-status" id="watchlistStatus" aria-live="polite"></p>
+            </form>
+            <div class="watchlist-items" id="watchlistItems">
+              <p class="empty-state-note">No watched areas yet. Add one area alert to start tracking movement and receive the next action here.</p>
+            </div>
+            <div class="watchlist-alert-preview" id="watchlistAlertPreview" data-state="empty">
+              <div class="card-label">
+                <span id="watchlistAlertLabel">Alert Preview</span>
+                <strong id="watchlistAlertTitle">No active watch alert</strong>
+              </div>
+              <p id="watchlistAlertCopy">Add an area alert to preview the decision message RentIntel would send.</p>
+              <dl class="watchlist-alert-metrics">
+                <div>
+                  <dt>Trigger</dt>
+                  <dd id="watchlistAlertTriggerMetric">-</dd>
+                </div>
+                <div>
+                  <dt>Target</dt>
+                  <dd id="watchlistAlertTargetMetric">-</dd>
+                </div>
+                <div>
+                  <dt>Cadence</dt>
+                  <dd id="watchlistAlertCadenceMetric">-</dd>
+                </div>
+              </dl>
+              <small id="watchlistAlertNext">Next alert action will show here.</small>
+            </div>
+            <div class="watchlist-alert-outbox" aria-label="Watchlist alert outbox preview">
+              <div class="card-label">
+                <span>Alert Outbox</span>
+                <strong id="watchlistOutboxCount">0 queued</strong>
+              </div>
+              <div class="watchlist-outbox-items" id="watchlistOutboxItems">
+                <p>No alert messages queued yet.</p>
+              </div>
+            </div>
+            <div class="watchlist-delivery-worker" aria-label="Watchlist delivery worker simulator">
+              <div class="card-label">
+                <span>Delivery Worker</span>
+                <strong id="deliveryWorkerRunCount">0 runs</strong>
+              </div>
+              <div class="watchlist-delivery-worker-actions">
+                <button type="button" id="runDeliveryWorkerButton">Run Delivery Worker</button>
+                <p class="account-status" id="deliveryWorkerStatus" aria-live="polite"></p>
+              </div>
+              <dl class="delivery-worker-metrics">
+                <div>
+                  <dt>Sent</dt>
+                  <dd id="deliveryWorkerSentMetric">0</dd>
+                </div>
+                <div>
+                  <dt>Failed</dt>
+                  <dd id="deliveryWorkerFailedMetric">0</dd>
+                </div>
+                <div>
+                  <dt>Skipped</dt>
+                  <dd id="deliveryWorkerSkippedMetric">0</dd>
+                </div>
+                <div>
+                  <dt>Dead letter</dt>
+                  <dd id="deliveryWorkerDeadLetterMetric">0</dd>
+                </div>
+                <div>
+                  <dt>Last run</dt>
+                  <dd id="deliveryWorkerLastRunAt">-</dd>
+                </div>
+              </dl>
+              <div class="delivery-worker-run-list" id="deliveryWorkerRunList">
+                <p>No delivery worker runs yet.</p>
+              </div>
+              <div class="delivery-message-panel" aria-label="Delivered alert messages">
+                <div class="card-label">
+                  <span>Delivered Messages</span>
+                  <strong id="deliveryMessageCount">0 messages</strong>
+                </div>
+                <div class="delivery-message-filters">
+                  <label for="deliveryMessageTransportFilter">Transport</label>
+                  <select id="deliveryMessageTransportFilter">
+                    <option value="all">All</option>
+                    <option value="file">File</option>
+                    <option value="smtp">SMTP</option>
+                  </select>
+                  <label for="deliveryMessageRunFilter">Run</label>
+                  <select id="deliveryMessageRunFilter">
+                    <option value="all">All runs</option>
+                  </select>
+                </div>
+                <div class="delivery-message-list" id="deliveryMessageList">
+                  <p>No delivered alert messages yet.</p>
+                </div>
+              </div>
+            </div>
+            <div class="watchlist-alert-history" aria-label="Watchlist alert delivery history">
+              <div class="card-label">
+                <span>Alert History</span>
+                <strong id="alertHistoryCount">0 events</strong>
+              </div>
+              <dl class="alert-history-metrics">
+                <div>
+                  <dt>Queued</dt>
+                  <dd id="alertHistoryQueuedMetric">0</dd>
+                </div>
+                <div>
+                  <dt>Sent</dt>
+                  <dd id="alertHistorySentMetric">0</dd>
+                </div>
+                <div>
+                  <dt>Skipped</dt>
+                  <dd id="alertHistorySkippedMetric">0</dd>
+                </div>
+                <div>
+                  <dt>Failed</dt>
+                  <dd id="alertHistoryFailedMetric">0</dd>
+                </div>
+              </dl>
+              <div class="alert-history-list" id="alertHistoryList">
+                <p>No alert history yet.</p>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="negotiation-note-panel" aria-label="Saved report negotiation note">
+          <div class="card-label">
+            <span>Negotiation Note</span>
+            <strong id="negotiationNoteLabel">Select report</strong>
+          </div>
+          <textarea id="negotiationNoteText" readonly>Save or select a report to generate the negotiation note.</textarea>
+          <div class="negotiation-note-actions">
+            <button type="button" id="copyNegotiationNoteButton">Copy Note</button>
+            <button type="button" id="downloadNegotiationNoteButton">Download TXT</button>
+            <p class="account-status" id="negotiationNoteStatus" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <div class="report-preview-modal" id="reportPreviewModal" hidden role="dialog" aria-modal="true" aria-labelledby="reportPreviewTitle">
+          <div class="report-preview-card">
+            <div class="card-label">
+              <span>Export Preview</span>
+            <strong id="reportPreviewTitle">Discussion brief preview</strong>
+            </div>
+            <pre id="reportPreviewText">Select a saved report to preview export contents.</pre>
+            <div class="report-preview-actions">
+              <button type="button" id="previewDownloadTxtButton">Download TXT</button>
+              <button type="button" id="previewDownloadJsonButton">Download JSON</button>
+              <button type="button" id="closeReportPreviewButton">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-preview-modal" id="deliveryMessageModal" hidden role="dialog" aria-modal="true" aria-labelledby="deliveryMessageModalTitle">
+          <div class="report-preview-card delivery-message-modal-card">
+            <div class="card-label">
+              <span>Delivery Inspector</span>
+              <strong id="deliveryMessageModalTitle">Delivered message</strong>
+            </div>
+            <div class="delivery-message-modal-meta" id="deliveryMessageModalMeta">
+              Select a delivered message to inspect delivery details.
+            </div>
+            <pre id="deliveryMessageModalText">No delivery message selected.</pre>
+            <div class="report-preview-actions">
+              <button type="button" id="copyDeliveryMessageButton">Copy Message</button>
+              <button type="button" id="downloadDeliveryMessageButton">Download TXT</button>
+              <button type="button" id="closeDeliveryMessageButton">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <details class="account-ops-drawer" id="accountOpsDrawer">
+          <summary>
+            <span>Operations drawer</span>
+            <strong>Data source, coverage, admin, and backend handoff tools</strong>
+          </summary>
+
+        <section class="source-status-panel" aria-label="RentIntel data source status">
+          <div class="card-label">
+            <span>Data Source Status</span>
+            <strong id="sourceStatusSummary">Prototype data contract</strong>
+          </div>
+          <div class="source-status-grid" id="sourceStatusGrid">
+            <p>Loading source status...</p>
+          </div>
+          <div class="account-source-qa" id="accountSourceQa" data-ready="false">
+            <div class="card-label">
+              <span>Asking Feed QA</span>
+              <strong id="accountSourceQaTitle">Manual pilot feed</strong>
+            </div>
+            <div class="account-source-qa-grid">
+              <article>
+                <span>Feed records</span>
+                <strong id="accountSourceQaRecords">0</strong>
+              </article>
+              <article>
+                <span>Asking checks</span>
+                <strong id="accountSourceQaChecks">0</strong>
+              </article>
+              <article>
+                <span>Latest capture</span>
+                <strong id="accountSourceQaCaptured">Not connected</strong>
+              </article>
+              <article>
+                <span>Production</span>
+                <strong id="accountSourceQaProduction">Not ready</strong>
+              </article>
+            </div>
+            <p id="accountSourceQaNext">Connect a production asking-rent source and QA log before treating the feed as production-ready.</p>
+            <div class="account-source-gate" id="accountSourceGate" data-state="blocked">
+              <div>
+                <span>Production Readiness Gate</span>
+                <strong id="accountSourceGateSummary">Blocked until QA passes</strong>
+              </div>
+              <ul id="accountSourceGateList">
+                <li>Feed connection, row checks, variance review, freshness, and production source contract will show here.</li>
+              </ul>
+            </div>
+            <div class="account-freshness-policy" id="accountFreshnessPolicy">
+              <div class="card-label">
+                <span>Freshness SLA Policy</span>
+                <strong id="freshnessPolicySummary">Fresh <=7 days | Watch 8-14 days | Stale >14 days</strong>
+              </div>
+              <form class="freshness-policy-form" id="freshnessPolicyForm">
+                <label for="freshnessFreshDays">Fresh max days</label>
+                <input id="freshnessFreshDays" type="number" min="1" max="60" step="1" value="7">
+                <label for="freshnessWatchDays">Watch max days</label>
+                <input id="freshnessWatchDays" type="number" min="2" max="90" step="1" value="14">
+                <button type="submit" id="saveFreshnessPolicyButton">Save SLA</button>
+              </form>
+              <p class="account-status" id="freshnessPolicyStatus" aria-live="polite"></p>
+            </div>
+            <div class="account-production-evidence" id="accountProductionEvidence" data-ready="false">
+              <div class="card-label">
+                <span>Production Evidence</span>
+                <strong id="productionEvidenceSummary">No production source attached</strong>
+              </div>
+              <div class="production-evidence-form">
+                <select id="productionSourceType">
+                  <option value="Licensed listing feed">Licensed listing feed</option>
+                  <option value="Verified agent input">Verified agent input</option>
+                  <option value="Tenant input workflow">Tenant input workflow</option>
+                  <option value="Controlled manual capture">Controlled manual capture</option>
+                </select>
+                <input id="productionSourceName" type="text" placeholder="Production source name">
+                <button type="button" id="attachProductionSourceButton">Attach Source</button>
+                <button type="button" id="recordProductionQaLogButton">Record QA Log</button>
+                <button type="button" id="recordSourceOwnerReviewButton">Owner Review</button>
+                <button type="button" id="clearProductionEvidenceButton">Clear</button>
+              </div>
+              <p id="productionEvidenceStatus">Attach production source evidence, QA log, and source-owner review to clear the final pilot blocker.</p>
+            </div>
+            <div class="account-ops-review" id="accountOpsReview" data-state="draft">
+              <div class="card-label">
+                <span>Ops Review</span>
+                <strong id="opsReviewStage">Draft</strong>
+              </div>
+              <p id="opsReviewSummary">Production evidence has not been attached yet.</p>
+              <div class="ops-review-metrics">
+                <article>
+                  <span>Evidence</span>
+                  <strong id="opsReviewEvidenceMetric">0/3</strong>
+                </article>
+                <article>
+                  <span>QA Gate</span>
+                  <strong id="opsReviewGateMetric">0/5</strong>
+                </article>
+                <article>
+                  <span>Decision</span>
+                  <strong id="opsReviewDecisionMetric">Hold</strong>
+                </article>
+              </div>
+              <div class="ops-review-action">
+                <strong>Next operator action</strong>
+                <span id="opsReviewAction">Attach source evidence before review.</span>
+              </div>
+              <ul id="opsReviewBlockers">
+                <li>Production blockers will show here.</li>
+              </ul>
+            </div>
+            <div class="account-release-log" id="accountReleaseLog" data-state="blocked">
+              <div class="card-label">
+                <span>Release Log</span>
+                <strong id="releaseLogStatus">Not released</strong>
+              </div>
+              <p id="releaseLogSummary">Release is blocked until Ops Review reaches Ready for Controlled Release.</p>
+              <div class="release-log-metrics">
+                <article>
+                  <span>Timestamp</span>
+                  <strong id="releaseLogTimestampMetric">Not set</strong>
+                </article>
+                <article>
+                  <span>Released by</span>
+                  <strong id="releaseLogByMetric">Not assigned</strong>
+                </article>
+                <article>
+                  <span>Rollback</span>
+                  <strong id="releaseLogRollbackMetric">None</strong>
+                </article>
+              </div>
+              <div class="release-log-controls">
+                <textarea id="releaseLogNote" rows="2" placeholder="Release note or rollback reason"></textarea>
+                <button type="button" id="queueProductionReleaseButton">Queue Release</button>
+                <button type="button" id="markProductionReleasedButton">Mark Released</button>
+                <button type="button" id="rollbackProductionReleaseButton">Roll Back</button>
+              </div>
+              <p id="releaseLogMessage">Complete Ops Review before release.</p>
+            </div>
+            <div class="account-source-exceptions" id="accountSourceExceptions" data-state="open">
+              <div class="card-label">
+                <span>Exception Alerts</span>
+                <strong id="sourceExceptionSummary">0 open</strong>
+              </div>
+              <div class="source-exception-metrics">
+                <article>
+                  <span>Critical</span>
+                  <strong id="sourceExceptionCriticalMetric">0</strong>
+                </article>
+                <article>
+                  <span>Watch</span>
+                  <strong id="sourceExceptionWatchMetric">0</strong>
+                </article>
+                <article>
+                  <span>Status</span>
+                  <strong id="sourceExceptionStatusMetric">Clear</strong>
+                </article>
+              </div>
+              <div class="source-exception-list" id="sourceExceptionList">
+                <p>No source exceptions detected.</p>
+              </div>
+            </div>
+            <div class="account-source-admin-queue" id="accountSourceAdminQueue" data-state="open">
+              <div class="card-label">
+                <span>Source Admin Queue</span>
+                <strong id="sourceAdminQueueSummary">0 items</strong>
+              </div>
+              <div class="source-admin-queue-list" id="sourceAdminQueueList">
+                <p>No source admin items yet.</p>
+              </div>
+            </div>
+            <div class="account-source-history" id="accountSourceHistory">
+              <div class="card-label">
+                <span>Source History</span>
+                <strong id="sourceHistorySummary">0 events</strong>
+              </div>
+              <div class="source-history-metrics" aria-label="Source history summary">
+                <article>
+                  <span>Current stage</span>
+                  <strong id="sourceHistoryStageMetric">Not started</strong>
+                </article>
+                <article>
+                  <span>QA state</span>
+                  <strong id="sourceHistoryQaMetric">Pending</strong>
+                </article>
+                <article>
+                  <span>Release state</span>
+                  <strong id="sourceHistoryReleaseMetric">Not released</strong>
+                </article>
+                <article>
+                  <span>Next control</span>
+                  <strong id="sourceHistoryNextMetric">Attach source</strong>
+                </article>
+              </div>
+              <ol class="source-history-list" id="sourceHistoryList">
+                <li>Source QA, review, release, and rollback events will show here.</li>
+              </ol>
+            </div>
+            <div class="account-source-handoff" id="accountSourceHandoff">
+              <div class="card-label">
+                <span>Production Handoff</span>
+                <strong id="accountSourceHandoffSummary">Action checklist pending</strong>
+              </div>
+              <ol id="accountSourceHandoffList">
+                <li>Readiness blockers will become production handoff tasks here.</li>
+              </ol>
+            </div>
+            <div class="account-source-qa-list" id="accountSourceQaList">
+              <p>No asking feed QA rows loaded.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="asking-source-panel" aria-label="Asking rent source intake">
+          <div class="card-label">
+            <span>Asking Rent Source</span>
+            <strong id="askingSourceCount">0 candidates</strong>
+          </div>
+          <form id="askingSourceForm" class="account-form">
+            <label for="askingSourceType">Source type</label>
+            <div>
+              <select id="askingSourceType">
+                <option value="Listing feed">Listing feed</option>
+                <option value="Verified agent input">Verified agent input</option>
+                <option value="Tenant-submitted asking rent">Tenant-submitted asking rent</option>
+                <option value="Manual listing capture">Manual listing capture</option>
+                <option value="Partner data source">Partner data source</option>
+              </select>
+              <input id="askingSourceName" type="text" placeholder="Source name or note" required>
+              <button type="submit">Add Candidate</button>
+            </div>
+            <p class="account-status" id="askingSourceStatus" aria-live="polite"></p>
+          </form>
+          <div class="asking-source-list" id="askingSourceList">
+            <p>No asking-rent source candidates yet.</p>
+          </div>
+        </section>
+
+        <section class="coverage-request-panel" id="accountSourceCoverage" aria-label="Public search coverage request review">
+          <div class="card-label">
+            <span>Coverage Requests</span>
+            <strong id="coverageRequestSummary">0 pending</strong>
+          </div>
+          <div class="coverage-request-metrics">
+            <article>
+              <span>Pending</span>
+              <strong id="coveragePendingMetric">0</strong>
+            </article>
+            <article>
+              <span>Approved</span>
+              <strong id="coverageApprovedMetric">0</strong>
+            </article>
+            <article>
+              <span>Rejected</span>
+              <strong id="coverageRejectedMetric">0</strong>
+            </article>
+          </div>
+          <div class="coverage-filter-row" role="tablist" aria-label="Coverage request filters">
+            <button type="button" class="active" data-coverage-filter="all">All</button>
+            <button type="button" data-coverage-filter="pending">Pending</button>
+            <button type="button" data-coverage-filter="pilot">Pilot Verified</button>
+            <button type="button" data-coverage-filter="production">Production Ready</button>
+            <button type="button" data-coverage-filter="rejected">Rejected</button>
+          </div>
+          <div class="coverage-request-list" id="coverageRequestList">
+            <p>No public coverage requests yet.</p>
+          </div>
+          <p class="account-status" id="coverageRequestStatus" aria-live="polite"></p>
+        </section>
+
+        <section class="manual-review-panel" id="accountManualReview" aria-label="Manual review queue">
+          <div class="card-label">
+            <span>Manual Review Queue</span>
+            <strong id="manualReviewSummary">0 items</strong>
+          </div>
+          <div class="manual-review-list" id="manualReviewList">
+            <p>No manual-review searches yet.</p>
+          </div>
+        </section>
+
+        <section class="source-sync-panel" id="accountSourceSync" aria-label="Asking rent source sync pipeline">
+          <div class="card-label">
+            <span>Source Sync Pipeline</span>
+            <strong id="sourceSyncSummary">No pilot sync yet</strong>
+          </div>
+          <div class="source-sync-grid">
+            <article>
+              <span>Approved source</span>
+              <strong id="approvedSourceMetric">0</strong>
+            </article>
+            <article>
+              <span>Latest sync</span>
+              <strong id="latestSyncMetric">Not run</strong>
+            </article>
+            <article>
+              <span>Records checked</span>
+              <strong id="recordsCheckedMetric">0</strong>
+            </article>
+            <article>
+              <span>Coverage targets</span>
+              <strong id="coverageTargetMetric">0</strong>
+            </article>
+          </div>
+          <div class="source-sync-actions">
+            <button type="button" id="runSourceSyncButton">Run Pilot Sync</button>
+            <p class="account-status" id="sourceSyncStatus" aria-live="polite"></p>
+          </div>
+          <div class="source-sync-automation" id="sourceSyncAutomation">
+            <div class="card-label">
+              <span>Sync Automation Contract</span>
+              <strong id="sourceSyncAutomationSummary">Daily schedule pending</strong>
+            </div>
+            <div class="source-sync-automation-grid">
+              <article>
+                <span>Next run</span>
+                <strong id="sourceSyncAutomationNextRun">Not scheduled</strong>
+              </article>
+              <article>
+                <span>Last run</span>
+                <strong id="sourceSyncAutomationLastRun">Never</strong>
+              </article>
+              <article>
+                <span>Freshness state</span>
+                <strong id="sourceSyncAutomationFreshness">Unknown</strong>
+              </article>
+              <article>
+                <span>Breach events</span>
+                <strong id="sourceSyncAutomationBreaches">0</strong>
+              </article>
+            </div>
+            <form class="source-sync-automation-form" id="sourceSyncAutomationForm">
+              <label class="source-sync-automation-toggle" for="sourceSyncAutomationEnabled">
+                <input type="checkbox" id="sourceSyncAutomationEnabled" checked>
+                Enable schedule
+              </label>
+              <label for="sourceSyncAutomationCadence">Cadence</label>
+              <select id="sourceSyncAutomationCadence">
+                <option value="daily">Daily</option>
+                <option value="12h">Every 12 hours</option>
+              </select>
+              <label for="sourceSyncAutomationHour">SGT run hour</label>
+              <input id="sourceSyncAutomationHour" type="number" min="0" max="23" step="1" value="8">
+              <button type="submit" id="saveSourceSyncAutomationButton">Save Schedule</button>
+              <button type="button" id="runSourceSyncAutomationNowButton">Run Now</button>
+            </form>
+            <p class="account-status" id="sourceSyncAutomationStatus" aria-live="polite"></p>
+            <div class="source-sync-automation-log" id="sourceSyncAutomationLog">
+              <p>No automation events yet.</p>
+            </div>
+          </div>
+          <div class="coverage-target-list" id="coverageTargetList">
+            <p>No approved coverage targets yet.</p>
+          </div>
+          <div class="source-sync-log" id="sourceSyncLog">
+            <p>No source sync runs yet.</p>
+          </div>
+        </section>
+
+        <section class="activity-log-panel" aria-label="RentIntel activity log">
+          <div class="card-label">
+            <span>Activity Log</span>
+            <strong id="activityLogCount">0 events</strong>
+          </div>
+          <div class="activity-log-list" id="activityLogList">
+            <p>No member activity yet.</p>
+          </div>
+        </section>
+
+        <section class="admin-review-panel" aria-label="RentIntel pilot admin review queue">
+          <div class="card-label">
+            <span>Pilot Admin Queue</span>
+            <strong id="adminReviewSummary">0 pending</strong>
+          </div>
+          <div class="admin-review-metrics" aria-label="Admin review controls">
+            <article>
+              <span>Activation</span>
+              <strong id="adminReviewActivationMetric">0 pending</strong>
+              <em id="adminReviewActivationCopy">No member activation waiting.</em>
+            </article>
+            <article>
+              <span>Public badge</span>
+              <strong id="adminReviewBadgeMetric">Sample</strong>
+              <em id="adminReviewBadgeCopy">Public trust badge follows source state.</em>
+            </article>
+            <article>
+              <span>Source gate</span>
+              <strong id="adminReviewGateMetric">Draft</strong>
+              <em id="adminReviewGateCopy">Production evidence review not started.</em>
+            </article>
+            <article>
+              <span>Release</span>
+              <strong id="adminReviewReleaseMetric">Not released</strong>
+              <em id="adminReviewReleaseCopy">Controlled release is pending.</em>
+            </article>
+          </div>
+          <div class="admin-review-list" id="adminReviewList">
+            <p>No activation requests waiting for review.</p>
+          </div>
+          <p class="account-status" id="adminReviewStatus" aria-live="polite"></p>
+        </section>
+
+        <section class="delivery-admin-panel" id="accountDeliveryAdmin" aria-label="Alert delivery admin console">
+          <div class="card-label">
+            <span>Delivery Admin Console</span>
+            <strong id="deliveryAdminSummary">0 items</strong>
+          </div>
+          <div class="delivery-admin-metrics" aria-label="Delivery admin queue metrics">
+            <article>
+              <span>Failed</span>
+              <strong id="deliveryAdminFailedMetric">0</strong>
+              <em>Retry candidates</em>
+            </article>
+            <article>
+              <span>Dead letter</span>
+              <strong id="deliveryAdminDeadMetric">0</strong>
+              <em>Needs operator decision</em>
+            </article>
+            <article>
+              <span>Suppressed</span>
+              <strong id="deliveryAdminSuppressedMetric">0</strong>
+              <em>Intentionally not delivered</em>
+            </article>
+            <article>
+              <span>Acknowledged</span>
+              <strong id="deliveryAdminAcknowledgedMetric">0</strong>
+              <em>Manual follow-up logged</em>
+            </article>
+            <article>
+              <span>Audit events</span>
+              <strong id="deliveryAdminAuditMetric">0</strong>
+              <em>Admin action history</em>
+            </article>
+          </div>
+          <div class="delivery-admin-actions">
+            <button type="button" id="deliveryAdminRequeueFailedButton">Bulk Resend Failed</button>
+            <button type="button" id="deliveryAdminRequeueDeadButton">Bulk Resend Dead Letter</button>
+            <button type="button" id="deliveryAdminSuppressDeadButton">Bulk Suppress Dead Letter</button>
+            <button type="button" id="deliveryAdminAcknowledgeButton">Bulk Acknowledge Failed/Dead</button>
+          </div>
+          <div class="delivery-admin-list" id="deliveryAdminList">
+            <p>No failed or dead-letter alerts.</p>
+          </div>
+          <div class="delivery-admin-audit-list" id="deliveryAdminAuditList">
+            <p>No delivery admin actions yet.</p>
+          </div>
+          <p class="account-status" id="deliveryAdminStatus" aria-live="polite"></p>
+        </section>
+
+        <section class="member-registry-panel" aria-label="RentIntel member registry">
+          <div class="card-label">
+            <span>Member Registry</span>
+            <strong id="memberRegistrySummary">0 members</strong>
+          </div>
+          <div class="member-registry-list" id="memberRegistryList">
+            <p>No members loaded yet.</p>
+          </div>
+          <div class="member-role-audit-panel">
+            <div class="card-label">
+              <span>Role Audit Log</span>
+              <strong id="memberRoleAuditSummary">0 role events</strong>
+            </div>
+            <div class="member-role-audit-list" id="memberRoleAuditList">
+              <p>No role changes logged yet.</p>
+            </div>
+          </div>
+          <p class="account-status" id="memberRegistryStatus" aria-live="polite"></p>
+        </section>
+
+        <section class="backend-handoff-panel" id="backendHandoffPanel" aria-label="RentIntel backend handoff status">
+          <div class="card-label">
+            <span>Backend Handoff</span>
+            <strong id="backendHandoffSummary">Prototype storage</strong>
+          </div>
+          <div class="backend-handoff-list" id="backendHandoffList">
+            <p>Loading backend handoff status...</p>
+          </div>
+          <div class="backend-table-map-panel">
+            <div class="card-label">
+              <span>Backend Table Map</span>
+              <strong id="backendTableMapSummary">0 tables mapped</strong>
+            </div>
+            <div class="backend-table-map-list" id="backendTableMapList">
+              <p>Loading backend table map...</p>
+            </div>
+          </div>
+          <div class="backend-api-map-panel">
+            <div class="card-label">
+              <span>Backend API Map</span>
+              <strong id="backendApiMapSummary">0 routes mapped</strong>
+            </div>
+            <div class="backend-api-map-list" id="backendApiMapList">
+              <p>Loading backend API map...</p>
+            </div>
+          </div>
+          <div class="backend-route-mock-panel">
+            <div class="card-label">
+              <span>Route Mock Pages</span>
+              <strong id="backendRouteMockSummary">0 mocks</strong>
+            </div>
+            <div class="backend-route-mock-list" id="backendRouteMockList">
+              <p>Loading backend route mocks...</p>
+            </div>
+          </div>
+          <div class="backend-implementation-panel">
+            <div class="card-label">
+              <span>Implementation Checklist</span>
+              <strong id="backendImplementationSummary">0 items</strong>
+            </div>
+            <div class="backend-implementation-list" id="backendImplementationList">
+              <p>Loading backend implementation checklist...</p>
+            </div>
+          </div>
+          <div class="backend-payload-panel">
+            <div class="card-label">
+              <span>Sync Payload</span>
+              <strong id="backendPayloadSummary">Not generated</strong>
+            </div>
+            <div class="payload-validation-grid" id="backendValidationGrid">
+              <p>Generate the payload to validate backend readiness.</p>
+            </div>
+            <textarea id="backendPayloadText" readonly>Generate the backend payload when the member state is ready to hand off.</textarea>
+          </div>
+          <div class="backend-sql-panel">
+            <div class="card-label">
+              <span>SQL Seed</span>
+              <strong id="backendSqlSummary">Not generated</strong>
+            </div>
+            <textarea id="backendSqlText" readonly>Generate SQL seed after the backend payload is ready.</textarea>
+          </div>
+          <div class="backend-package-panel">
+            <div class="card-label">
+              <span>Handoff Package v2</span>
+              <strong id="backendPackageSummary">Not generated</strong>
+            </div>
+            <textarea id="backendPackageText" readonly>Generate the v2 handoff package for backend implementation, source sync, and coverage workflow handoff.</textarea>
+          </div>
+          <div class="backend-handoff-actions">
+            <button type="button" id="backendPayloadButton">Generate Payload</button>
+            <button type="button" id="validateBackendPayloadButton">Validate Payload</button>
+            <button type="button" id="backendSqlButton">Generate SQL</button>
+            <button type="button" id="backendPackageButton">Generate Package v2</button>
+            <button type="button" id="copyBackendPayloadButton">Copy JSON</button>
+            <button type="button" id="downloadBackendPayloadButton">Download JSON</button>
+            <button type="button" id="copyBackendSqlButton">Copy SQL</button>
+            <button type="button" id="downloadBackendSqlButton">Download SQL</button>
+            <button type="button" id="copyBackendPackageButton">Copy Package</button>
+            <button type="button" id="downloadBackendPackageButton">Download Package</button>
+            <a href="../../data/sources/backend-schema.sql">Open SQL Schema</a>
+            <a href="../../data/sources/backend-api-contract.json">Open API Contract</a>
+            <a href="../../backend/routes/">Open Route Mocks</a>
+            <button type="button" id="backendHandoffButton">Mark Reviewed</button>
+            <p class="account-status" id="backendHandoffStatus" aria-live="polite"></p>
+          </div>
+        </section>
+        </details>
+
+        <article class="toolbench-panel" id="toolbenchPanel">
+          <div>
+            <p class="eyebrow">Workspace</p>
+            <h2 id="toolbenchTitle">Free tools Workspace</h2>
+            <p id="toolbenchCopy">
+              Saved reports, exports, alerts, and chart context are free to use from the RentIntel workspace.
+            </p>
+          </div>
+          <a id="toolbenchLink" href="../toolbench/">Open Workspace</a>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="verseintel">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <strong><span>Verse</span><span>Intel</span></strong>
+          <small>Signals Across Every Verse</small>
+          <p>RentIntel is a VerseIntel product.</p>
+        </div>
+        <nav aria-label="Footer links">
+          <a href="../../about.html">About</a>
+          <a href="../../privacy.html">Privacy</a>
+          <a href="../../contact.html">Contact</a>
+          <a href="../../disclaimer.html">Disclaimer</a>
+          <a href="../../user-manual.html">User Manual</a>
+        </nav>
+        <b>PULSE V26</b>
+        <p class="footer-note">
+          RentIntel saved tools are free during launch. Optional sign-in only helps link saved reports, watched areas, and alerts to your email.
+        </p>
+      </div>
+    </footer>
+
+    <script src="../../data/rentintel-members.js"></script>
+    <script src="../../data/rentintel-sample-data.js"></script>
+    <script src="../../data/sources/asking-rent-feed.js?v=20260509-asking-pilot"></script>
+    <script src="../../data/sources/source-status.js"></script>
+    <script src="../../source-trust.js?v=20260510-next5i"></script>
+    <script src="../../auth-client.js?v=20260510-authcutover"></script>
+    <script src="../../member-account.js?v=20260510-syncschedule"></script>
+  </body>
+</html>

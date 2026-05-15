@@ -1,0 +1,32 @@
+window.RENTINTEL_MEMBERS = {
+  "version": "prototype-2026-05-07",
+  "members": [
+    {
+      "email": "active@rent-intel.com",
+      "memberStatus": "Active member",
+      "subscriptionStatus": "Member plan: S$19/month",
+      "access": "active",
+      "role": "admin",
+      "promoCode": "",
+      "toolsEnabled": true
+    },
+    {
+      "email": "promo@rent-intel.com",
+      "memberStatus": "Promo user",
+      "subscriptionStatus": "Promo access active: S$0 pilot",
+      "access": "promo",
+      "role": "member",
+      "promoCode": "RENTINTEL-PILOT",
+      "toolsEnabled": true
+    },
+    {
+      "email": "waitlist@rent-intel.com",
+      "memberStatus": "Waitlist email",
+      "subscriptionStatus": "Waiting for member activation",
+      "access": "waitlist",
+      "role": "member",
+      "promoCode": "",
+      "toolsEnabled": false
+    }
+  ]
+};

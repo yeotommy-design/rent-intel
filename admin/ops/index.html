@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RentIntel Admin | Ops Dashboard</title>
+    <link rel="icon" href="../../pulse-shared-transparent.png">
+    <link rel="stylesheet" href="../../styles.css?v=20260513-adminops-actions">
+  </head>
+  <body>
+    <header class="site-header" aria-label="RentIntel admin operations dashboard">
+      <div class="product-header-card">
+        <a class="brand" href="../../index.html" aria-label="RentIntel home">
+          <img src="../../pulse-shared-transparent.png" alt="" aria-hidden="true">
+          <span class="brand-product">
+            <strong>RentIntel</strong>
+            <em>Admin Ops Dashboard</em>
+          </span>
+        </a>
+        <a class="members-login-button" href="../../members/account/?loggedIn=active#accountManualReview">
+          <small>Members</small>
+          <span>Account Console</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="admin-ops-page">
+      <section class="admin-ops-hero" aria-label="Operations dashboard summary">
+        <div>
+          <p>Ops Control</p>
+          <h1>Track freshness, coverage, delivery, and release readiness in one place.</h1>
+          <span>
+            This dashboard turns the admin ops report into a readable command surface for source health,
+            alert delivery, coverage queue movement, and backend handoff readiness.
+          </span>
+        </div>
+        <nav aria-label="Admin ops links">
+          <a href="../coverage/">Coverage Review</a>
+          <a href="../../members/account/#accountDeliveryAdmin">Delivery Admin</a>
+          <a href="../../api/admin/ops-report">Raw API</a>
+        </nav>
+      </section>
+
+      <section class="admin-ops-metrics" aria-label="Operations headline metrics">
+        <article>
+          <span>Members</span>
+          <strong id="adminOpsMembersMetric">0</strong>
+          <em id="adminOpsMembersCopy">Loading member access mix.</em>
+        </article>
+        <article>
+          <span>Coverage Queue</span>
+          <strong id="adminOpsCoverageMetric">0</strong>
+          <em id="adminOpsCoverageCopy">Loading review queue.</em>
+        </article>
+        <article>
+          <span>Delivery Health</span>
+          <strong id="adminOpsDeliveryMetric">0</strong>
+          <em id="adminOpsDeliveryCopy">Loading alert outcomes.</em>
+        </article>
+        <article>
+          <span>Source Freshness</span>
+          <strong id="adminOpsFreshnessMetric">Unknown</strong>
+          <em id="adminOpsFreshnessCopy">Loading sync schedule.</em>
+        </article>
+      </section>
+
+      <section class="admin-ops-toolbar" aria-label="Operations toolbar">
+        <div>
+          <label for="adminOpsFocusFilter">Focus</label>
+          <select id="adminOpsFocusFilter">
+            <option value="all">All signals</option>
+            <option value="watch">Watchlist</option>
+            <option value="delivery">Delivery</option>
+            <option value="coverage">Coverage</option>
+            <option value="handoff">Handoff</option>
+          </select>
+        </div>
+        <div>
+          <label for="adminOpsSearch">Search report</label>
+          <input id="adminOpsSearch" type="search" placeholder="Filter by source, status, request, or action">
+        </div>
+        <button type="button" id="adminOpsRefresh">Refresh Report</button>
+        <button type="button" id="adminOpsCopy">Copy Report JSON</button>
+      </section>
+
+      <section class="admin-ops-attention" aria-label="Operations attention queue">
+        <div class="admin-ops-panel-head">
+          <span>Needs Attention</span>
+          <strong id="adminOpsAttentionTitle">Loading operational warnings...</strong>
+        </div>
+        <div class="admin-ops-attention-list" id="adminOpsAttentionList">
+          <p>Loading operational warnings...</p>
+        </div>
+      </section>
+
+      <section class="admin-ops-board" aria-label="Operations board">
+        <div class="admin-ops-main">
+          <article class="admin-ops-panel">
+            <div class="admin-ops-panel-head">
+              <span>Source Ops</span>
+              <strong id="adminOpsSourceTitle">Loading source status...</strong>
+            </div>
+            <div class="admin-ops-inline-actions">
+              <button type="button" id="adminOpsRefreshFeed">Refresh Asking Feed</button>
+              <button type="button" id="adminOpsReloadReport">Reload Report</button>
+            </div>
+            <div class="admin-ops-signal-grid" id="adminOpsSourceSignals">
+              <p>Loading source metrics...</p>
+            </div>
+          </article>
+
+          <article class="admin-ops-panel">
+            <div class="admin-ops-panel-head">
+              <span>Recent Sync Runs</span>
+              <strong id="adminOpsSyncTitle">0 runs loaded</strong>
+            </div>
+            <div class="admin-ops-feed" id="adminOpsSyncFeed">
+              <p>Loading sync runs...</p>
+            </div>
+          </article>
+
+          <article class="admin-ops-panel">
+            <div class="admin-ops-panel-head">
+              <span>Coverage Queue</span>
+              <strong id="adminOpsCoverageTitle">0 requests loaded</strong>
+            </div>
+            <div class="admin-ops-feed" id="adminOpsCoverageFeed">
+              <p>Loading coverage queue...</p>
+            </div>
+          </article>
+
+          <article class="admin-ops-panel">
+            <div class="admin-ops-panel-head">
+              <span>Delivery Health</span>
+              <strong id="adminOpsDeliveryTitle">0 delivery signals loaded</strong>
+            </div>
+            <div class="admin-ops-feed" id="adminOpsDeliveryFeed">
+              <p>Loading delivery health...</p>
+            </div>
+          </article>
+        </div>
+
+        <aside class="admin-ops-side" aria-label="Operations side panel">
+          <article class="admin-ops-panel">
+            <div class="admin-ops-panel-head">
+              <span>Handoff Readiness</span>
+              <strong id="adminOpsHandoffTitle">Loading handoff audit...</strong>
+            </div>
+            <div class="admin-ops-inline-actions">
+              <button type="button" id="adminOpsEvidenceReady">Mark Evidence Ready</button>
+              <button type="button" id="adminOpsQueueRelease">Queue Release</button>
+              <button type="button" id="adminOpsApproveHandoff">Approve Handoff</button>
+            </div>
+            <div class="admin-ops-detail-list" id="adminOpsHandoffSummary">
+              <p>Loading handoff summary...</p>
+            </div>
+          </article>
+
+          <article class="admin-ops-panel">
+            <div class="admin-ops-panel-head">
+              <span>Review Actions</span>
+              <strong id="adminOpsReviewActionTitle">Loading review counts...</strong>
+            </div>
+            <div class="admin-ops-tag-list" id="adminOpsReviewActions">
+              <p>Loading review actions...</p>
+            </div>
+          </article>
+
+          <article class="admin-ops-panel">
+            <div class="admin-ops-panel-head">
+              <span>Report Payload</span>
+              <strong id="adminOpsPayloadTitle">Debug snapshot</strong>
+            </div>
+            <pre id="adminOpsPayload">{}</pre>
+          </article>
+        </aside>
+      </section>
+
+      <p class="admin-ops-status" id="adminOpsStatus" aria-live="polite"></p>
+    </main>
+
+    <script src="../../auth-client.js?v=20260513-adminops-actions"></script>
+    <script src="../../admin-ops.js?v=20260513-adminops-actions"></script>
+  </body>
+</html>

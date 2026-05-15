@@ -1,0 +1,57 @@
+window.RENTINTEL_SOURCE_STATUS = {
+  "version": "source-status-2026-05-09",
+  "updatedAt": "2026-05-09",
+  "environment": "prototype",
+  "status": [
+    {
+      "sourceId": "ura-commercial-retail-rental-analysis",
+      "label": "URA benchmark",
+      "layer": "Official transaction benchmark",
+      "currentState": "contract-ready",
+      "prototypeState": "sample data only",
+      "productionNextStep": "Add authorised export or data-service ingestion for retail rental benchmark records.",
+      "refreshTarget": "Quarterly",
+      "visibleTo": "Free and members"
+    },
+    {
+      "sourceId": "hdb-commercial-data",
+      "label": "HDB commercial context",
+      "layer": "Commercial classification context",
+      "currentState": "contract-ready",
+      "prototypeState": "sample classification only",
+      "productionNextStep": "Map HDB commercial datasets into property type and comparable context fields.",
+      "refreshTarget": "Monthly or when updated",
+      "visibleTo": "Members"
+    },
+    {
+      "sourceId": "onemap-geospatial",
+      "label": "OneMap",
+      "layer": "Address and geospatial enrichment",
+      "currentState": "contract-ready",
+      "prototypeState": "static map coordinates only",
+      "productionNextStep": "Connect postal, address, and planning-area lookup to search records.",
+      "refreshTarget": "On search with nightly cache",
+      "visibleTo": "Free and members"
+    },
+    {
+      "sourceId": "asking-rent-feed",
+      "label": "Asking rent feed",
+      "layer": "Current market asking signal",
+      "currentState": "pilot-manual-feed-connected",
+      "prototypeState": "verified manual pilot feed connected from data/sources/asking-rent-feed.json",
+      "productionNextStep": "Replace pilot manual feed with licensed listing feed, agent input, tenant input, or verified capture workflow plus daily ingestion QA.",
+      "refreshTarget": "Daily",
+      "visibleTo": "Members"
+    },
+    {
+      "sourceId": "rentintel-member-data",
+      "label": "Member data",
+      "layer": "Private application data",
+      "currentState": "prototype-local-storage",
+      "prototypeState": "browser storage only",
+      "productionNextStep": "Move members, login codes, sessions, saved reports, and watchlists into a backend database.",
+      "refreshTarget": "Real time",
+      "visibleTo": "Members only"
+    }
+  ]
+};

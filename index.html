@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RentIntel | Singapore Retail Rent Check & Area Intelligence</title>
+    <meta
+      name="description"
+      content="Check Singapore retail asking rent against benchmark signals, area context, and trust cues. RentIntel helps tenants, landlords, and operators review whether a rent looks fair."
+    >
+    <link rel="icon" href="./pulse-shared-transparent.png">
+    <link rel="stylesheet" href="./styles.css?v=20260514-freepublic">
+  </head>
+  <body>
+    <header class="site-header" aria-label="RentIntel navigation">
+      <div class="product-header-card">
+        <a class="brand" href="./index.html" aria-label="RentIntel home">
+          <img src="./pulse-shared-transparent.png" alt="" aria-hidden="true">
+          <span class="brand-product">
+            <strong>RentIntel</strong>
+            <em>Singapore Rent Intelligence</em>
+          </span>
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <section class="insight-strip" aria-label="Daily RentIntel insight">
+        <span class="banner-label"><b>Daily</b><b>RentIntel</b></span>
+        <div class="ticker" aria-live="polite">
+          <p id="dailyInsight">Loading today's rent signal...</p>
+        </div>
+        <a id="dailyInsightLink" href="#search">View signal</a>
+      </section>
+
+      <section class="hero" aria-label="RentIntel search">
+        <div class="hero-copy">
+          <p class="eyebrow">Singapore retail rent check</p>
+          <h1>Check whether a Singapore retail asking rent looks fair.</h1>
+          <p class="hero-lede">
+            Search an area, compare asking rent against benchmark signals, and see whether the rent looks fair, high, or needs deeper review before you commit.
+          </p>
+
+          <form class="search-panel" id="rentSearch" role="search">
+            <label for="searchInput">Search retail rent by area</label>
+            <div class="search-row">
+              <input
+                id="searchInput"
+                name="search"
+                type="search"
+                enterkeyhint="search"
+                autocomplete="off"
+                placeholder="Try Bedok HDB retail, Ang Mo Kio shop, Serangoon HDB retail"
+              >
+              <button type="submit">Search Rent</button>
+            </div>
+            <div class="quick-picks" aria-label="Example searches">
+              <button type="button" data-query="Chinatown shophouse">Chinatown shophouse</button>
+              <button type="button" data-query="Orchard mall">Orchard mall</button>
+              <button type="button" data-query="Ang Mo Kio shop">Ang Mo Kio shop</button>
+              <button type="button" data-query="Serangoon HDB retail">Serangoon HDB retail</button>
+              <button type="button" data-query="Tampines HDB retail">Tampines HDB retail</button>
+            </div>
+            <div class="search-suggestions" id="searchSuggestions" aria-label="Recognized rent searches"></div>
+            <p class="search-coverage-note">Search a Singapore retail area. Direct records load first; unusual searches go to coverage review.</p>
+            <div class="coverage-rules-panel" aria-label="Coverage eligibility rules">
+              <article>
+                <span>Supported</span>
+                <strong>HDB retail towns, malls, shophouses, neighbourhood shops</strong>
+              </article>
+              <article>
+                <span>Manual review</span>
+                <strong>Industrial, office, warehouse, unusual commercial use</strong>
+              </article>
+              <article>
+                <span>Not covered</span>
+                <strong>Offshore islands, military/special-use sites, conflicting area/type pairs</strong>
+              </article>
+            </div>
+          </form>
+          <article class="hero-answer-card" aria-label="Current RentIntel answer">
+            <div>
+              <span id="heroAnswerLabel">Current rent check</span>
+              <strong id="heroAnswerTitle">Chinatown shophouse retail</strong>
+              <p id="heroAnswerCopy">Likely high. Negotiate below S$14.60 psf unless frontage is unusually strong.</p>
+            </div>
+            <aside class="pulse-callout" data-pulse-tone="read" role="button" tabindex="0" aria-expanded="false" aria-label="Pulse Read">
+              <img class="pulse-guide-icon" src="./pulse-shared-transparent.png" alt="" aria-hidden="true">
+              <div>
+                <span id="pulseHeroLabel">Pulse Read</span>
+                <strong id="pulseHeroTitle">Check the evidence before accepting.</strong>
+                <p id="pulseHeroCopy">Asking rent looks high. Use the fair range before deciding.</p>
+              </div>
+            </aside>
+            <a id="heroToolbenchLink" href="#market-context">View Chart Context</a>
+          </article>
+          <div class="public-scope-strip" aria-label="Free public access scope">
+            <span>Free public access</span>
+            <strong>Search, compare, and review trust context freely on the public site.</strong>
+          </div>
+          <nav class="rentintel-path-strip" aria-label="RentIntel page path">
+            <div class="rentintel-path-copy">
+              <span>RentIntel Path</span>
+              <strong>Move between public search, workspace, and saved tools without leaving the main flow.</strong>
+            </div>
+            <div class="rentintel-path-links">
+              <a href="./index.html#search" aria-current="page">Public Search</a>
+              <a href="./members/toolbench/index.html">Workspace</a>
+              <a href="./members/account/index.html">Saved Tools</a>
+            </div>
+          </nav>
+        </div>
+
+        <aside class="rent-pressure-panel" aria-label="Comparable rent pressure">
+          <div class="pressure-heading">
+            <div>
+              <span>Comparable rent pressure</span>
+              <strong id="pressurePanelTitle">Current search</strong>
+            </div>
+            <small id="dataFreshness">Updated weekly</small>
+          </div>
+
+          <div class="pressure-focus" id="pressureFocus" data-status="high">
+            <div class="pressure-focus-top">
+              <span id="pressureSignal">High</span>
+              <strong id="pressureGap">+20%</strong>
+            </div>
+            <div class="pressure-metric-grid">
+              <article>
+                <span>Current asking</span>
+                <strong id="pressureAsking">S$15.40 psf</strong>
+              </article>
+              <article>
+                <span>Fair range</span>
+                <strong id="pressureFairRange">S$11.80-S$14.60 psf</strong>
+              </article>
+            </div>
+            <div class="fair-range-gauge" id="pressureGauge">
+              <div class="gauge-track">
+                <span class="gauge-fair-band" id="pressureFairBand"></span>
+                <i class="gauge-marker benchmark" id="pressureBenchmarkMarker"><b>Benchmark</b></i>
+                <i class="gauge-marker asking" id="pressureAskingMarker"><b>Asking</b></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="pressure-board">
+            <div class="pressure-board-title">
+              <span>Comparable areas</span>
+              <strong id="pressureBoardSummary">Ranked by asking premium</strong>
+            </div>
+            <div class="pressure-list" id="pressureList"></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="results-shell" id="search" aria-label="Search results">
+        <div class="no-match" id="noMatch" hidden>
+          <strong>No exact match yet.</strong>
+          <span>Try a town, mall, or shophouse. Unsupported searches show alternatives or manual review.</span>
+          <ol class="coverage-flow" aria-label="Coverage request steps">
+            <li><b>1</b><span>Requested</span></li>
+            <li><b>2</b><span>Reviewing</span></li>
+            <li><b>3</b><span>Pilot verified</span></li>
+          </ol>
+          <div class="no-match-alternatives" id="noMatchAlternatives" aria-label="Suggested valid searches"></div>
+          <form id="coverageRequestForm" class="coverage-request-form">
+            <label for="coverageRequestEmail">Request this area</label>
+            <div class="coverage-request-detail-grid">
+              <input id="coverageRequestArea" type="text" placeholder="Area or street">
+              <select id="coverageRequestPropertyType" aria-label="Property type">
+                <option value="">Property type</option>
+                <option value="HDB retail">HDB retail</option>
+                <option value="Shophouse retail">Shophouse retail</option>
+                <option value="Mall retail">Mall retail</option>
+                <option value="Neighbourhood shop">Neighbourhood shop</option>
+              </select>
+              <select id="coverageRequestUseCase" aria-label="Use case">
+                <option value="">Use case</option>
+                <option value="Opening cafe">Opening cafe</option>
+                <option value="Renewal negotiation">Renewal negotiation</option>
+                <option value="Mall comparison">Mall comparison</option>
+                <option value="Tenant representation">Tenant representation</option>
+              </select>
+              <select id="coverageRequestUrgency" aria-label="Urgency">
+                <option value="normal">Normal</option>
+                <option value="soon">Need soon</option>
+                <option value="urgent">Urgent lease decision</option>
+              </select>
+            </div>
+            <div>
+              <input id="coverageRequestEmail" type="email" placeholder="Email for update, optional">
+              <button type="submit">Add to Coverage Queue</button>
+            </div>
+            <p id="coverageRequestStatus" class="member-action-status" aria-live="polite"></p>
+          </form>
+        </div>
+        <div class="public-coverage-queue" id="publicCoverageQueue" hidden>
+          <div class="card-label">
+            <span>Coverage Queue</span>
+            <strong id="publicCoverageSummary">0 requests</strong>
+          </div>
+          <div class="public-coverage-actions">
+            <button type="button" id="copyCoverageQueueButton">Copy Queue JSON</button>
+            <button type="button" id="downloadCoverageQueueButton">Download Queue JSON</button>
+            <p id="publicCoverageExportStatus" class="member-action-status" aria-live="polite"></p>
+          </div>
+          <div class="public-coverage-list" id="publicCoverageList">
+            <p>No public coverage requests yet.</p>
+          </div>
+        </div>
+        <div class="search-result-state" id="searchResultState" data-state="direct" aria-live="polite">
+          <div>
+            <span id="searchResultType">Exact match</span>
+            <strong id="searchResultLabel">Direct RentIntel record loaded</strong>
+          </div>
+          <p id="searchResultCopy">Official benchmark and asking signal are available for this area.</p>
+        </div>
+        <div class="public-trust-guide" id="publicTrustGuide" data-active="pilot" aria-label="Public trust badge guide">
+          <div>
+            <span>Public trust</span>
+            <strong id="publicTrustGuideSummary">Pilot Verified: Manual asking checks are connected.</strong>
+          </div>
+          <div class="public-trust-guide-grid">
+            <article data-level="sample">
+              <span>Sample</span>
+              <p>Prototype or comparable only.</p>
+            </article>
+            <article data-level="pilot">
+              <span>Pilot verified</span>
+              <p>Manual checks connected.</p>
+            </article>
+            <article data-level="production">
+              <span>Production verified</span>
+              <p>Source and QA controls connected.</p>
+            </article>
+          </div>
+        </div>
+        <div class="section-heading">
+          <p>Public Rent Answer</p>
+          <h2 id="resultTitle">Chinatown shophouse retail</h2>
+        </div>
+
+        <div class="result-grid">
+          <article class="result-card decision-card">
+            <div class="card-label">
+              <span>Rent signal</span>
+              <strong id="confidenceBadge">Medium confidence</strong>
+            </div>
+            <div class="confidence-strip" id="confidenceStrip" data-confidence-tone="medium">
+              <span id="confidenceSource">Direct record</span>
+              <span id="confidenceEvidence">Transaction benchmark + asking signal</span>
+              <span id="confidenceUse">Review evidence</span>
+            </div>
+            <h3 id="rentDecision">Asking rent is above official benchmark.</h3>
+            <div class="mobile-summary" id="mobileSummary">Likely high. Negotiate below S$14.60 psf unless frontage is unusually strong.</div>
+            <aside class="pulse-callout" data-pulse-tone="warning" role="button" tabindex="0" aria-expanded="false" aria-label="Pulse Warning">
+              <img class="pulse-guide-icon" src="./pulse-shared-transparent.png" alt="" aria-hidden="true">
+              <div>
+                <span id="pulseDecisionLabel">Pulse Warning</span>
+                <strong id="pulseDecisionTitle">Do not accept the ask without evidence.</strong>
+                <p id="pulseDecisionCopy">The gap is above the benchmark range. Check source confidence and unit-specific premium.</p>
+              </div>
+            </aside>
+            <p id="rentReason">
+              Current asking rent is estimated around 20% above the latest transaction-backed benchmark.
+              Negotiate unless the unit has unusually strong frontage, F&B approval, or fit-out value.
+            </p>
+            <div class="answer-evidence-row">
+              <div class="public-trust-badge" id="publicTrustBadge" data-level="pilot">
+                <span>Public trust</span>
+                <strong id="publicTrustTitle">Pilot Verified</strong>
+                <em id="publicTrustCopy">Manual asking checks are connected. Next: treat as a working signal until production release.</em>
+              </div>
+              <div class="trust-badge" id="trustBadge" data-trust="direct">
+                <strong id="trustBadgeTitle">Direct benchmark</strong>
+                <span id="trustBadgeCopy">Official and asking layers are available for comparison.</span>
+              </div>
+            </div>
+            <div class="signal-depth">
+              <strong>Why this signal</strong>
+              <ul id="signalDrivers">
+                <li>Tourism and F&B demand are supporting asking rents.</li>
+                <li>Shophouse supply remains limited in the selected area.</li>
+                <li>Frontage and permitted-use premiums can explain part of the gap.</li>
+              </ul>
+            </div>
+            <dl class="metrics">
+              <div>
+                <dt>Official median</dt>
+                <dd id="officialMetric">S$12.80 psf</dd>
+              </div>
+              <div>
+                <dt>Current asking</dt>
+                <dd id="askingMetric">S$15.40 psf</dd>
+              </div>
+              <div>
+                <dt>Gap</dt>
+                <dd id="gapMetric">+20%</dd>
+              </div>
+              <div>
+                <dt>Fair range</dt>
+                <dd id="fairRangeMetric">S$11.80-S$14.60 psf</dd>
+              </div>
+            </dl>
+          </article>
+
+          <article class="result-card action-card">
+            <div class="card-label">
+              <span>Next action</span>
+              <strong id="actionLabel">Negotiate</strong>
+            </div>
+            <p class="action-copy" id="actionCopy">
+              Negotiate below S$14.60 psf unless the unit has premium frontage, F&B approval, or unusually strong fit-out value.
+            </p>
+            <aside class="pulse-callout pulse-callout-compact" data-pulse-tone="next" role="button" tabindex="0" aria-expanded="false" aria-label="Pulse Next Step">
+              <img class="pulse-guide-icon" src="./pulse-shared-transparent.png" alt="" aria-hidden="true">
+              <div>
+                <span id="pulseNextLabel">Pulse Next Step</span>
+                <strong id="pulseNextTitle">Set a defendable upper line.</strong>
+                <p id="pulseNextCopy">Use the fair range as the negotiation boundary before talking to the landlord.</p>
+              </div>
+            </aside>
+            <ul class="action-checklist" id="actionChecklist">
+              <li>Check frontage quality before accepting the ask.</li>
+              <li>Confirm permitted use and F&B approval.</li>
+              <li>Separate fit-out value from base rent.</li>
+            </ul>
+          </article>
+
+          <article class="result-card" id="premium">
+            <div class="card-label">
+              <span>Source context</span>
+              <strong>Benchmark and asking source view</strong>
+            </div>
+            <p id="sourceSummary">
+              Official benchmark: URA-linked retail rent trend. Asking estimate: recent shophouse listing signals.
+            </p>
+            <div class="source-qa-panel" id="sourceQaPanel" data-ready="false">
+              <div>
+                <span>Status</span>
+                <strong id="sourceQaStatus">Sample/manual</strong>
+              </div>
+              <div>
+                <span>Asking checks</span>
+                <strong id="sourceQaChecks">0</strong>
+              </div>
+              <div>
+                <span>Captured</span>
+                <strong id="sourceQaCaptured">Not connected</strong>
+              </div>
+              <div>
+                <span>Production</span>
+                <strong id="sourceQaProduction">Not ready</strong>
+              </div>
+              <p id="sourceQaWarning">Connect and QA the asking-rent source before using this as a final rent position.</p>
+            </div>
+            <div class="public-evidence-view" aria-label="Simplified public evidence preview">
+              <div class="card-label">
+                <span>Evidence Preview</span>
+                <strong id="publicEvidenceSummary">Source split</strong>
+              </div>
+              <div class="public-evidence-list" id="publicEvidenceList">
+                <article>
+                  <span>Benchmark</span>
+                  <strong>Official rent trend</strong>
+                  <em>Transaction-backed layer</em>
+                </article>
+              </div>
+            </div>
+            <div class="conversion-prompt">
+              <strong>See the chart and source context behind the answer.</strong>
+              <span>Use the chart context when you want more benchmark detail, source structure, and historical context.</span>
+            </div>
+            <button class="secondary-button" id="togglePaid" type="button">View Chart Context</button>
+          </article>
+        </div>
+
+        <section class="decision-note-section" aria-label="RentIntel public decision note preview">
+          <div class="section-heading compact">
+            <p>Read Decision Notes</p>
+            <h2>See how RentIntel would frame the rent decision before you act.</h2>
+          </div>
+          <article class="decision-note-card">
+            <div class="card-label">
+              <span>Decision Note Preview</span>
+              <strong id="decisionNotePreviewTitle">Chinatown shophouse retail</strong>
+            </div>
+            <div class="decision-note-metrics">
+              <article>
+                <span>Decision</span>
+                <strong id="decisionNoteDecision">Likely high</strong>
+              </article>
+              <article>
+                <span>Fair range</span>
+                <strong id="decisionNoteRange">S$11.80-S$14.60 psf</strong>
+              </article>
+              <article>
+                <span>Trust</span>
+                <strong id="decisionNoteTrust">Direct benchmark</strong>
+              </article>
+            </div>
+            <div class="decision-note-copy">
+              <p id="decisionNotePreviewLead">Current asking rent sits above the fair range, so the decision note should anchor negotiation on benchmark evidence rather than landlord sentiment alone.</p>
+              <p id="decisionNotePreviewBody">RentIntel would tell the user to confirm frontage quality, permitted use, and the latest asking source before accepting the premium. If those factors are ordinary, the note should support a lower counter position.</p>
+              <p id="decisionNotePreviewNext">Use this preview as a public reasoning layer. Open the chart context if you want a deeper read on benchmark movement and source structure.</p>
+            </div>
+            <div class="decision-note-angles" aria-label="Decision note angles">
+              <article>
+                <span id="decisionAngleOneLabel">New lease</span>
+                <strong id="decisionAngleOneTitle">Anchor on fair range first</strong>
+                <p id="decisionAngleOneCopy">Use the benchmark range as the first counter anchor, then test whether any unit-specific premium is real.</p>
+              </article>
+              <article>
+                <span id="decisionAngleTwoLabel">Renewal</span>
+                <strong id="decisionAngleTwoTitle">Separate market move from landlord ambition</strong>
+                <p id="decisionAngleTwoCopy">If the asking jump is ahead of the public benchmark, request stronger comparable evidence before accepting it as a market move.</p>
+              </article>
+              <article>
+                <span id="decisionAngleThreeLabel">Area comparison</span>
+                <strong id="decisionAngleThreeTitle">Check whether nearby options reduce pressure</strong>
+                <p id="decisionAngleThreeCopy">If comparable areas show less pressure, the decision note should treat the current asking premium more cautiously.</p>
+              </article>
+            </div>
+            <div class="decision-note-actions">
+              <a id="decisionNoteOpenLink" href="#market-context">View Chart Context</a>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <section class="rent-movers-section" aria-label="Latest area updates and rent movers">
+        <div class="section-heading compact">
+          <p>Latest Area Updates</p>
+          <h2>See which retail areas are running hot, holding fair, or needing review.</h2>
+        </div>
+        <div class="rent-movers-grid">
+          <article class="rent-movers-card">
+            <div class="card-label">
+              <span>Top Rent Movers</span>
+              <strong id="rentMoversSummary">Loading movers</strong>
+            </div>
+            <div class="rent-movers-list" id="rentMoversList">
+              <p>Loading current area movement...</p>
+            </div>
+          </article>
+          <article class="rent-movers-card">
+            <div class="card-label">
+              <span>Freshness Watch</span>
+              <strong id="freshnessWatchSummary">Loading freshness</strong>
+            </div>
+            <div class="rent-movers-list" id="freshnessWatchList">
+              <p>Loading source freshness watch...</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="coverage-highlights-section" aria-label="Coverage queue and requested areas">
+        <div class="section-heading compact">
+          <p>Coverage Queue</p>
+          <h2>See which requested areas RentIntel is reviewing next.</h2>
+        </div>
+        <div class="coverage-highlights-grid">
+          <article class="coverage-highlight-card">
+            <div class="card-label">
+              <span>Requested Areas</span>
+              <strong id="coverageHighlightsSummary">No requests yet</strong>
+            </div>
+            <div class="coverage-highlight-list" id="coverageHighlightsList">
+              <p class="coverage-highlight-empty">No public coverage requests yet. Search an uncovered retail area above to add it to the queue.</p>
+            </div>
+          </article>
+          <article class="coverage-highlight-card">
+            <div class="card-label">
+              <span>Queue Status</span>
+              <strong id="coverageStatusSummary">Waiting for requests</strong>
+            </div>
+            <div class="coverage-highlight-stats" id="coverageHighlightStats">
+              <article>
+                <span>In review</span>
+                <strong id="coveragePendingMetric">0</strong>
+              </article>
+              <article>
+                <span>Pilot verified</span>
+                <strong id="coverageApprovedMetric">0</strong>
+              </article>
+              <article>
+                <span>Production</span>
+                <strong id="coverageProductionMetric">0</strong>
+              </article>
+            </div>
+            <p class="coverage-highlight-copy" id="coverageHighlightCopy">When people request uncovered areas, RentIntel checks benchmark fit, asking-rent source quality, and release readiness before publishing a public answer.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="chart-section" id="market-context" aria-label="Public historical rent psf chart">
+        <div class="section-heading compact">
+          <p>Market Context</p>
+          <h2>Historical rent movement behind the current answer</h2>
+        </div>
+        <div class="chart-shell" id="chartShell" data-locked="false">
+          <div class="chart-topline">
+            <div>
+              <span id="chartKicker">Market context</span>
+              <strong id="chartTitle">Historical rent psf trend</strong>
+            </div>
+            <div class="range-toggle" aria-label="Chart range">
+              <button type="button" data-range="3">3Y</button>
+              <button type="button" data-range="5" class="active">5Y</button>
+              <button type="button" data-range="all">All</button>
+            </div>
+          </div>
+          <canvas id="rentChart" width="1120" height="420" aria-label="Historical rent psf line chart"></canvas>
+        </div>
+      </section>
+
+      <section class="use-cases-section" aria-label="RentIntel use cases">
+        <div class="section-heading compact">
+          <p>Use Cases</p>
+          <h2>Real rent decisions people actually need to make.</h2>
+        </div>
+        <div class="trust-path-strip" aria-label="RentIntel decision path">
+          <article>
+            <span>Search</span>
+            <strong>Area + property type</strong>
+            <p>Normal queries now open a direct result, comparable estimate, or coverage request path.</p>
+          </article>
+          <article>
+            <span>Trust badge</span>
+            <strong>Sample / Pilot / Production</strong>
+            <p>The answer says how far the evidence has moved through source review.</p>
+          </article>
+          <article>
+            <span>Decision</span>
+            <strong>Target, offer, note</strong>
+            <p>Use the public signal to frame a clearer landlord discussion position before committing.</p>
+          </article>
+        </div>
+        <div class="use-case-grid">
+          <article>
+            <span>01</span>
+            <strong>Opening cafe</strong>
+            <small>Margin check</small>
+            <p>Check whether the asking rent leaves enough margin before committing.</p>
+            <button type="button" data-query="Chinatown shophouse">Check cafe rent</button>
+          </article>
+          <article>
+            <span>02</span>
+            <strong>Negotiating renewal</strong>
+            <small>Renewal defence</small>
+            <p>Use benchmark, fair range, and signal drivers before accepting an increase.</p>
+            <button type="button" data-query="Serangoon HDB retail">Build renewal position</button>
+          </article>
+          <article>
+            <span>03</span>
+            <strong>Comparing malls</strong>
+            <small>Area comparison</small>
+            <p>Compare pressure across retail nodes instead of looking at one unit alone.</p>
+            <button type="button" data-query="Orchard mall">Compare mall rent</button>
+          </article>
+          <article>
+            <span>04</span>
+            <strong>Evaluating shophouse</strong>
+            <small>Premium test</small>
+            <p>Separate location premium, F&B approval, frontage, and supply constraints.</p>
+            <button type="button" data-query="Joo Chiat shophouse">Test shophouse premium</button>
+          </article>
+          <article>
+            <span>05</span>
+            <strong>Franchise expansion</strong>
+            <small>Shortlist areas</small>
+            <p>Shortlist areas where rent pressure still fits the operating model.</p>
+            <button type="button" data-query="Ang Mo Kio shop">Check heartland rent</button>
+          </article>
+          <article>
+            <span>06</span>
+            <strong>Tenant representation</strong>
+            <small>Client note</small>
+            <p>Prepare a cleaner rent position for landlord discussion and client review.</p>
+            <button type="button" data-query="Tampines HDB retail">Prepare tenant position</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="faq-section" aria-label="Common questions about RentIntel">
+        <div class="section-heading compact">
+          <p>Common Questions</p>
+          <h2>What people usually want to know before trusting a rent signal.</h2>
+        </div>
+        <div class="faq-grid">
+          <article>
+            <strong>Is this official rent data?</strong>
+            <p>RentIntel separates official benchmark rent from current asking-rent signals. The official benchmark stays distinct from the asking layer so you can see where the answer is grounded and where it is estimated.</p>
+          </article>
+          <article>
+            <strong>What does “Pilot Verified” mean?</strong>
+            <p>“Pilot Verified” means the public answer has benchmark support plus manual or pilot asking-rent checks, but the source workflow is not yet at a fully production-controlled release state.</p>
+          </article>
+          <article>
+            <strong>Why can an asking rent look high?</strong>
+            <p>A rent can sit above benchmark because of frontage, permitted use, recent fit-out, tight supply, or simply because the landlord is testing pricing above the market. RentIntel helps separate those possibilities.</p>
+          </article>
+          <article>
+            <strong>What if my area is missing?</strong>
+            <p>If a retail area is not covered yet, add it to the coverage queue. RentIntel can review benchmark fit, source quality, and release readiness before publishing a public answer for that area.</p>
+          </article>
+          <article>
+            <strong>Should I rely on this alone to sign a lease?</strong>
+            <p>No. Use RentIntel as decision support, then still verify lease terms, GST, service charge, handover condition, permitted use, and unit-specific factors before committing.</p>
+          </article>
+          <article>
+            <strong>Who is RentIntel for?</strong>
+            <p>It is built for tenants, operators, agents, small landlords, and people comparing retail areas who want a faster first view of whether a quoted rent looks fair or stretched.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="workspace-links-section" aria-label="RentIntel tools">
+        <div class="section-heading compact">
+          <p>Free Tools</p>
+          <h2>Go deeper with Workspace or keep your checks in Saved Tools.</h2>
+        </div>
+        <div class="workspace-links-grid">
+          <article>
+            <span>Workspace</span>
+            <strong>Run the deeper rent workflow.</strong>
+            <p>Open chart context, compare benchmark versus asking rent, and prepare decision notes before you negotiate.</p>
+            <a href="./members/toolbench/index.html">Open Workspace</a>
+          </article>
+          <article>
+            <span>Saved Tools</span>
+            <strong>Keep reports, watched areas, and history.</strong>
+            <p>Return to saved rent checks, watched areas, alerts, and exported notes without leaving the free-access model.</p>
+            <a href="./members/account/index.html">Open Saved Tools</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="method-grid" id="method" aria-label="RentIntel method">
+        <article>
+          <span>1</span>
+          <strong>URA benchmark</strong>
+          <p>Official retail rental benchmark stays as the transaction-backed layer. It feeds official median, history, and benchmark confidence.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <strong>Asking signal</strong>
+          <p>Listing feeds or verified manual capture estimate current asking rent. This stays separate from official rent.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <strong>Internal app data</strong>
+          <p>Saved reports, alerts, queue history, and internal admin sessions stay in RentIntel's private application layer.</p>
+        </article>
+        <article>
+          <span>4</span>
+          <strong>Source contract</strong>
+          <p>Production sync follows <code>data/sources/</code>: URA, HDB, OneMap, and asking-rent feeds stay separated with clear source roles.</p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="verseintel">
+      <section class="related-intel" aria-label="Related VerseIntel products">
+        <article>
+          <div>
+            <span>Related Intelligence</span>
+            <strong>DemandIntel</strong>
+            <p>
+              Fast public answers for what is happening in Singapore now: mobility pressure, travel friction,
+              airport flows, cruise traffic, and event movement signals.
+            </p>
+          </div>
+          <a href="https://demand-intel.com">Open DemandIntel</a>
+        </article>
+        <article>
+          <div>
+            <span>Related Intelligence</span>
+            <strong>CashIntel</strong>
+            <p>
+              Singapore cash allocation intelligence for T-Bills, SSBs, fixed deposits, savings accounts,
+              and money market moves.
+            </p>
+          </div>
+          <a href="https://cash-intel.com">Open CashIntel</a>
+        </article>
+      </section>
+
+      <div class="footer-main">
+        <div class="footer-brand">
+          <strong><span>Verse</span><span>Intel</span></strong>
+          <small>Signals Across Every Verse</small>
+          <p>RentIntel is a VerseIntel product.</p>
+        </div>
+        <nav aria-label="Footer links">
+          <a href="#search">Search</a>
+          <a href="#premium">Source Context</a>
+          <a href="#method">Method</a>
+          <a href="./about.html">About</a>
+          <a href="./privacy.html">Privacy</a>
+          <a href="./contact.html">Contact</a>
+          <a href="./disclaimer.html">Disclaimer</a>
+          <a href="./user-manual.html">User Manual</a>
+        </nav>
+        <b>PULSE V26</b>
+        <p class="footer-note">
+          RentIntel is an information and decision-support product, not valuation advice or a guaranteed lease outcome.
+          Always verify source data, lease terms, GST, service charge, permitted use, and handover condition before committing.
+        </p>
+      </div>
+    </footer>
+
+    <script src="./data/rentintel-sample-data.js?v=20260508-1649"></script>
+    <script src="./data/sources/asking-rent-feed.js?v=20260509-asking-pilot"></script>
+    <script src="./data/sources/onemap-enrichment.js?v=20260512-onemap"></script>
+    <script src="./asking-feed-adapter.js?v=20260510-feedhardening"></script>
+    <script src="./onemap-enrichment-adapter.js?v=20260512-onemap"></script>
+    <script src="./source-trust.js?v=20260510-pulseguide"></script>
+    <script src="./app.js?v=20260514-launchqa"></script>
+  </body>
+</html>

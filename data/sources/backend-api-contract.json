@@ -1,0 +1,319 @@
+{
+  "contract": "rentintel-backend-api-contract",
+  "version": "prototype-v3-delivery-artifacts",
+  "basePath": "/api",
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/members/login/request-code",
+      "purpose": "Check whether an email is in the member list and create a short-lived passwordless login code.",
+      "request": ["email"],
+      "response": ["status", "maskedEmail", "expiresAt"],
+      "targetTables": ["members", "login_codes"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/login/verify-code",
+      "purpose": "Verify a 6-digit login code and create a secure member session.",
+      "request": ["email", "code"],
+      "response": ["member", "session"],
+      "targetTables": ["members", "login_codes", "sessions"]
+    },
+    {
+      "method": "GET",
+      "path": "/members/me",
+      "purpose": "Return the current member status, subscription status, promo state, and toolbench entitlement.",
+      "request": ["sessionCookie"],
+      "response": ["member", "notificationPreferences"],
+      "targetTables": ["members", "sessions", "member_notification_preferences"]
+    },
+    {
+      "method": "GET",
+      "path": "/members/roles/audit",
+      "purpose": "Load member role-change audit events for admin review.",
+      "request": ["sessionCookie"],
+      "response": ["roleAuditLog"],
+      "targetTables": ["member_role_audit_log"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/roles",
+      "purpose": "Update a member role and persist actor, target, and reason in the role-audit log.",
+      "request": ["targetEmail", "nextRole", "reason"],
+      "response": ["memberRole", "roleAudit"],
+      "targetTables": ["members", "member_role_audit_log"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/promo/apply",
+      "purpose": "Apply a promo code and update member entitlement when valid.",
+      "request": ["code"],
+      "response": ["member", "promo"],
+      "targetTables": ["members", "promo_codes"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/activation-requests",
+      "purpose": "Queue a waitlist-to-member activation request before payment is connected.",
+      "request": ["plan", "useCase"],
+      "response": ["activationRequest"],
+      "targetTables": ["member_activation_requests"]
+    },
+    {
+      "method": "GET",
+      "path": "/members/reports",
+      "purpose": "Load saved rent reports for the signed-in member.",
+      "request": ["sessionCookie"],
+      "response": ["reports"],
+      "targetTables": ["member_saved_reports"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/reports",
+      "purpose": "Save or replace a member rent decision pack and negotiation note.",
+      "request": ["recordId", "decisionPack", "negotiationNote"],
+      "response": ["report"],
+      "targetTables": ["member_saved_reports"]
+    },
+    {
+      "method": "DELETE",
+      "path": "/members/reports/{recordId}",
+      "purpose": "Remove one saved report for the signed-in member.",
+      "request": ["recordId"],
+      "response": ["removed"],
+      "targetTables": ["member_saved_reports"]
+    },
+    {
+      "method": "GET",
+      "path": "/members/watchlist",
+      "purpose": "Load watched rent areas and any linked alert rule summary.",
+      "request": ["sessionCookie"],
+      "response": ["watchlist", "alertRules"],
+      "targetTables": ["member_watchlist_areas", "member_alert_rules"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/watchlist",
+      "purpose": "Add or replace a watched rent area.",
+      "request": ["recordId", "area"],
+      "response": ["watchlistItem"],
+      "targetTables": ["member_watchlist_areas"]
+    },
+    {
+      "method": "DELETE",
+      "path": "/members/watchlist/{recordId}",
+      "purpose": "Remove a watched rent area and its linked alert rule for the signed-in member.",
+      "request": ["recordId"],
+      "response": ["removed"],
+      "targetTables": ["member_watchlist_areas", "member_alert_rules"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/alerts",
+      "purpose": "Save or replace an alert trigger, target, gap limit, cadence, and condition.",
+      "request": ["recordId", "trigger", "targetPsf", "gapLimit", "cadence"],
+      "response": ["alertRule"],
+      "targetTables": ["member_alert_rules", "member_watchlist_areas"]
+    },
+    {
+      "method": "GET",
+      "path": "/members/alerts/deliveries",
+      "purpose": "Load queued, sent, skipped, and failed alert delivery records for the signed-in member.",
+      "request": ["sessionCookie", "status"],
+      "response": ["alertDeliveries", "summary"],
+      "targetTables": ["member_alert_deliveries", "member_alert_rules"]
+    },
+    {
+      "method": "GET",
+      "path": "/members/alerts/messages",
+      "purpose": "Load outbound alert artifacts that were actually written by the local delivery worker.",
+      "request": ["sessionCookie"],
+      "response": ["deliveredMessages"],
+      "targetTables": ["member_alert_delivered_messages", "member_alert_delivery_runs"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/alerts/queue-delivery",
+      "purpose": "Queue one member-facing alert message from a saved alert rule or system freshness breach before email delivery is attempted.",
+      "request": ["recordId", "alertRuleId", "subject", "message", "trigger", "cadence", "freshnessState", "previousFreshnessState", "freshnessBreach", "deliveryChannel", "deliveryPayload"],
+      "response": ["alertDelivery"],
+      "targetTables": ["member_alert_deliveries", "member_alert_rules", "member_notification_preferences"]
+    },
+    {
+      "method": "GET",
+      "path": "/members/alerts/delivery-runs",
+      "purpose": "Load delivery worker run logs with sent, failed, skipped, and dead-letter totals.",
+      "request": ["sessionCookie"],
+      "response": ["deliveryRuns"],
+      "targetTables": ["member_alert_delivery_runs"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/alerts/delivery-runs",
+      "purpose": "Run the local delivery worker, write outbound alert artifacts, and persist final delivery statuses.",
+      "request": ["runId", "queueRows", "startedAt", "finishedAt"],
+      "response": ["deliveryRun", "updatedDeliveries", "deliveredMessages"],
+      "targetTables": ["member_alert_delivery_runs", "member_alert_deliveries", "member_alert_delivered_messages"]
+    },
+    {
+      "method": "GET",
+      "path": "/members/alerts/admin-actions",
+      "purpose": "Load delivery admin queue actions with status transitions and retry metadata.",
+      "request": ["sessionCookie"],
+      "response": ["adminActions"],
+      "targetTables": ["member_alert_delivery_admin_log"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/alerts/admin-actions",
+      "purpose": "Persist one delivery admin action and apply the corresponding delivery status transition.",
+      "request": ["recordId", "actionType", "fromStatus", "toStatus", "reason"],
+      "response": ["adminAction", "alertDelivery"],
+      "targetTables": ["member_alert_delivery_admin_log", "member_alert_deliveries"]
+    },
+    {
+      "method": "POST",
+      "path": "/members/preferences",
+      "purpose": "Save notification preferences for daily briefs, activation updates, watchlist alerts, and source sync alerts.",
+      "request": ["dailyBrief", "activationUpdates", "watchlistAlerts", "sourceSyncAlerts"],
+      "response": ["notificationPreferences"],
+      "targetTables": ["member_notification_preferences"]
+    },
+    {
+      "method": "GET",
+      "path": "/sources/asking-feed",
+      "purpose": "Load the current asking-rent feed state that public pages and member tools consume.",
+      "request": [],
+      "response": ["feed"],
+      "targetTables": ["asking_source_production_evidence"]
+    },
+    {
+      "method": "GET",
+      "path": "/sources/asking-candidates",
+      "purpose": "Load asking-rent source candidates together with any linked pilot coverage sample records.",
+      "request": [],
+      "response": ["candidates", "sampleRecords"],
+      "targetTables": ["asking_source_candidates", "coverage_sample_records"]
+    },
+    {
+      "method": "POST",
+      "path": "/sources/asking-feed/refresh",
+      "purpose": "Run the verified daily capture workflow and persist a refreshed asking-rent feed snapshot.",
+      "request": [],
+      "response": ["feed", "refresh"],
+      "targetTables": ["asking_source_production_evidence", "source_sync_runs"]
+    },
+    {
+      "method": "POST",
+      "path": "/sources/asking-candidates",
+      "purpose": "Submit an asking-rent source candidate for pilot review.",
+      "request": ["type", "name", "requestedQuery", "requestEmail", "source"],
+      "response": ["candidate"],
+      "targetTables": ["asking_source_candidates"]
+    },
+    {
+      "method": "GET",
+      "path": "/sources/coverage-requests",
+      "purpose": "Load public coverage requests with eligibility status, manual-review state, source classification, QA decision, and linked pilot sample record.",
+      "request": ["status", "classification", "coverageEligibilityStatus"],
+      "response": ["coverageRequests", "sampleRecords", "summary"],
+      "targetTables": ["asking_source_candidates", "coverage_sample_records"]
+    },
+    {
+      "method": "PATCH",
+      "path": "/sources/coverage-requests/{candidateId}/classification",
+      "purpose": "Classify a coverage request before any public sample can be created.",
+      "request": ["candidateId", "sourceClassification", "coverageEligibilityStatus", "reviewerNote"],
+      "response": ["candidate"],
+      "targetTables": ["asking_source_candidates", "source_review_history"]
+    },
+    {
+      "method": "POST",
+      "path": "/sources/coverage-requests/{candidateId}/qa-decision",
+      "purpose": "Record the admin QA decision for benchmark fit, property-type validity, asking-source path, and public-sample readiness.",
+      "request": ["candidateId", "coverageQaDecision", "qaChecks", "reviewerNote"],
+      "response": ["candidate", "qaDecision"],
+      "targetTables": ["asking_source_candidates", "source_review_history"]
+    },
+    {
+      "method": "POST",
+      "path": "/sources/coverage-requests/{candidateId}/sample-record",
+      "purpose": "Create a pilot coverage sample only after source classification and QA decision pass.",
+      "request": ["candidateId", "sampleRecord", "publicTrustLevel", "sourceSummary"],
+      "response": ["sampleRecord", "candidate"],
+      "targetTables": ["coverage_sample_records", "asking_source_candidates", "source_review_history"]
+    },
+    {
+      "method": "POST",
+      "path": "/sources/sync-runs",
+      "purpose": "Record an asking-rent source sync run and benchmark QA result.",
+      "request": ["sourceName", "sourceType", "recordsChecked", "benchmarkLayer", "status"],
+      "response": ["syncRun"],
+      "targetTables": ["source_sync_runs"]
+    },
+    {
+      "method": "GET",
+      "path": "/sources/sync-schedule",
+      "purpose": "Load source sync cadence, next-run contract, and freshness SLA policy.",
+      "request": ["sourceName"],
+      "response": ["syncSchedule", "freshnessPolicy"],
+      "targetTables": ["source_sync_schedule", "source_freshness_policy"]
+    },
+    {
+      "method": "POST",
+      "path": "/sources/sync-schedule",
+      "purpose": "Persist source sync cadence, run-hour policy, and schedule ownership for backend automation workers.",
+      "request": ["sourceName", "enabled", "cadence", "runHourSgt", "nextRunAt", "updatedBy", "note"],
+      "response": ["syncSchedule"],
+      "targetTables": ["source_sync_schedule", "source_review_history"]
+    },
+    {
+      "method": "POST",
+      "path": "/sources/freshness-breach-events",
+      "purpose": "Persist freshness transition events and queue metadata when source freshness drops from Fresh.",
+      "request": ["sourceName", "freshnessState", "previousFreshnessState", "breachAt", "queueTrigger", "deliveryIds", "note"],
+      "response": ["breachEvent"],
+      "targetTables": ["source_freshness_breach_events", "member_alert_deliveries"]
+    },
+    {
+      "method": "GET",
+      "path": "/sources/production-evidence",
+      "purpose": "Load the latest production asking-source evidence package, release log, and controlled-release state.",
+      "request": [],
+      "response": ["productionEvidence"],
+      "targetTables": ["asking_source_production_evidence"]
+    },
+    {
+      "method": "POST",
+      "path": "/sources/production-evidence",
+      "purpose": "Persist production asking-source evidence, QA log, source-owner review, source trust state, ops review stage, readiness gate, source exception alerts, release log, and controlled-release status.",
+      "request": ["sourceName", "sourceType", "sourceAttachedAt", "qaLogAt", "ownerReviewedAt", "evidenceReady", "pilotFeed", "qaSummary", "qaRows", "readinessGate", "sourceTrust", "opsReview", "exceptionAlerts", "releaseLog", "handoffTasks", "controlledReleaseNextStep"],
+      "response": ["productionEvidence"],
+      "targetTables": ["asking_source_production_evidence"]
+    },
+    {
+      "method": "POST",
+      "path": "/sources/freshness-policy",
+      "purpose": "Persist Freshness SLA policy used by public/member/source checks and freshness-breach alerting.",
+      "request": ["freshMaxDays", "watchMaxDays", "updatedBy", "note"],
+      "response": ["freshnessPolicy"],
+      "targetTables": ["source_freshness_policy", "source_review_history"]
+    },
+    {
+      "method": "GET",
+      "path": "/backend/handoff-audit",
+      "purpose": "Load the latest saved backend handoff audit package and validation history for the signed-in member.",
+      "request": [],
+      "response": ["latestAudit", "handoffAudits"],
+      "targetTables": ["backend_handoff_audit"]
+    },
+    {
+      "method": "POST",
+      "path": "/backend/handoff-audit",
+      "purpose": "Persist generated payload, validation rows, and backend handoff summary.",
+      "request": ["payload", "validationRows", "summary"],
+      "response": ["auditRecord"],
+      "targetTables": ["backend_handoff_audit"]
+    }
+  ]
+}

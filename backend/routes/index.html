@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RentIntel Backend Route Mocks</title>
+    <link rel="icon" href="../../pulse-shared-transparent.png">
+    <link rel="stylesheet" href="../../styles.css?v=20260510-syncschedule">
+  </head>
+  <body>
+    <header class="site-header" aria-label="RentIntel backend route mocks">
+      <div class="product-header-card">
+        <a class="brand" href="../../index.html" aria-label="RentIntel home">
+          <img src="../../pulse-shared-transparent.png" alt="" aria-hidden="true">
+          <span class="brand-product">
+            <strong>RentIntel</strong>
+            <em>Backend Route Mocks</em>
+          </span>
+        </a>
+        <a class="members-login-button" href="../../members/account/">
+          <small>Members</small>
+          <span>Back to Account</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="backend-route-page">
+      <section class="section-heading">
+        <p>Backend Handoff</p>
+        <h1>Route mock pages</h1>
+        <span>Static mock cards for passwordless login, member data, manual coverage review, source QA, production evidence, and backend audit routes.</span>
+      </section>
+
+      <section class="backend-route-summary" aria-label="Backend route summary">
+        <article>
+          <span>Total routes</span>
+          <strong id="routeTotalMetric">0</strong>
+          <em>API mocks in this handoff</em>
+        </article>
+        <article>
+          <span>Auth first</span>
+          <strong id="routeAuthMetric">0</strong>
+          <em>Passwordless login and session routes</em>
+        </article>
+        <article>
+          <span>Member data</span>
+          <strong id="routeMemberMetric">0</strong>
+          <em>Reports, watchlist, alerts, and preferences</em>
+        </article>
+        <article>
+          <span>Coverage + source ops</span>
+          <strong id="routeSourceMetric">0</strong>
+          <em>Manual review, QA, production evidence</em>
+        </article>
+      </section>
+
+      <section class="backend-route-handoff" aria-label="Backend implementation order">
+        <div>
+          <span>Recommended Build Order</span>
+          <strong>Auth -> member data -> coverage review -> source ops -> production audit</strong>
+          <p>Implement passwordless sessions first, then saved member workflows, then manual coverage classification, source QA, and controlled-release evidence.</p>
+        </div>
+        <nav aria-label="Backend route handoff links">
+          <a href="../../admin/coverage/">Admin coverage</a>
+          <a href="../../members/account/?loggedIn=active#backendHandoffPanel">Account handoff</a>
+          <a href="../../members/account/?loggedIn=active#accountSourceHistory">Source history</a>
+        </nav>
+      </section>
+
+      <section class="backend-route-grid" id="backendRouteGrid" aria-label="Backend route mocks">
+        <p>Loading route mocks...</p>
+      </section>
+    </main>
+
+    <script>
+      const fallbackContract = {
+        basePath: "/api",
+        routes: [
+          { method: "POST", path: "/members/login/request-code", purpose: "Check whether an email is in the member list and create a short-lived passwordless login code.", request: ["email"], response: ["status", "maskedEmail", "expiresAt"], targetTables: ["members", "login_codes"] },
+          { method: "POST", path: "/members/login/verify-code", purpose: "Verify a 6-digit login code and create a secure member session.", request: ["email", "code"], response: ["member", "session"], targetTables: ["members", "login_codes", "sessions"] },
+          { method: "GET", path: "/members/me", purpose: "Return member status, subscription status, promo state, and Workspace entitlement.", request: ["sessionCookie"], response: ["member", "notificationPreferences"], targetTables: ["members", "sessions", "member_notification_preferences"] },
+          { method: "GET", path: "/members/roles/audit", purpose: "Load member role-change audit events for admin review.", request: ["sessionCookie"], response: ["roleAuditLog"], targetTables: ["member_role_audit_log"] },
+          { method: "POST", path: "/members/roles", purpose: "Update a member role and persist actor, target, and reason in the role-audit log.", request: ["targetEmail", "nextRole", "reason"], response: ["memberRole", "roleAudit"], targetTables: ["members", "member_role_audit_log"] },
+          { method: "POST", path: "/members/reports", purpose: "Save or replace a member rent decision pack and negotiation note.", request: ["recordId", "decisionPack", "negotiationNote"], response: ["report"], targetTables: ["member_saved_reports"] },
+          { method: "GET", path: "/members/alerts/deliveries", purpose: "Load queued, sent, skipped, and failed alert delivery records for the signed-in member.", request: ["sessionCookie", "status"], response: ["alertDeliveries", "summary"], targetTables: ["member_alert_deliveries", "member_alert_rules"] },
+          { method: "POST", path: "/members/alerts/queue-delivery", purpose: "Queue one member-facing alert message from a saved alert rule or system freshness breach before email delivery is attempted.", request: ["recordId", "alertRuleId", "subject", "message", "trigger", "cadence", "freshnessState", "previousFreshnessState", "freshnessBreach", "deliveryChannel", "deliveryPayload"], response: ["alertDelivery"], targetTables: ["member_alert_deliveries", "member_alert_rules", "member_notification_preferences"] },
+          { method: "GET", path: "/members/alerts/delivery-runs", purpose: "Load delivery worker run logs with sent, failed, skipped, and dead-letter totals.", request: ["sessionCookie"], response: ["deliveryRuns"], targetTables: ["member_alert_delivery_runs"] },
+          { method: "POST", path: "/members/alerts/delivery-runs", purpose: "Persist one delivery worker run and update alert delivery statuses.", request: ["runId", "outcomes", "startedAt", "finishedAt"], response: ["deliveryRun", "updatedDeliveries"], targetTables: ["member_alert_delivery_runs", "member_alert_deliveries"] },
+          { method: "GET", path: "/members/alerts/admin-actions", purpose: "Load delivery admin queue actions with status transitions and retry metadata.", request: ["sessionCookie"], response: ["adminActions"], targetTables: ["member_alert_delivery_admin_log"] },
+          { method: "POST", path: "/members/alerts/admin-actions", purpose: "Persist one delivery admin action and apply the corresponding delivery status transition.", request: ["recordId", "actionType", "fromStatus", "toStatus", "reason"], response: ["adminAction", "alertDelivery"], targetTables: ["member_alert_delivery_admin_log", "member_alert_deliveries"] },
+          { method: "GET", path: "/sources/coverage-requests", purpose: "Load coverage requests with manual-review state, source classification, QA decision, and linked sample record.", request: ["status", "classification", "coverageEligibilityStatus"], response: ["coverageRequests", "summary"], targetTables: ["asking_source_candidates", "coverage_sample_records"] },
+          { method: "PATCH", path: "/sources/coverage-requests/{candidateId}/classification", purpose: "Classify a coverage request before any public sample can be created.", request: ["candidateId", "sourceClassification", "coverageEligibilityStatus", "reviewerNote"], response: ["candidate"], targetTables: ["asking_source_candidates", "source_review_history"] },
+          { method: "POST", path: "/sources/coverage-requests/{candidateId}/qa-decision", purpose: "Record the admin QA decision for benchmark fit, property-type validity, asking-source path, and public-sample readiness.", request: ["candidateId", "coverageQaDecision", "qaChecks", "reviewerNote"], response: ["candidate", "qaDecision"], targetTables: ["asking_source_candidates", "source_review_history"] },
+          { method: "POST", path: "/sources/coverage-requests/{candidateId}/sample-record", purpose: "Create a pilot coverage sample only after source classification and QA decision pass.", request: ["candidateId", "sampleRecord", "publicTrustLevel", "sourceSummary"], response: ["sampleRecord", "candidate"], targetTables: ["coverage_sample_records", "asking_source_candidates", "source_review_history"] },
+          { method: "GET", path: "/sources/sync-schedule", purpose: "Load source sync cadence, next-run contract, and freshness SLA policy.", request: ["sourceName"], response: ["syncSchedule", "freshnessPolicy"], targetTables: ["source_sync_schedule", "source_freshness_policy"] },
+          { method: "POST", path: "/sources/sync-schedule", purpose: "Persist source sync cadence, run-hour policy, and schedule ownership for backend automation workers.", request: ["sourceName", "enabled", "cadence", "runHourSgt", "nextRunAt", "updatedBy", "note"], response: ["syncSchedule"], targetTables: ["source_sync_schedule", "source_review_history"] },
+          { method: "POST", path: "/sources/sync-runs", purpose: "Record an asking-rent source sync run and benchmark QA result.", request: ["sourceName", "sourceType", "recordsChecked", "benchmarkLayer", "status"], response: ["syncRun"], targetTables: ["source_sync_runs"] },
+          { method: "POST", path: "/sources/freshness-breach-events", purpose: "Persist freshness transition events and queue metadata when source freshness drops from Fresh.", request: ["sourceName", "freshnessState", "previousFreshnessState", "breachAt", "queueTrigger", "deliveryIds", "note"], response: ["breachEvent"], targetTables: ["source_freshness_breach_events", "member_alert_deliveries"] },
+          { method: "POST", path: "/sources/production-evidence", purpose: "Persist source evidence, source trust state, QA review, exception alerts, release log, and controlled-release status.", request: ["sourceName", "sourceType", "sourceTrust", "readinessGate", "opsReview", "exceptionAlerts", "releaseLog"], response: ["productionEvidence"], targetTables: ["asking_source_production_evidence"] },
+          { method: "POST", path: "/sources/freshness-policy", purpose: "Persist Freshness SLA policy used by public/member/source checks and freshness-breach alerting.", request: ["freshMaxDays", "watchMaxDays", "updatedBy", "note"], response: ["freshnessPolicy"], targetTables: ["source_freshness_policy", "source_review_history"] },
+          { method: "POST", path: "/backend/handoff-audit", purpose: "Persist generated payload, validation rows, and backend handoff summary.", request: ["payload", "validationRows", "summary"], response: ["auditRecord"], targetTables: ["backend_handoff_audit"] }
+        ]
+      };
+
+      function slugify(value) {
+        return String(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      }
+
+      function routeId(method, path) {
+        return `${slugify(method)}-${slugify(path)}`;
+      }
+
+      function routePhase(route) {
+        if (route.path.includes("/login/") || route.path === "/members/me") return "Auth first";
+        if (route.path.includes("/coverage-requests")) return "Coverage review";
+        if (route.path.includes("/sources/") || route.path.includes("/backend/")) return "Source ops";
+        return "Member data";
+      }
+
+      function routeAuth(route) {
+        if (route.path.includes("/login/request-code")) return "Known member email";
+        if (route.path.includes("/login/verify-code")) return "Email + 6-digit code";
+        if (route.path.includes("/members/roles")) return "Admin session cookie";
+        if (route.path.includes("/coverage-requests")) return "Admin review required";
+        return "Secure session cookie";
+      }
+
+      function routeAcceptance(phase) {
+        if (phase === "Auth first") return "Session must be short-lived and secure";
+        if (phase === "Coverage review") return "Classification and QA must pass before public sample creation";
+        if (phase === "Source ops") return "Write audit-ready source state";
+        return "Scope data to signed-in member";
+      }
+
+      function sampleValue(key) {
+        const values = {
+          email: "active@rent-intel.com",
+          code: "123456",
+          sessionCookie: "rentintel_session=secure-session-token",
+          recordId: "serangoon-hdb-retail",
+          alertRuleId: "alert-rule-001",
+          area: "Serangoon",
+          subject: "Serangoon rent alert: High pressure",
+          message: "Serangoon asking rent is above target. Review source evidence before discussion.",
+          trigger: "asking-falls-to-target",
+          freshnessState: "watch",
+          previousFreshnessState: "fresh",
+          freshnessBreach: true,
+          targetPsf: 10.9,
+          gapLimit: 20,
+          cadence: "daily",
+          deliveryChannel: "email",
+          deliveryPayload: {
+            source: "watchlist-alert-outbox-preview",
+            targetPsf: 10.9,
+            askingPsf: 11.4,
+            gap: 31,
+            freshnessState: "watch",
+            previousFreshnessState: "fresh",
+            freshnessBreach: true
+          },
+          candidateId: "coverage-candidate-001",
+          classification: "retail-direct",
+          coverageEligibilityStatus: "manual",
+          sourceClassification: "retail-direct",
+          coverageQaDecision: "pass",
+          qaChecks: ["property type valid", "benchmark basis confirmed", "asking-source path documented"],
+          reviewerNote: "Retail coverage accepted for pilot after source review.",
+          sampleRecord: {
+            recordId: "coverage-serangoon-hdb-retail",
+            title: "Serangoon HDB retail",
+            area: "Serangoon",
+            propertyType: "HDB retail"
+          },
+          publicTrustLevel: "Pilot Verified",
+          sourceSummary: "Manual asking checks and benchmark context reviewed for pilot sample.",
+          sourceName: "RentIntel verified manual asking-rent pilot",
+          sourceType: "verified-manual-capture",
+          enabled: true,
+          runHourSgt: 8,
+          nextRunAt: "2026-05-11T00:00:00.000Z",
+          previousFreshnessState: "fresh",
+          breachAt: "2026-05-10T06:00:00.000Z",
+          queueTrigger: "freshness-breach",
+          deliveryIds: ["delivery-001", "delivery-002"],
+          recordsChecked: 8,
+          benchmarkLayer: "URA/HDB-linked retail benchmark",
+          status: "pilot verified",
+          sourceTrust: "Pilot Verified",
+          readinessGate: "draft",
+          opsReview: "Draft",
+          exceptionAlerts: [],
+          releaseLog: "Not released",
+          freshMaxDays: 7,
+          watchMaxDays: 14,
+          updatedBy: "active@rent-intel.com",
+          note: "Freshness SLA policy update from admin source review.",
+          payload: "backend handoff payload",
+          validationRows: [],
+          summary: "Prototype payload validated",
+          targetEmail: "promo@rent-intel.com",
+          nextRole: "admin",
+          reason: "Ops coverage owner assignment"
+        };
+        return Object.prototype.hasOwnProperty.call(values, key) ? values[key] : "sample";
+      }
+
+      function sampleRequest(route) {
+        if (route.method === "GET") return `${route.method} ${route.fullPath}`;
+        if (route.method === "DELETE") return `${route.method} ${route.fullPath}`;
+        return `${route.method} ${route.fullPath}\n${JSON.stringify(Object.fromEntries(route.request.map((key) => [key, sampleValue(key)])), null, 2)}`;
+      }
+
+      function sampleResponse(route) {
+        return JSON.stringify({
+          ok: true,
+          route: route.fullPath,
+          returns: route.response
+        }, null, 2);
+      }
+
+      function renderSummary(routes) {
+        document.getElementById("routeTotalMetric").textContent = String(routes.length);
+        document.getElementById("routeAuthMetric").textContent = String(routes.filter((route) => routePhase(route) === "Auth first").length);
+        document.getElementById("routeMemberMetric").textContent = String(routes.filter((route) => routePhase(route) === "Member data").length);
+        document.getElementById("routeSourceMetric").textContent = String(routes.filter((route) => ["Coverage review", "Source ops"].includes(routePhase(route))).length);
+      }
+
+      async function loadContract() {
+        try {
+          const response = await fetch("../../data/sources/backend-api-contract.json", { cache: "no-store" });
+          if (!response.ok) throw new Error("Contract unavailable");
+          return await response.json();
+        } catch (error) {
+          return fallbackContract;
+        }
+      }
+
+      function renderRoutes(contract) {
+        const basePath = contract.basePath || "/api";
+        const routes = contract.routes.map((route) => ({
+          ...route,
+          fullPath: `${basePath}${route.path}`,
+          request: route.request || [],
+          response: route.response || [],
+          targetTables: route.targetTables || []
+        }));
+        renderSummary(routes);
+        const grid = document.getElementById("backendRouteGrid");
+        grid.replaceChildren();
+        routes.forEach((route) => {
+          const phase = routePhase(route);
+          const card = document.createElement("article");
+          card.className = "backend-route-card";
+          card.id = routeId(route.method, route.fullPath);
+          card.dataset.phase = slugify(phase);
+          card.innerHTML = `
+            <div>
+              <mark>${route.method}</mark>
+              <strong>${route.fullPath}</strong>
+            </div>
+            <p>${route.purpose}</p>
+            <div class="backend-route-status">
+              <span>${phase}</span>
+              <span>${routeAuth(route)}</span>
+              <span>${route.targetTables.length} table${route.targetTables.length === 1 ? "" : "s"}</span>
+            </div>
+            <dl>
+              <div><dt>Request</dt><dd>${route.request.join(", ") || "None"}</dd></div>
+              <div><dt>Response</dt><dd>${route.response.join(", ") || "None"}</dd></div>
+              <div><dt>Tables</dt><dd>${route.targetTables.join(", ") || "Not mapped"}</dd></div>
+              <div><dt>Acceptance</dt><dd>${routeAcceptance(phase)}</dd></div>
+            </dl>
+            <div class="backend-route-example">
+              <pre><code>${sampleRequest(route)}</code></pre>
+              <pre><code>${sampleResponse(route)}</code></pre>
+            </div>
+          `;
+          grid.append(card);
+        });
+      }
+
+      loadContract().then(renderRoutes);
+    </script>
+  </body>
+</html>
