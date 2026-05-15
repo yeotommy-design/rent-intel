@@ -286,6 +286,22 @@
           <span class="member-action-status" id="todayBriefStatus" aria-live="polite"></span>
         </article>
 
+        <article class="account-panel market-notes-signup-panel" id="marketNotesSignup">
+          <div class="card-label">
+            <span>Weekly Market Notes</span>
+            <strong>Get the Friday release by email.</strong>
+          </div>
+          <p>
+            Market Notes is the short weekly release on what changed, where rent pressure is building,
+            and what new coverage just went live. Turn it on here so Saved Tools becomes the place that
+            sends you back into RentIntel each week.
+          </p>
+          <div class="market-notes-signup-actions">
+            <a href="../../market-notes.html">Read latest Market Notes</a>
+            <a href="#marketNotesPreferences">Choose weekly email settings</a>
+          </div>
+        </article>
+
         <section class="member-toolbench-grid" aria-label="RentIntel saved tools">
           <article class="member-tool-card" id="benchmarkToolCard">
             <span>Workspace</span>
@@ -336,19 +352,20 @@
             </div>
           </article>
 
-          <article class="account-panel notification-preferences-panel">
+          <article class="account-panel notification-preferences-panel" id="marketNotesPreferences">
             <div class="card-label">
-              <span>Notifications</span>
+              <span>Market Notes Email</span>
               <strong id="notificationPreferenceSummary">Not set</strong>
             </div>
+            <p class="notification-preferences-copy">Use this section to receive the weekly Market Notes release by email, plus any broader product updates you want to keep.</p>
             <form id="notificationPreferenceForm" class="preference-form">
               <label>
                 <input id="preferenceDailyBrief" type="checkbox">
-                <span>Daily RentIntel brief</span>
+                <span>Weekly Market Notes</span>
               </label>
               <label>
                 <input id="preferenceActivationUpdates" type="checkbox">
-                <span>Product and launch updates</span>
+                <span>Market Notes and launch updates</span>
               </label>
               <label>
                 <input id="preferenceWatchlistAlerts" type="checkbox">

@@ -8849,8 +8849,8 @@ function renderNotificationPreferences() {
   ].filter(Boolean).length;
   accountEl.notificationPreferenceSummary.textContent = `${enabledCount} enabled`;
   accountEl.notificationPreferenceStatus.textContent = hasAccess
-    ? "Alert preferences are ready for backend email delivery."
-    : "Open the free saved tools session to manage alerts.";
+    ? "Weekly Market Notes and alert preferences are ready for backend email delivery."
+    : "Open the free saved tools session to manage weekly Market Notes and alerts.";
 }
 
 async function saveNotificationPreferences() {
@@ -8877,8 +8877,8 @@ async function saveNotificationPreferences() {
       );
       writeStoredJson(notificationPreferencesKey, [synced, ...remaining].slice(0, 50));
       renderNotificationPreferences();
-      accountEl.notificationPreferenceStatus.textContent = "Notification preferences saved to backend.";
-      recordActivity("Notification preferences", `${currentSession.email} updated backend account alerts.`);
+      accountEl.notificationPreferenceStatus.textContent = "Weekly Market Notes preferences saved to backend.";
+      recordActivity("Notification preferences", `${currentSession.email} updated backend Market Notes and account alerts.`);
       return;
     }
   }
@@ -8887,8 +8887,8 @@ async function saveNotificationPreferences() {
   );
   writeStoredJson(notificationPreferencesKey, [preference, ...preferences].slice(0, 50));
   renderNotificationPreferences();
-  accountEl.notificationPreferenceStatus.textContent = "Notification preferences saved.";
-  recordActivity("Notification preferences", `${currentSession.email} updated account alerts.`);
+  accountEl.notificationPreferenceStatus.textContent = "Weekly Market Notes preferences saved.";
+  recordActivity("Notification preferences", `${currentSession.email} updated Market Notes and account alerts.`);
 }
 
 async function addWatchlistArea() {
