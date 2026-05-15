@@ -6,6 +6,7 @@ Strategy note:
 
 - Free public product rewrite plan: `free-product-rewrite-plan.md`
 - June 1, 2026 soft-launch checklist: `launch-checklist-june-1-2026.md`
+- Missing coverage tracker: `missing-coverage-list.md`
 
 ## Local app server
 
