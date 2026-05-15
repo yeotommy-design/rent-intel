@@ -8986,13 +8986,13 @@ h1 {
 
 .public-trust-guide {
   display: grid;
-  grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: minmax(300px, 0.36fr) minmax(0, 1fr);
+  gap: 10px;
   align-items: center;
   margin-bottom: 10px;
   border: 1px solid rgba(35, 31, 24, 0.12);
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 9px 12px;
   background: #fffdf9;
   box-shadow: 0 8px 20px rgba(35, 31, 24, 0.05);
 }
@@ -9013,21 +9013,21 @@ h1 {
 
 .public-trust-guide > div:first-child strong {
   color: var(--ink);
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.15;
 }
 
 .public-trust-guide-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
+  gap: 8px;
 }
 
 .public-trust-guide-grid article {
   min-width: 0;
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 7px 9px;
+  padding: 9px 11px;
   background: #f7f5ef;
 }
 
@@ -9049,15 +9049,15 @@ h1 {
 .public-trust-guide-grid span {
   display: block;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
 }
 
 .public-trust-guide-grid p {
-  margin-top: 3px;
+  margin-top: 4px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   line-height: 1.2;
 }
