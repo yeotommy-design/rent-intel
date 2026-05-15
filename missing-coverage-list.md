@@ -18,15 +18,27 @@ Updated: 2026-05-15
 - Clementi retail
 - Tiong Bahru retail
 - Woodlands retail
+- Novena retail
+- Bukit Timah retail
+- Marine Parade retail
+- Pasir Ris retail
+- Hougang retail
 
 ## Priority 1 Added In Current Build
+- Novena retail
+- Bukit Timah retail
+- Marine Parade retail
+- Pasir Ris retail
+- Hougang retail
+
+## Priority 1 Added In Previous Build
 - Paya Lebar retail
 - Bugis retail
 - Clementi retail
 - Tiong Bahru retail
 - Woodlands retail
 
-## Priority 1 Added In Previous Build
+## Priority 1 Added In Earlier Build
 - Bedok HDB retail
 - Ang Mo Kio retail
 - Bishan retail
@@ -34,26 +46,18 @@ Updated: 2026-05-15
 - Joo Chiat shophouse retail
 
 ## Priority 1 Still To Add Before Launch
-- Novena retail
-- Bukit Timah retail
-- Marine Parade retail
-- Pasir Ris retail
-- Hougang retail
+- None
 
 ## Prime And Central Comparison Areas
 - Marina Bay retail
 - Raffles Place retail
 - City Hall retail
 - Bras Basah retail
-- Novena retail
 
 ## Heartland Town Retail Coverage
-- Hougang retail
 - Yishun retail
 - Sengkang retail
 - Punggol retail
-- Pasir Ris retail
-- Marine Parade retail
 - Bukit Batok retail
 - Bukit Panjang retail
 
@@ -88,16 +92,16 @@ Updated: 2026-05-15
 - Non-retail commercial uses without comparison basis
 
 ## Suggested Next 10 Additions
-1. Novena retail
-2. Bukit Timah retail
-3. Marine Parade retail
-4. Pasir Ris retail
-5. Hougang retail
-6. Yishun retail
-7. Sengkang retail
-8. Punggol retail
-9. Marina Bay retail
-10. City Hall retail
+1. Yishun retail
+2. Sengkang retail
+3. Punggol retail
+4. Marina Bay retail
+5. City Hall retail
+6. Raffles Place retail
+7. Bras Basah retail
+8. Bukit Batok retail
+9. Bukit Panjang retail
+10. Tiong Bahru shophouse retail
 
 ## Notes
 - Direct search coverage means a named record is already available in the main public search flow.
