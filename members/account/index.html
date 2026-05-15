@@ -50,11 +50,12 @@
       </nav>
 
       <section class="account-grid" aria-label="RentIntel account login and status">
-        <article class="account-panel" id="emailStep">
+        <article class="account-panel optional-signin-panel" id="emailStep">
           <div class="card-label">
-            <span>Optional Sign-In</span>
-            <strong>Add your own email later</strong>
+            <span>Use your own email later</span>
+            <strong>Optional email link</strong>
           </div>
+          <p class="optional-signin-note">Free saved tools already work without sign-in. Add an email only if you want your own saved session later.</p>
           <form id="emailLoginForm" class="account-form">
             <label for="accountEmail">Email address</label>
             <div>
@@ -82,8 +83,8 @@
 
         <article class="account-panel join-member-panel" id="joinMemberPanel" hidden>
           <div class="card-label">
-            <span>Optional Sign-In</span>
-            <strong>Add another email later</strong>
+            <span>Another email later</span>
+            <strong>Optional secondary sign-in</strong>
           </div>
           <form id="joinMemberForm" class="account-form">
             <label for="joinEmail">Email to add</label>

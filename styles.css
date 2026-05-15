@@ -12038,3 +12038,55 @@ h1 {
   font-size: 34px;
   line-height: 1.05;
 }
+
+
+.optional-signin-panel {
+  background: linear-gradient(180deg, rgba(255, 249, 236, 0.9), rgba(255, 255, 255, 0.98));
+  border-color: #e8d9bb;
+}
+
+.optional-signin-panel .card-label span {
+  color: #876321;
+}
+
+.optional-signin-panel .card-label strong {
+  font-size: 1.35rem;
+}
+
+.optional-signin-note {
+  margin: 0 0 1rem;
+  color: #5f6a63;
+  max-width: 42rem;
+}
+
+.account-status-grid {
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.account-status-grid .account-panel {
+  padding: 1rem 1.125rem;
+}
+
+.account-status-grid .account-panel span {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+}
+
+.account-status-grid .account-panel strong {
+  font-size: 1.1rem;
+}
+
+.member-toolbench-grid {
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.member-tool-card {
+  padding: 1.125rem;
+  min-height: 0;
+}
+
+.member-tool-card p {
+  margin-bottom: 0.875rem;
+}
