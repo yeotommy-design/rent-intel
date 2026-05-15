@@ -1,159 +1,93 @@
 # RentIntel Missing Coverage List
 
-Updated for the current live search build.
+Updated: 2026-05-15
 
-## Current direct-search coverage
-
-The live public search currently loads direct records for only these 5 areas:
-
+## Current Direct Search Coverage
 - Chinatown shophouse retail
 - Orchard mall retail
 - Serangoon HDB retail
 - Tampines HDB retail
 - Jurong East retail
-
-Everything else below should be treated as missing direct-search coverage until a named record is added.
-
-## Build priority
-
-### Priority 1: Strong launch coverage
-
-These are high-value areas to add next because they are recognizable, frequently compared, or useful for showing breadth before launch.
-
 - Bedok HDB retail
 - Ang Mo Kio retail
 - Bishan retail
 - Toa Payoh retail
+- Joo Chiat shophouse retail
+
+## Priority 1 Added In Current Build
+- Bedok HDB retail
+- Ang Mo Kio retail
+- Bishan retail
+- Toa Payoh retail
+- Joo Chiat shophouse retail
+
+## Priority 1 Still To Add Before Launch
 - Paya Lebar retail
 - Bugis retail
-- Tiong Bahru retail
 - Clementi retail
+- Tiong Bahru retail
 - Woodlands retail
+
+## Prime And Central Comparison Areas
+- Marina Bay retail
+- Raffles Place retail
+- City Hall retail
+- Bras Basah retail
+- Novena retail
+
+## Heartland Town Retail Coverage
 - Hougang retail
 - Yishun retail
-- Joo Chiat shophouse
+- Sengkang retail
+- Punggol retail
+- Pasir Ris retail
+- Marine Parade retail
+- Bukit Batok retail
+- Bukit Panjang retail
 
-### Priority 2: Prime / central / city-fringe comparison areas
-
-These help users compare central asking-rent premiums across common retail nodes.
-
-- Bugis Junction / Bugis retail
-- City Hall retail
-- Marina retail
-- Clarke Quay retail
-- Tanjong Pagar retail
-- Tiong Bahru shophouse / retail
-- Holland Village retail
-- Katong / East Coast retail
-- Novena retail
-- Balestier shophouse / retail
-
-### Priority 3: Heartland town retail coverage
-
-These help make HDB / neighbourhood retail coverage feel truly Singapore-wide.
-
-- Bedok HDB retail
-- Ang Mo Kio HDB retail
-- Bishan HDB retail
-- Toa Payoh HDB retail
-- Hougang HDB retail
-- Yishun HDB retail
-- Woodlands HDB retail
-- Sengkang HDB retail
-- Punggol HDB retail
-- Pasir Ris HDB retail
-- Bukit Batok HDB retail
-- Choa Chu Kang HDB retail
-- Bukit Panjang HDB retail
-- Clementi HDB retail
-- Queenstown HDB retail
-- Marine Parade HDB retail
-- Kallang / Whampoa HDB retail
-
-### Priority 4: Suburban mall retail coverage
-
-These make mall comparison more useful for chain, franchise, and operator decisions.
-
-- Nex retail
+## Mall Coverage To Expand
 - Tampines Mall retail
-- Century Square retail
-- White Sands retail
-- IMM retail
-- Jem retail
-- Westgate retail
-- Northpoint City retail
-- Causeway Point retail
-- Waterway Point retail
-- Compass One retail
-- Junction 8 retail
-- Plaza Singapura retail
 - VivoCity retail
-- Lot One retail
+- PLQ Mall retail
+- Junction 8 retail
+- Northpoint retail
+- Century Square retail
+- Waterway Point retail
 
-### Priority 5: Shophouse and street-front clusters
+## Shophouse And Streetfront Clusters
+- Tiong Bahru shophouse retail
+- Katong shophouse retail
+- East Coast Road retail
+- Arab Street retail
+- Haji Lane retail
+- Keong Saik retail
 
-These help strengthen high-interest premium retail use cases.
+## Manual Review Bucket
+- Industrial showroom
+- Office-linked retail
+- Warehouse-front commercial use
+- Large-format unusual use
+- Special clinic / education layouts
 
-- Joo Chiat shophouse
-- Tiong Bahru shophouse
-- Holland Village shophouse
-- Arab Street / Haji Lane retail
-- Kampong Glam shophouse
-- Keong Saik shophouse
-- Boat Quay shophouse
-- Jalan Besar shophouse
-- Balestier shophouse
-- Bukit Timah shophouse
-
-## Manual review bucket
-
-These are not good candidates for direct launch coverage until the product has clearer classification and source handling.
-
-- Industrial commercial units
-- Office retail hybrids
-- Warehouse / showroom hybrids
-- Mixed-use strata commercial
-- Medical-suite heavy retail nodes
-- Unusual private retail formats
-
-## Not covered for now
-
-These should stay outside launch coverage.
-
+## Not Covered
 - Offshore islands
-- Military / special-use sites
-- Conflicting area-type pairs
-- Non-retail commercial uses that do not match the product scope
+- Military / restricted sites
+- Conflicting area-type combinations
+- Non-retail commercial uses without comparison basis
 
-## Suggested build order
+## Suggested Next 10 Additions
+1. Paya Lebar retail
+2. Bugis retail
+3. Clementi retail
+4. Tiong Bahru retail
+5. Woodlands retail
+6. Novena retail
+7. Bukit Timah retail
+8. Marine Parade retail
+9. Pasir Ris retail
+10. Hougang retail
 
-If we want a practical rollout path, add coverage in this order:
-
-1. Bedok HDB retail
-2. Ang Mo Kio retail
-3. Bishan retail
-4. Toa Payoh retail
-5. Joo Chiat shophouse
-6. Bugis retail
-7. Paya Lebar retail
-8. Tiong Bahru retail
-9. Clementi retail
-10. Woodlands retail
-
-## Tracking notes
-
-Use this list as the working coverage queue for new direct records.
-
-For each new area we add, we should track:
-
-- Title
-- Property type
-- Aliases
-- Official benchmark source
-- Asking-rent source
-- Fair range
-- Confidence
-- Coverage status:
-  - direct
-  - pilot verified
-  - production verified
+## Notes
+- Direct search coverage means a named record is already available in the main public search flow.
+- Priority 1 areas are the next most useful additions for launch breadth and user trust.
+- Manual review means the place or use case may still be supported later, but not as a fast direct-search record yet.
