@@ -7900,6 +7900,26 @@ h1 {
   background: #fff5d6;
 }
 
+.hero-copy > .public-scope-strip {
+  display: none;
+}
+
+.results-shell > .public-scope-strip {
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding: 13px 15px;
+  box-shadow: var(--shadow);
+}
+
+.results-shell > .rentintel-path-strip {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.results-shell > .search-result-state {
+  margin-top: 0;
+}
+
 .hero-answer-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
