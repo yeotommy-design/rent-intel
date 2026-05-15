@@ -12330,12 +12330,13 @@ h1 {
 }
 
 .market-notes-section {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
   padding: 8px 0 16px;
 }
 
 .market-notes-shell {
-  width: min(1180px, calc(100% - 40px));
-  margin: 0 auto;
+  width: 100%;
 }
 
 .market-notes-feature,
