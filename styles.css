@@ -12176,3 +12176,40 @@ h1 {
     padding-top: 0.85rem;
   }
 }
+
+
+.rentintel-path-strip {
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.rentintel-path-copy {
+  min-width: 0;
+  flex: 1 1 26rem;
+}
+
+.rentintel-path-copy strong {
+  display: block;
+  max-width: 34rem;
+}
+
+.rentintel-path-links {
+  justify-content: flex-end;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 0.75rem;
+}
+
+.rentintel-path-links a {
+  white-space: nowrap;
+}
+
+@media (max-width: 920px) {
+  .rentintel-path-strip {
+    align-items: flex-start;
+  }
+
+  .rentintel-path-links {
+    justify-content: flex-start;
+  }
+}
