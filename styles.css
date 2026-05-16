@@ -12326,7 +12326,7 @@ h1 {
 .market-notes-grid {
   display: grid;
   gap: 1rem;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
 }
 
 .market-notes-section {
@@ -12343,6 +12343,7 @@ h1 {
 .market-note-card,
 .market-note-entry,
 .market-notes-signup-panel {
+  min-width: 0;
   border: 1px solid rgba(211, 155, 43, 0.24);
   border-radius: 18px;
   background:
