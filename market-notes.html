@@ -9,8 +9,73 @@
       content="Short weekly RentIntel notes on where Singapore retail rent pressure is building, what coverage was added, and what decision cue matters next."
     >
     <link rel="stylesheet" href="./styles.css">
+    <style>
+      .market-notes-page .site-header {
+        padding: 0;
+      }
+
+      .market-notes-page .product-header-card {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 1.1rem 0 0.95rem;
+        border-bottom: 1px solid rgba(210, 224, 220, 0.2);
+      }
+
+      .market-notes-page .brand {
+        gap: 1rem;
+      }
+
+      .market-notes-page .brand-mark-img {
+        width: 56px;
+        height: 56px;
+      }
+
+      .market-notes-page .brand-name {
+        font-size: clamp(2.6rem, 4vw, 4rem);
+        line-height: 0.92;
+      }
+
+      .market-notes-page .brand-tag {
+        font-size: 1rem;
+        letter-spacing: 0.16em;
+      }
+
+      .market-notes-page .compact-footer {
+        padding-top: 2.6rem;
+        padding-bottom: 2.4rem;
+      }
+
+      .market-notes-page .compact-footer .footer-brand {
+        font-size: 1.9rem;
+      }
+
+      .market-notes-page .compact-footer .footer-links {
+        gap: 1.1rem;
+      }
+
+      .market-notes-page .compact-footer .footer-contact {
+        margin-top: 1rem;
+      }
+
+      @media (max-width: 720px) {
+        .market-notes-page .product-header-card {
+          width: min(100% - 24px, 1180px);
+          padding: 0.9rem 0 0.8rem;
+        }
+
+        .market-notes-page .brand-mark-img {
+          width: 42px;
+          height: 42px;
+        }
+
+        .market-notes-page .brand-tag {
+          font-size: 0.82rem;
+          letter-spacing: 0.12em;
+        }
+      }
+    </style>
   </head>
-  <body class="info-page">
+  <body class="info-page market-notes-page">
     <header class="site-header" aria-label="RentIntel navigation">
       <div class="product-header-card">
         <a class="brand" href="./index.html" aria-label="RentIntel home">
