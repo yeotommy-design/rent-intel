@@ -13128,19 +13128,19 @@ body .product-footer a {
   }
 }
 .related-intel article {
-  background: linear-gradient(180deg, #213e45, #1c343b);
-  border: 1px solid rgba(217, 188, 121, 0.28);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  background: linear-gradient(180deg, #28444b, #213840) !important;
+  border: 1px solid rgba(217, 188, 121, 0.24) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .related-intel article span {
-  color: #c8922f;
+  color: #d59a2f !important;
 }
 
 .related-intel article strong {
-  color: #f4f7f5;
+  color: #f3f5f4 !important;
 }
 
 .related-intel article p {
-  color: rgba(232, 238, 240, 0.9);
+  color: rgba(231, 238, 236, 0.84) !important;
 }
