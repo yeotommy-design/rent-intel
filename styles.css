@@ -13133,6 +13133,10 @@ body .product-footer a {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
+.related-intel article > div {
+  color: #eef4f2;
+}
+
 .related-intel article span {
   color: #d59a2f !important;
 }
@@ -13143,4 +13147,15 @@ body .product-footer a {
 
 .related-intel article p {
   color: rgba(231, 238, 236, 0.84) !important;
+}
+
+.related-intel article a {
+  background: #f1d786 !important;
+  color: #07111c !important;
+  border: 1px solid rgba(217, 188, 121, 0.24);
+}
+
+.related-intel article a:hover {
+  background: #f5df96 !important;
+  color: #07111c !important;
 }
