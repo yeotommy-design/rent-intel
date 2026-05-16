@@ -12833,3 +12833,314 @@ h1 {
     letter-spacing: 0.14em !important;
   }
 }
+.site-footer,
+.app-footer,
+.product-footer {
+  display: block;
+  width: 100%;
+  margin-top: 72px;
+  background: #1f3b42;
+  color: rgba(239, 245, 243, 0.9);
+}
+
+.site-footer .footer-main,
+.app-footer .footer-main,
+.product-footer .footer-main,
+.site-footer .footer-shell,
+.app-footer .footer-shell,
+.product-footer .footer-shell,
+.site-footer .footer-inner,
+.app-footer .footer-inner,
+.product-footer .footer-inner {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 30px 0 36px;
+}
+
+.site-footer .footer-brand,
+.app-footer .footer-brand,
+.product-footer .footer-brand {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.site-footer .footer-brand strong,
+.app-footer .footer-brand strong,
+.product-footer .footer-brand strong {
+  font-size: 2rem;
+  line-height: 1;
+  color: #f4f7f6;
+}
+
+.site-footer .footer-brand span,
+.app-footer .footer-brand span,
+.product-footer .footer-brand span {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(239, 245, 243, 0.86);
+}
+
+.site-footer nav,
+.app-footer nav,
+.product-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 20px;
+  margin: 14px 0;
+}
+
+.site-footer nav a,
+.app-footer nav a,
+.product-footer nav a {
+  color: #f0cf6a;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-footer nav a:hover,
+.app-footer nav a:hover,
+.product-footer nav a:hover {
+  text-decoration: underline;
+}
+
+.site-footer .pulse-chip,
+.app-footer .pulse-chip,
+.product-footer .pulse-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  padding: 8px 14px;
+  border: 1px solid rgba(219, 230, 227, 0.22);
+  border-radius: 999px;
+  color: rgba(239, 245, 243, 0.88);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.site-footer .footer-contact,
+.app-footer .footer-contact,
+.product-footer .footer-contact,
+.site-footer .footer-note,
+.app-footer .footer-note,
+.product-footer .footer-note,
+.site-footer > p,
+.app-footer > p,
+.product-footer > p {
+  text-align: center;
+  max-width: 920px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.site-footer .footer-contact,
+.app-footer .footer-contact,
+.product-footer .footer-contact {
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
+.site-footer .footer-note,
+.app-footer .footer-note,
+.product-footer .footer-note {
+  color: rgba(239, 245, 243, 0.64);
+  margin-bottom: 0;
+}
+
+.site-footer hr,
+.app-footer hr,
+.product-footer hr {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  border: 0;
+  border-top: 1px solid rgba(219, 230, 227, 0.2);
+}
+
+@media (max-width: 720px) {
+  .site-footer .footer-main,
+  .app-footer .footer-main,
+  .product-footer .footer-main,
+  .site-footer .footer-shell,
+  .app-footer .footer-shell,
+  .product-footer .footer-shell,
+  .site-footer .footer-inner,
+  .app-footer .footer-inner,
+  .product-footer .footer-inner {
+    width: min(100% - 28px, 1180px);
+    padding: 26px 0 32px;
+  }
+
+  .site-footer .footer-brand strong,
+  .app-footer .footer-brand strong,
+  .product-footer .footer-brand strong {
+    font-size: 1.7rem;
+  }
+
+  .site-footer nav,
+  .app-footer nav,
+  .product-footer nav {
+    gap: 10px 14px;
+  }
+}
+/* Shared footer fallback normalization */
+body .site-footer,
+body .app-footer,
+body .product-footer {
+  display: block;
+  width: 100%;
+  clear: both;
+  margin-top: 56px;
+  padding: 40px 0 28px;
+  background: #1f3a3f;
+  color: #d5deda;
+}
+
+body .site-footer hr,
+body .app-footer hr,
+body .product-footer hr {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto 24px;
+  border: 0;
+  border-top: 1px solid rgba(214, 223, 219, 0.18);
+}
+
+body .site-footer .footer-main,
+body .app-footer .footer-main,
+body .product-footer .footer-main {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  text-align: center;
+}
+
+body .site-footer .footer-brand,
+body .app-footer .footer-brand,
+body .product-footer .footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 12px;
+}
+
+body .site-footer .footer-brand strong,
+body .app-footer .footer-brand strong,
+body .product-footer .footer-brand strong {
+  font-size: 2rem;
+  line-height: 1;
+  color: #f4f5f2;
+}
+
+body .site-footer .footer-brand span,
+body .app-footer .footer-brand span,
+body .product-footer .footer-brand span {
+  font-size: 0.92rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #d5deda;
+}
+
+body .site-footer nav,
+body .app-footer nav,
+body .product-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+body .site-footer nav a,
+body .app-footer nav a,
+body .product-footer nav a {
+  color: #f5d87a;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+body .site-footer .pulse-chip,
+body .app-footer .pulse-chip,
+body .product-footer .pulse-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  margin: 6px auto 16px;
+  border: 1px solid rgba(213, 222, 218, 0.22);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #d5deda;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+body .site-footer p,
+body .app-footer p,
+body .product-footer p {
+  max-width: 860px;
+  margin: 0 auto 10px;
+  color: #d5deda;
+}
+
+body .site-footer .footer-contact,
+body .app-footer .footer-contact,
+body .product-footer .footer-contact,
+body .site-footer .footer-note,
+body .app-footer .footer-note,
+body .product-footer .footer-note {
+  max-width: 860px;
+}
+
+body .site-footer a,
+body .app-footer a,
+body .product-footer a {
+  color: #f5d87a;
+}
+
+@media (max-width: 760px) {
+  body .site-footer .footer-main,
+  body .app-footer .footer-main,
+  body .product-footer .footer-main,
+  body .site-footer hr,
+  body .app-footer hr,
+  body .product-footer hr {
+    width: min(100%, calc(100% - 32px));
+  }
+
+  body .site-footer .footer-brand strong,
+  body .app-footer .footer-brand strong,
+  body .product-footer .footer-brand strong {
+    font-size: 1.7rem;
+  }
+
+  body .site-footer nav,
+  body .app-footer nav,
+  body .product-footer nav {
+    gap: 12px;
+  }
+}
+.related-intel article {
+  background: linear-gradient(180deg, #213e45, #1c343b);
+  border: 1px solid rgba(217, 188, 121, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.related-intel article span {
+  color: #c8922f;
+}
+
+.related-intel article strong {
+  color: #f4f7f5;
+}
+
+.related-intel article p {
+  color: rgba(232, 238, 240, 0.9);
+}
