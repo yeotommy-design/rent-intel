@@ -12462,3 +12462,87 @@ h1 {
     flex-direction: column;
   }
 }
+.info-page .site-header {
+  padding: 0;
+}
+
+.info-page .product-header-card {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 1.05rem 0 0.95rem;
+  border-bottom: 1px solid rgba(210, 224, 220, 0.2);
+}
+
+.info-page .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.95rem;
+  text-decoration: none;
+}
+
+.info-page .brand-mark-img {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+}
+
+.info-page .brand-product {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.info-page .brand-name {
+  font-size: clamp(2.4rem, 4vw, 3.9rem);
+  line-height: 0.92;
+}
+
+.info-page .brand-tag {
+  font-size: 0.98rem;
+  letter-spacing: 0.16em;
+}
+
+.info-page .compact-footer {
+  margin-top: 3.4rem;
+  padding-top: 2.6rem;
+  padding-bottom: 2.35rem;
+}
+
+.info-page .compact-footer .footer-brand {
+  font-size: 1.9rem;
+}
+
+.info-page .compact-footer .footer-links {
+  justify-content: center;
+  gap: 1rem;
+}
+
+.info-page .compact-footer .footer-contact {
+  margin-top: 1rem;
+}
+
+@media (max-width: 720px) {
+  .info-page .product-header-card {
+    width: min(100% - 24px, 1180px);
+    padding: 0.88rem 0 0.8rem;
+  }
+
+  .info-page .brand-mark-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .info-page .brand-name {
+    font-size: clamp(2rem, 9vw, 2.7rem);
+  }
+
+  .info-page .brand-tag {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+  }
+
+  .info-page .compact-footer {
+    padding-top: 2.2rem;
+    padding-bottom: 2rem;
+  }
+}
