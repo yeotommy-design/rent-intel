@@ -18,6 +18,20 @@ Run it from the project root:
 npm start
 ```
 
+Useful release checks:
+
+```bash
+npm run audit:search
+```
+
+```bash
+npm run consolidate:sample-data
+```
+
+```bash
+npm run verify:production
+```
+
 Then open:
 
 ```text
@@ -152,3 +166,23 @@ Important rule: official transaction-backed benchmark rent, current asking-rent 
 Open `index.html` directly in a browser to view the prototype.
 
 If you want to test the backend auth flow, use the local app server instead of opening `index.html` directly.
+
+## Release guardrails
+
+Before production deploys:
+
+- Run `npm run audit:search`
+- Resolve any exact-title, base-title, or exact-alias regressions first
+
+After production deploys:
+
+- Run `npm run verify:production`
+- Spot-check these live queries:
+  - `Thomson Plaza`
+  - `Palais Renaissance`
+  - `Seah Street`
+  - `Liat Towers`
+  - `Cuppage annexe`
+  - `Cuppage Rise annexe retail`
+  - `Chinatown shophouse retail`
+  - `Tampines Mall retail`

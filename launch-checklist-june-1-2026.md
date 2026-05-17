@@ -173,6 +173,18 @@ Deliverables:
 - Analytics installed
 - No broken public navigation
 - Admin routes remain gated
+- Run `npm run audit:search` before any production deploy
+- Run `npm run verify:production` after any production deploy
+- After deploy, production-check these queries:
+  - `Thomson Plaza`
+  - `Palais Renaissance`
+  - `Seah Street`
+  - `Liat Towers`
+  - `Cuppage annexe`
+  - `Cuppage Rise annexe retail`
+  - `Chinatown shophouse retail`
+  - `Tampines Mall retail`
+- Confirm those production checks resolve to the expected direct records before closing the release
 
 ### Internal ops
 
@@ -211,6 +223,29 @@ Implement the public-positioning reset first:
 - May 14 to May 25: build and rewrite
 - May 26 to May 29: QA and launch tightening
 - May 30 to May 31: freeze and critical fixes only
+
+## Release Workflow
+
+### Before deploy
+
+- Run `npm run audit:search`
+- Fix any exact-title, base-title, or exact-alias failures before shipping
+- Review shared alias collisions if the release touched search, aliases, or coverage expansion
+
+### After deploy
+
+- Run `npm run verify:production`
+- Re-check production for:
+  - `Thomson Plaza`
+  - `Palais Renaissance`
+  - `Seah Street`
+  - `Liat Towers`
+  - `Cuppage annexe`
+  - `Cuppage Rise annexe retail`
+  - `Chinatown shophouse retail`
+  - `Tampines Mall retail`
+- Confirm the production bundle version and sample payload version changed as expected
+- Do not treat the release as complete until those checks pass on the live domain
 
 ## Success Metric For Soft Launch
 

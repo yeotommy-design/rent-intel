@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "audit:search": "node ./scripts/audit-sample-search.mjs",
-    "consolidate:sample-data": "node ./scripts/consolidate-sample-data.mjs"
+    "consolidate:sample-data": "node ./scripts/consolidate-sample-data.mjs",
+    "verify:production": "node ./scripts/spot-check-production.mjs"
   }
 }
