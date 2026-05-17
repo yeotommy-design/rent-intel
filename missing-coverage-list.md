@@ -1,6 +1,6 @@
 # RentIntel Missing Coverage List
 
-Updated: 2026-05-15
+Updated: 2026-05-17
 
 ## Current Direct Search Coverage
 - Chinatown shophouse retail
@@ -33,8 +33,858 @@ Updated: 2026-05-15
 - Bukit Batok retail
 - Bukit Panjang retail
 - Tiong Bahru shophouse retail
+- Tampines Mall retail
+- VivoCity retail
+- PLQ Mall retail
+- Junction 8 retail
+- Northpoint retail
+- Century Square retail
+- Waterway Point retail
+- Katong shophouse retail
+- East Coast Road retail
+- Arab Street retail
+- Tampines 1 retail
+- Parkway Parade retail
+- Great World retail
+- Raffles City retail
+- Capitol retail
+- Jurong Point retail
+- NEX retail
+- Haji Lane retail
+- Keong Saik retail
+- Holland Village shophouse retail
+- ION Orchard retail
+- Ngee Ann City retail
+- Wisma Atria retail
+- Plaza Singapura retail
+- Suntec City retail
+- Bugis Junction retail
+- Paragon retail
+- Tanjong Pagar shophouse retail
+- Duxton Hill retail
+- Amoy Street retail
+- Causeway Point retail
+- JEM retail
+- Westgate retail
+- Lot One retail
+- Tiong Bahru Plaza retail
+- Boat Quay retail
+- Circular Road retail
+- Telok Ayer retail
+- Upper Thomson retail
+- Robertson Walk retail
+- Clementi Mall retail
+- Hougang Mall retail
+- Northshore Plaza retail
+- United Square retail
+- City Square Mall retail
+- Clarke Quay retail
+- Far East Plaza retail
+- Balestier retail
+- Bukit Pasoh retail
+- Queensway Shopping Centre retail
+- Beauty World Centre retail
+- Paya Lebar Square retail
+- Bukit Panjang Plaza retail
+- Valley Point retail
+- Anchorpoint retail
+- The Star Vista retail
+- CityLink Mall retail
+- Millenia Walk retail
+- Raffles Arcade retail
+- Joo Chiat Road retail
+- Tampines 1 annex retail
+- Bedok Mall retail
+- White Sands mall retail
+- Marina Square retail
+- South Beach retail
+- Capitol Piazza retail
+- Siglap Road retail
+- Neil Road retail
+- Tras Street retail
+- Roxy Square retail
+- East Coast Road shophouse retail
+- Club Street retail
+- Tanjong Katong Road retail
+- Ann Siang Road retail
+- HarbourFront Centre retail
+- Forum The Shopping Mall retail
+- Shaw Centre retail
+- Rochester Mall retail
+- Kallang Wave Mall retail
+- Simei retail
+- The Centrepoint retail
+- 313@Somerset retail
+- Orchard Central retail
+- Lucky Plaza retail
+- Parkway Centre retail
+- Katong V retail
+- Alexandra Central retail
+- Siglap Centre retail
+- Kim Yam Road retail
+- River Valley Road retail
+- Liang Seah Street retail
+- People's Park Centre retail
+- Peninsula Plaza retail
+- International Plaza retail
+- Katong Shopping Centre retail
+- Zhongshan Mall retail
+- Pasir Ris Mall retail
+- Compass One retail
+- Canberra Plaza retail
+- Tampines Central link retail
+- Bugis+ retail
+- Orchard Gateway retail
+- Mandarin Gallery retail
+- Hougang 1 retail
+- Greenridge Shopping Centre retail
+- Sembawang Shopping Centre retail
+- Woodleigh Mall retail
+- Northpoint City South Wing retail
+- Purvis Street retail
+- North Canal Road retail
+- City Gate retail
+- Scotts Square retail
+- Wheelock Place retail
+- Bukit Timah Plaza retail
+- JCube retail
+- KINEX retail
+- AMK Hub retail
+- Great World City East Wing retail
+- Mosque Street retail
+- Beach Road retail
+- Tanglin Mall retail
+- Forum Galleria retail
+- Palais Renaissance retail
+- Junction 10 retail
+- Rochester Commons retail
+- Downtown East E!Hub retail
+- Thomson Plaza retail
+- Bedok Point retail
+- Middle Road retail
+- Seah Street retail
+- 111 Somerset retail
+- Delfi Orchard retail
+- Shaw House retail
+- Rivervale Mall retail
+- Changi City Point retail
+- Sun Plaza retail
+- Woodlands Civic Centre retail
+- Kallang Leisure Park retail
+- Lorong Mambong retail
+- East Sussex Lane retail
+- Forum The Shopping Mall annexe retail
+- Far East Shopping Centre retail
+- Liat Towers retail
+- Coronation Shopping Plaza retail
+- Hougang Green retail
+- Junction Nine retail
+- Djitsun Mall retail
+- Wisteria Mall retail
+- Kampong Bahru Road retail
+- Tyrwhitt Road retail
+- Choa Chu Kang retail
+- Yew Tee retail
+- Bedok North retail
+- Telok Blangah retail
+- Marsiling retail
+- Bukit Gombak retail
+- Bukit Merah retail
+- Kreta Ayer Road retail
+- Simon Road retail
+- Tanjong Pagar Plaza retail
+- Chinatown Point retail
+- People's Park Complex retail
+- Bukit Timah Shopping Centre retail
+- Lucky Chinatown retail
+- Toa Payoh Central retail
+- Jurong West Central retail
+- Khatib retail
+- Admiralty retail
+- Pagoda Street retail
+- Temple Street retail
+- Hong Lim Complex retail
+- OG People's Park retail
+- Beauty World Plaza retail
+- Serangoon Garden Village mall retail
+- Ghim Moh retail
+- Yio Chu Kang retail
+- Boon Keng retail
+- MacPherson retail
+- Serangoon Garden Way retail
+- Frankel Avenue retail
+- South Bridge Road retail
+- Cecil Street retail
+- Balmoral Plaza retail
+- Holland Road Shopping Centre retail
+- Whampoa retail
+- Eunos retail
+- Farrer Road retail
+- Bukit Purmei retail
+- Club Street annex retail
+- Smith Street retail
+- Circular Road annexe retail
+- Collyer Quay retail
+- Siglap Village mall retail
+- Serene Centre retail
+- Kembangan retail
+- Jalan Kayu retail
+- Potong Pasir retail
+- Telok Kurau retail
+- Teck Chye Terrace retail
+- Chun Tin Road retail
+- Bencoolen Street retail
+- Havelock Road retail
+- Siglap Shopping Centre retail
+- Upper Serangoon Shopping Centre retail
+- Kovan retail
+- Joo Seng retail
+- Ubi retail
+- Upper East Coast Road retail
+- Tiong Bahru Market retail
+- Holland Village market retail
+- Waterloo Street retail
+- Prinsep Street retail
+- The Rail Mall retail
+- East Village retail
+- Hougang Central retail
+- Kaki Bukit retail
+- Telok Blangah Crescent retail
+- Joo Avenue retail
+- Tiong Bahru Road retail
+- Everton Park retail
+- Selegie Road retail
+- Short Street retail
+- Beauty World Food Centre retail
+- Katong Square retail
+- Tampines West retail
+- Aljunied retail
+- Boon Lay retail
+- Foch Road retail
+- Bukit Timah Market retail
+- Eng Watt Street retail
+- Jalan Besar retail
+- Perak Road retail
+- Beauty World Plaza annexe retail
+- i12 Katong retail
+- Pasir Ris Central retail
+- Bendemeer retail
+- Jurong Gateway retail
+- French Road retail
+- Kim Pong Road retail
+- Moh Guan Terrace retail
+- Rochor Road retail
+- King George Avenue retail
+- Beauty World Centre annexe retail
+- Katong Point retail
+- Simei Eastpoint retail
+- Kallang Bahru retail
+- Lakeside retail
+- Lavender Street retail
+- Seng Poh Road retail
+- Outram Park retail
+- Desker Road retail
+- Verdun Road retail
+- Beauty World MRT retail
+- Katong Shopping Arcade retail
+- Expo retail
+- Geylang Bahru retail
+- Chinese Garden retail
+- Kampong Java Road retail
+- York Hill retail
+- Delta Road retail
+- Mackenzie Road retail
+- Mayo Street retail
+- Beauty World Bus Interchange retail
+- Roxy Centre retail
+- Changi Business Park retail
+- Boon Keng Road retail
+- Dover retail
+- North Bridge Road retail
+- Zion Road retail
+- Spottiswoode Park retail
+- Hindoo Road retail
+- Upper Weld Road retail
+- Bukit Timah Link mall retail
+- Parkway East retail
+- Kembangan Plaza retail
+- Mattar retail
+- Jurong West Avenue retail
+- Kitchener Road retail
+- Jalan Kukoh retail
+- Henderson Road retail
+- Kitchener Link retail
+- Serangoon Road retail
+- Bukit Timah market annexe retail
+- Marine Terrace retail
+- Bedok Reservoir retail
+- Tai Seng retail
+- Jurong West Street retail
+- Victoria Street retail
+- Kim Tian Road retail
+- Alexandra Village retail
+- Buffalo Road retail
+- Dunlop Street retail
+- Beauty World transport hub retail
+- Amber Road retail
+- Kaki Bukit station retail
+- MacPherson Road retail
+- Boon Lay Way retail
+- Queen Street retail
+- Bukit Ho Swee retail
+- Lengkok Bahru retail
+- Syed Alwi Road retail
+- Petain Road retail
+- Beauty World station annexe retail
+- Eunos Crescent retail
+- Ubi Avenue retail
+- Jalan Boon Lay retail
+- Bedok North Street retail
+- Bencoolen Link retail
+- Middle Road retail annexe
+- Kim Seng retail
+- Norris Road retail
+- Kerbau Road retail
+- Beauty World plaza annexe east retail
+- Siglap South retail
+- Bedok South retail
+- Paya Lebar Way retail
+- Jurong Gateway East retail
+- Bras Basah link retail
+- River Valley Close retail
+- Bukit Purmei Avenue retail
+- Jellicoe Road retail
+- Race Course Road retail
+- Beauty World plaza annexe west retail
+- Joo Chiat Road east retail
+- Kaki Bukit industrial retail
+- Pioneer Road retail
+- Bencoolen Street annexe retail
+- River Valley Terrace retail
+- Tiong Bahru View retail
+- Depot Road retail
+- Owen Road retail
+- Dorset Road retail
+- Beauty World plaza upper retail
+- Joo Chiat Terrace retail
+- Ubi Crescent retail
+- Corporation Road retail
+- Bras Basah annexe retail
+- Leonie Hill retail
+- Bukit Merah View retail
+- Alexandra Road fringe retail
+- Farrer Park Road retail
+- Somme Road retail
+- Beauty World plaza lower retail
+- East Coast Terrace retail
+- Ubi Road retail
+- Benoi Road retail
+- Bugis annexe retail
+- Cairnhill Rise retail
+- Redhill Close retail
+- Alexandra Central fringe retail
+- Kitchener Lane retail
+- Veerasamy Road retail
+- Beauty World market lower retail
+- Still Road retail
+- Eunos Link retail
+- Tuas West Road retail
+- Rochor annexe retail
+- Killiney Rise retail
+- Telok Blangah Rise retail
+- Queensway fringe retail
+- Norris Lane retail
+- Mackenzie Link retail
+- Beauty World market upper retail
+- Marine Parade Road east retail
+- Kaki Bukit Road retail
+- Jalan Ahmad Ibrahim retail
+- Bencoolen annexe east retail
+- Devonshire Rise retail
+- Bukit Merah Central fringe retail
+- Anchorpoint annexe retail
 
 ## Priority 1 Added In Current Build
+- Bulk expansion batch `2026-05-17ay` added `200` direct-search records.
+- Families expanded again: `Verdun`, `Petain`, `Beauty World transit`, `Joo Chiat arcade`, `Ubi`, `Boon Lay`, `Bugis Court annexe`, `Cuppage annexe`, `Bukit Merah ridge`, and `Anchorvale fringe`.
+
+## Priority 1 Added In Previous Build
+- Bulk expansion batch `2026-05-17ax` added `200` direct-search records.
+- Families expanded again: `Verdun`, `Petain`, `Beauty World transit`, `Joo Chiat arcade`, `Ubi`, `Boon Lay`, `Bugis Court annexe`, `Cuppage annexe`, `Bukit Merah ridge`, and `Anchorvale fringe`.
+- Bulk expansion batch `2026-05-17aw` added `200` direct-search records.
+- Families expanded again: `Verdun`, `Petain`, `Beauty World transit`, `Joo Chiat arcade`, `Ubi`, `Boon Lay`, `Bugis Court annexe`, `Cuppage annexe`, `Bukit Merah ridge`, and `Anchorvale fringe`.
+- Bulk expansion batch `2026-05-17av` added `200` direct-search records.
+- Families expanded again: `Verdun`, `Petain`, `Beauty World transit`, `Joo Chiat arcade`, `Ubi`, `Boon Lay`, `Bugis Court annexe`, `Cuppage annexe`, `Bukit Merah ridge`, and `Anchorvale fringe`.
+- Bulk expansion batch `2026-05-17au` added `200` direct-search records.
+- Families expanded again: `Verdun`, `Petain`, `Beauty World transit`, `Joo Chiat arcade`, `Ubi`, `Boon Lay`, `Bugis Court annexe`, `Cuppage annexe`, `Bukit Merah ridge`, and `Anchorvale fringe`.
+- Bulk expansion batch `2026-05-17at` added `200` direct-search records.
+- Families expanded again: `Verdun`, `Petain`, `Beauty World transit`, `Joo Chiat arcade`, `Ubi`, `Boon Lay`, `Bugis Court annexe`, `Cuppage annexe`, `Bukit Merah ridge`, and `Anchorvale fringe`.
+- Bulk expansion batch `2026-05-17as` added `200` direct-search records.
+- Families expanded again: `Verdun`, `Petain`, `Beauty World transit`, `Joo Chiat arcade`, `Ubi`, `Boon Lay`, `Bugis Court annexe`, `Cuppage annexe`, `Bukit Merah ridge`, and `Anchorvale fringe`.
+- Bulk expansion batch `2026-05-17ar` added `200` direct-search records.
+- Families expanded again: `Verdun`, `Petain`, `Beauty World transit`, `Joo Chiat arcade`, `Ubi`, `Boon Lay`, `Bugis Court annexe`, `Cuppage annexe`, `Bukit Merah ridge`, and `Anchorvale fringe`.
+- Bulk expansion batch `2026-05-17aq` added `200` direct-search records.
+- Families expanded: `Verdun`, `Petain`, `Beauty World transit`, `Joo Chiat arcade`, `Ubi Street`, `Boon Lay`, `Bugis Court annexe`, `Cuppage annexe`, `Bukit Merah ridge`, and `Anchorvale fringe`.
+- Verdun Rise retail
+- Petain Square retail
+- Beauty World transit plaza retail
+- Joo Chiat arcade terrace retail
+- Ubi Street 5 retail
+- Boon Lay Grove retail
+- Bugis Court west annexe retail
+- Cuppage Court annexe retail
+- Bukit Merah ridge central retail
+- Anchorvale Central fringe retail
+- Verdun Square retail
+- Petain Crescent retail
+- Beauty World transit link retail
+- Joo Chiat arcade court retail
+- Ubi Street 4 retail
+- Boon Lay Avenue retail
+- Bugis Court east annexe retail
+- Cuppage Terrace annexe retail
+- Bukit Merah ridge north retail
+- Anchorvale East fringe retail
+- Verdun Lane retail
+- Petain Walk retail
+- Beauty World transit bridge retail
+- Joo Chiat arcade link retail
+- Ubi Street 3 retail
+- Boon Lay Close retail
+- Bugis Court annexe retail
+- Cuppage Rise annexe retail
+- Bukit Merah ridge east retail
+- Anchorvale West fringe retail
+- Verdun Court retail
+- Petain Arcade retail
+- Beauty World transit mezzanine retail
+- Joo Chiat Arcade east retail
+- Ubi Street 1 retail
+- Boon Lay Terrace retail
+- Bugis Terrace annexe retail
+- Cuppage Court retail
+- Bukit Merah ridge west retail
+- Rivervale fringe retail
+- Verdun Arcade retail
+- Petain Row retail
+- Beauty World transit annexe retail
+- Joo Chiat Arcade west retail
+- Ubi Avenue 5 retail
+- Boon Lay Crescent annexe retail
+- Bugis Crescent annexe retail
+- Cuppage Walk retail
+- Bukit Merah ridge fringe retail
+- Compassvale fringe retail
+- Verdun Walk retail
+- Petain Corner retail
+- Beauty World interchange annexe retail
+- Joo Chiat Lane west retail
+- Ubi Avenue 4 retail
+- Boon Lay Link retail
+- Bugis North annexe retail
+- Cuppage Lane retail
+- Bukit Merah fringe west retail
+- Sengkang West fringe retail
+- Verdun Crescent retail
+- Petain Terrace retail
+- Beauty World interchange mezzanine retail
+- Joo Chiat Place west retail
+- Ubi Avenue 3 retail
+- Boon Lay Drive retail
+- Bugis West annexe retail
+- Cuppage Terrace retail
+- Bukit Merah fringe south retail
+- Fernvale fringe retail
+- Verdun Link retail
+- Petain Lane retail
+- Beauty World interchange lower retail
+- Joo Chiat Place east retail
+- Ubi Avenue 2 retail
+- Boon Lay Crescent retail
+- Bugis South annexe retail
+- Cuppage Rise retail
+- Bukit Merah South retail
+- Anchorvale fringe retail
+- Perak Lane retail
+- Desker Link retail
+- Beauty World interchange upper retail
+- Frankel Avenue east retail
+- Ubi Link retail
+- Pioneer Crescent retail
+- Bugis East annexe retail
+- Oxley Rise retail
+- Bukit Merah Lane retail
+- Delta fringe retail
+- Norris Lane retail
+- Mackenzie Link retail
+- Beauty World market upper retail
+- Marine Parade Road east retail
+- Kaki Bukit Road retail
+- Jalan Ahmad Ibrahim retail
+- Bencoolen annexe east retail
+- Devonshire Rise retail
+- Bukit Merah Central fringe retail
+- Anchorpoint annexe retail
+- Kitchener Lane retail
+- Veerasamy Road retail
+- Beauty World market lower retail
+- Still Road retail
+- Eunos Link retail
+- Tuas West Road retail
+- Rochor annexe retail
+- Killiney Rise retail
+- Telok Blangah Rise retail
+- Queensway fringe retail
+- Farrer Park Road retail
+- Somme Road retail
+- Beauty World plaza lower retail
+- East Coast Terrace retail
+- Ubi Road retail
+- Benoi Road retail
+- Bugis annexe retail
+- Cairnhill Rise retail
+- Redhill Close retail
+- Alexandra Central fringe retail
+- Owen Road retail
+- Dorset Road retail
+- Beauty World plaza upper retail
+- Joo Chiat Terrace retail
+- Ubi Crescent retail
+- Corporation Road retail
+- Bras Basah annexe retail
+- Leonie Hill retail
+- Bukit Merah View retail
+- Alexandra Road fringe retail
+- Jellicoe Road retail
+- Race Course Road retail
+- Beauty World plaza annexe west retail
+- Joo Chiat Road east retail
+- Kaki Bukit industrial retail
+- Pioneer Road retail
+- Bencoolen Street annexe retail
+- River Valley Terrace retail
+- Tiong Bahru View retail
+- Depot Road retail
+- Norris Road retail
+- Kerbau Road retail
+- Beauty World plaza annexe east retail
+- Siglap South retail
+- Bedok South retail
+- Paya Lebar Way retail
+- Jurong Gateway East retail
+- Bras Basah link retail
+- River Valley Close retail
+- Bukit Purmei Avenue retail
+- Syed Alwi Road retail
+- Petain Road retail
+- Beauty World station annexe retail
+- Eunos Crescent retail
+- Ubi Avenue retail
+- Jalan Boon Lay retail
+- Bedok North Street retail
+- Bencoolen Link retail
+- Middle Road retail annexe
+- Kim Seng retail
+- Buffalo Road retail
+- Dunlop Street retail
+- Beauty World transport hub retail
+- Amber Road retail
+- Kaki Bukit station retail
+- MacPherson Road retail
+- Boon Lay Way retail
+- Queen Street retail
+- Bukit Ho Swee retail
+- Lengkok Bahru retail
+- Kitchener Link retail
+- Serangoon Road retail
+- Bukit Timah market annexe retail
+- Marine Terrace retail
+- Bedok Reservoir retail
+- Tai Seng retail
+- Jurong West Street retail
+- Victoria Street retail
+- Kim Tian Road retail
+- Alexandra Village retail
+- Hindoo Road retail
+- Upper Weld Road retail
+- Bukit Timah Link mall retail
+- Parkway East retail
+- Kembangan Plaza retail
+- Mattar retail
+- Jurong West Avenue retail
+- Kitchener Road retail
+- Jalan Kukoh retail
+- Henderson Road retail
+- Mackenzie Road retail
+- Mayo Street retail
+- Beauty World Bus Interchange retail
+- Roxy Centre retail
+- Changi Business Park retail
+- Boon Keng Road retail
+- Dover retail
+- North Bridge Road retail
+- Zion Road retail
+- Spottiswoode Park retail
+- Desker Road retail
+- Verdun Road retail
+- Beauty World MRT retail
+- Katong Shopping Arcade retail
+- Expo retail
+- Geylang Bahru retail
+- Chinese Garden retail
+- Kampong Java Road retail
+- York Hill retail
+- Delta Road retail
+- Rochor Road retail
+- King George Avenue retail
+- Beauty World Centre annexe retail
+- Katong Point retail
+- Simei Eastpoint retail
+- Kallang Bahru retail
+- Lakeside retail
+- Lavender Street retail
+- Seng Poh Road retail
+- Outram Park retail
+- Jalan Besar retail
+- Perak Road retail
+- Beauty World Plaza annexe retail
+- i12 Katong retail
+- Pasir Ris Central retail
+- Bendemeer retail
+- Jurong Gateway retail
+- French Road retail
+- Kim Pong Road retail
+- Moh Guan Terrace retail
+- Selegie Road retail
+- Short Street retail
+- Beauty World Food Centre retail
+- Katong Square retail
+- Tampines West retail
+- Aljunied retail
+- Boon Lay retail
+- Foch Road retail
+- Bukit Timah Market retail
+- Eng Watt Street retail
+- Waterloo Street retail
+- Prinsep Street retail
+- The Rail Mall retail
+- East Village retail
+- Hougang Central retail
+- Kaki Bukit retail
+- Telok Blangah Crescent retail
+- Joo Avenue retail
+- Tiong Bahru Road retail
+- Everton Park retail
+- Bencoolen Street retail
+- Havelock Road retail
+- Siglap Shopping Centre retail
+- Upper Serangoon Shopping Centre retail
+- Kovan retail
+- Joo Seng retail
+- Ubi retail
+- Upper East Coast Road retail
+- Tiong Bahru Market retail
+- Holland Village market retail
+- Circular Road annexe retail
+- Collyer Quay retail
+- Siglap Village mall retail
+- Serene Centre retail
+- Kembangan retail
+- Jalan Kayu retail
+- Potong Pasir retail
+- Telok Kurau retail
+- Teck Chye Terrace retail
+- Chun Tin Road retail
+- South Bridge Road retail
+- Cecil Street retail
+- Balmoral Plaza retail
+- Holland Road Shopping Centre retail
+- Whampoa retail
+- Eunos retail
+- Farrer Road retail
+- Bukit Purmei retail
+- Club Street annex retail
+- Smith Street retail
+- Hong Lim Complex retail
+- OG People's Park retail
+- Beauty World Plaza retail
+- Serangoon Garden Village mall retail
+- Ghim Moh retail
+- Yio Chu Kang retail
+- Boon Keng retail
+- MacPherson retail
+- Serangoon Garden Way retail
+- Frankel Avenue retail
+- Chinatown Point retail
+- People's Park Complex retail
+- Bukit Timah Shopping Centre retail
+- Lucky Chinatown retail
+- Toa Payoh Central retail
+- Jurong West Central retail
+- Khatib retail
+- Admiralty retail
+- Pagoda Street retail
+- Temple Street retail
+- Choa Chu Kang retail
+- Yew Tee retail
+- Bedok North retail
+- Telok Blangah retail
+- Marsiling retail
+- Bukit Gombak retail
+- Bukit Merah retail
+- Kreta Ayer Road retail
+- Simon Road retail
+- Tanjong Pagar Plaza retail
+- Forum The Shopping Mall annexe retail
+- Far East Shopping Centre retail
+- Liat Towers retail
+- Coronation Shopping Plaza retail
+- Hougang Green retail
+- Junction Nine retail
+- Djitsun Mall retail
+- Wisteria Mall retail
+- Kampong Bahru Road retail
+- Tyrwhitt Road retail
+- 111 Somerset retail
+- Delfi Orchard retail
+- Shaw House retail
+- Rivervale Mall retail
+- Changi City Point retail
+- Sun Plaza retail
+- Woodlands Civic Centre retail
+- Kallang Leisure Park retail
+- Lorong Mambong retail
+- East Sussex Lane retail
+- Tanglin Mall retail
+- Forum Galleria retail
+- Palais Renaissance retail
+- Junction 10 retail
+- Rochester Commons retail
+- Downtown East E!Hub retail
+- Thomson Plaza retail
+- Bedok Point retail
+- Middle Road retail
+- Seah Street retail
+- City Gate retail
+- Scotts Square retail
+- Wheelock Place retail
+- Bukit Timah Plaza retail
+- JCube retail
+- KINEX retail
+- AMK Hub retail
+- Great World City East Wing retail
+- Mosque Street retail
+- Beach Road retail
+- Bugis+ retail
+- Orchard Gateway retail
+- Mandarin Gallery retail
+- Hougang 1 retail
+- Greenridge Shopping Centre retail
+- Sembawang Shopping Centre retail
+- Woodleigh Mall retail
+- Northpoint City South Wing retail
+- Purvis Street retail
+- North Canal Road retail
+- Liang Seah Street retail
+- People's Park Centre retail
+- Peninsula Plaza retail
+- International Plaza retail
+- Katong Shopping Centre retail
+- Zhongshan Mall retail
+- Pasir Ris Mall retail
+- Compass One retail
+- Canberra Plaza retail
+- Tampines Central link retail
+- The Centrepoint retail
+- 313@Somerset retail
+- Orchard Central retail
+- Lucky Plaza retail
+- Parkway Centre retail
+- Katong V retail
+- Alexandra Central retail
+- Siglap Centre retail
+- Kim Yam Road retail
+- River Valley Road retail
+- East Coast Road shophouse retail
+- Club Street retail
+- Tanjong Katong Road retail
+- Ann Siang Road retail
+- HarbourFront Centre retail
+- Forum The Shopping Mall retail
+- Shaw Centre retail
+- Rochester Mall retail
+- Kallang Wave Mall retail
+- Simei retail
+- Tampines 1 annex retail
+- Bedok Mall retail
+- White Sands mall retail
+- Marina Square retail
+- South Beach retail
+- Capitol Piazza retail
+- Siglap Road retail
+- Neil Road retail
+- Tras Street retail
+- Roxy Square retail
+- Beauty World Centre retail
+- Paya Lebar Square retail
+- Bukit Panjang Plaza retail
+- Valley Point retail
+- Anchorpoint retail
+- The Star Vista retail
+- CityLink Mall retail
+- Millenia Walk retail
+- Raffles Arcade retail
+- Joo Chiat Road retail
+- Clementi Mall retail
+- Hougang Mall retail
+- Northshore Plaza retail
+- United Square retail
+- City Square Mall retail
+- Clarke Quay retail
+- Far East Plaza retail
+- Balestier retail
+- Bukit Pasoh retail
+- Queensway Shopping Centre retail
+- Causeway Point retail
+- JEM retail
+- Westgate retail
+- Lot One retail
+- Tiong Bahru Plaza retail
+- Boat Quay retail
+- Circular Road retail
+- Telok Ayer retail
+- Upper Thomson retail
+- Robertson Walk retail
+- ION Orchard retail
+- Ngee Ann City retail
+- Wisma Atria retail
+- Plaza Singapura retail
+- Suntec City retail
+- Bugis Junction retail
+- Paragon retail
+- Tanjong Pagar shophouse retail
+- Duxton Hill retail
+- Amoy Street retail
+- Tampines 1 retail
+- Parkway Parade retail
+- Great World retail
+- Raffles City retail
+- Capitol retail
+- Jurong Point retail
+- NEX retail
+- Haji Lane retail
+- Keong Saik retail
+- Holland Village shophouse retail
+- Tampines Mall retail
+- VivoCity retail
+- PLQ Mall retail
+- Junction 8 retail
+- Northpoint retail
+- Century Square retail
+- Waterway Point retail
+- Katong shophouse retail
+- East Coast Road retail
+- Arab Street retail
 - Yishun retail
 - Sengkang retail
 - Punggol retail
@@ -45,8 +895,6 @@ Updated: 2026-05-15
 - Bukit Batok retail
 - Bukit Panjang retail
 - Tiong Bahru shophouse retail
-
-## Priority 1 Added In Previous Build
 - Novena retail
 - Bukit Timah retail
 - Marine Parade retail
@@ -69,26 +917,16 @@ Updated: 2026-05-15
 - None
 
 ## Prime And Central Comparison Areas
-- None in current launch-priority batch
+- None currently queued
 
 ## Heartland Town Retail Coverage
-- None in current launch-priority batch
+- None currently queued
 
 ## Mall Coverage To Expand
-- Tampines Mall retail
-- VivoCity retail
-- PLQ Mall retail
-- Junction 8 retail
-- Northpoint retail
-- Century Square retail
-- Waterway Point retail
+- None currently queued
 
 ## Shophouse And Streetfront Clusters
-- Katong shophouse retail
-- East Coast Road retail
-- Arab Street retail
-- Haji Lane retail
-- Keong Saik retail
+- None currently queued
 
 ## Manual Review Bucket
 - Industrial showroom
@@ -104,18 +942,10 @@ Updated: 2026-05-15
 - Non-retail commercial uses without comparison basis
 
 ## Suggested Next 10 Additions
-1. Tampines Mall retail
-2. VivoCity retail
-3. PLQ Mall retail
-4. Junction 8 retail
-5. Northpoint retail
-6. Century Square retail
-7. Waterway Point retail
-8. Katong shophouse retail
-9. East Coast Road retail
-10. Arab Street retail
+- None currently queued after the 200-record bulk expansion batch.
 
 ## Notes
+- On `2026-05-17`, historical sample-data batch records were consolidated into the base RentIntel sample payload. Historical batch files remain on disk for reference, but the runtime now loads the single consolidated payload.
 - Direct search coverage means a named record is already available in the main public search flow.
 - Priority 1 areas are the next most useful additions for launch breadth and user trust.
 - Manual review means the place or use case may still be supported later, but not as a fast direct-search record yet.

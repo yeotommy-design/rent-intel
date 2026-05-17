@@ -649,16 +649,73 @@ function enrichOneMapRecord(record) {
     : record;
 }
 
+const rentIntelSampleBatchJsonFiles = [];
+
+function mergeSamplePayloads(basePayload, batchPayloads = []) {
+  const payloads = [basePayload, ...batchPayloads].filter((payload) => Array.isArray(payload?.records));
+  if (!payloads.length) return null;
+  const recordsById = new Map();
+  payloads.forEach((payload) => {
+    payload.records.forEach((record) => {
+      if (record?.id) recordsById.set(record.id, record);
+    });
+  });
+  return {
+    version: payloads[payloads.length - 1]?.version || basePayload?.version || "",
+    updatedAt: payloads
+      .map((payload) => String(payload?.updatedAt || ""))
+      .filter(Boolean)
+      .sort()
+      .at(-1) || "",
+    sourceNote: payloads[payloads.length - 1]?.sourceNote || basePayload?.sourceNote || "",
+    records: Array.from(recordsById.values())
+  };
+}
+
+function windowSamplePayload() {
+  if (!Array.isArray(window.RENTINTEL_SAMPLE_DATA?.records)) return null;
+  return {
+    version: String(window.RENTINTEL_SAMPLE_DATA.version || ""),
+    updatedAt: String(window.RENTINTEL_SAMPLE_DATA.updatedAt || ""),
+    sourceNote: String(window.RENTINTEL_SAMPLE_DATA.sourceNote || ""),
+    records: window.RENTINTEL_SAMPLE_DATA.records
+  };
+}
+
+async function loadSamplePayloadJson(url) {
+  const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) throw new Error(`Data request failed: ${response.status}`);
+  return await response.json();
+}
+
+async function loadRentIntelSamplePayload() {
+  const basePayload = await loadSamplePayloadJson("./data/rentintel-sample-data.json");
+  const batchPayloads = await Promise.all(
+    rentIntelSampleBatchJsonFiles.map(async (url) => {
+      try {
+        const payload = await loadSamplePayloadJson(url);
+        return Array.isArray(payload?.records) ? payload : null;
+      } catch (error) {
+        console.warn("RentIntel sample-data batch load failed; continuing without it.", url, error);
+        return null;
+      }
+    })
+  );
+  return mergeSamplePayloads(basePayload, batchPayloads.filter(Boolean));
+}
+
 async function loadRentIntelData() {
   const askingFeed = await loadAskingRentFeed();
+  const mirroredPayload = windowSamplePayload();
   if (window.location.protocol !== "file:") {
     try {
-      const response = await fetch("./data/rentintel-sample-data.json", { cache: "no-store" });
-      if (!response.ok) throw new Error(`Data request failed: ${response.status}`);
-      const payload = await response.json();
-      if (Array.isArray(payload.records)) {
+      const payload = mergeSamplePayloads(
+        await loadRentIntelSamplePayload(),
+        mirroredPayload ? [mirroredPayload] : []
+      );
+      if (Array.isArray(payload?.records)) {
         const merged = mergeAskingRentFeed(payload.records, askingFeed, {
-          sampleUpdatedAt: payload.updatedAt || window.RENTINTEL_SAMPLE_DATA?.updatedAt || ""
+          sampleUpdatedAt: payload.updatedAt || mirroredPayload?.updatedAt || ""
         });
         return enrichOneMapRecords(mergeCoverageRecords(merged.records));
       }
@@ -667,9 +724,9 @@ async function loadRentIntelData() {
     }
   }
 
-  if (Array.isArray(window.RENTINTEL_SAMPLE_DATA?.records)) {
-    const merged = mergeAskingRentFeed(window.RENTINTEL_SAMPLE_DATA.records, askingFeed, {
-      sampleUpdatedAt: window.RENTINTEL_SAMPLE_DATA?.updatedAt || ""
+  if (Array.isArray(mirroredPayload?.records)) {
+    const merged = mergeAskingRentFeed(mirroredPayload.records, askingFeed, {
+      sampleUpdatedAt: mirroredPayload.updatedAt || ""
     });
     return enrichOneMapRecords(mergeCoverageRecords(merged.records));
   }
@@ -1534,9 +1591,54 @@ function renderSearchSuggestions() {
 function findRecord(query) {
   const normalized = query.trim().toLowerCase();
   if (!normalized) return selectedRecord;
-  if (!coverageEligibilityProfile(normalized).eligible) return null;
 
   const activeRecords = mergeCoverageRecords(rentRecords);
+  const normalizedWords = normalized.split(/\s+/).filter(Boolean);
+  const exactTitleMatch = activeRecords.find((record) => normalized === String(record.title || "").toLowerCase());
+  if (exactTitleMatch) return exactTitleMatch;
+
+  const exactAliasMatches = activeRecords
+    .filter((record) => (record.aliases || []).some((alias) => normalized === String(alias).toLowerCase()))
+    .sort((a, b) => {
+      const aBase = String(a.title || "").toLowerCase().replace(/\s+retail$/, "");
+      const bBase = String(b.title || "").toLowerCase().replace(/\s+retail$/, "");
+      const aBaseExact = normalized === aBase ? 1 : 0;
+      const bBaseExact = normalized === bBase ? 1 : 0;
+      if (bBaseExact !== aBaseExact) return bBaseExact - aBaseExact;
+      const aStarts = String(a.title || "").toLowerCase().startsWith(normalized) ? 1 : 0;
+      const bStarts = String(b.title || "").toLowerCase().startsWith(normalized) ? 1 : 0;
+      if (bStarts !== aStarts) return bStarts - aStarts;
+      return String(a.title || "").length - String(b.title || "").length;
+    });
+  if (exactAliasMatches[0]) return exactAliasMatches[0];
+
+  const familyAliasMatch = activeRecords
+    .map((record) => {
+      const title = String(record.title || "").toLowerCase();
+      const aliases = (record.aliases || []).map((alias) => String(alias).toLowerCase());
+      const searchFields = [title, ...aliases];
+      const matchingField = searchFields.find((field) => normalizedWords.every((word) => field.includes(word)));
+      if (!matchingField) return null;
+      const extraWordPenalty = matchingField.split(/\s+/).filter((word) => !normalizedWords.includes(word)).length;
+      const titleStarts = title.startsWith(normalized) ? 1 : 0;
+      const aliasStarts = aliases.some((alias) => alias.startsWith(normalized)) ? 1 : 0;
+      return {
+        record,
+        titleStarts,
+        aliasStarts,
+        extraWordPenalty
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => {
+      if (b.titleStarts !== a.titleStarts) return b.titleStarts - a.titleStarts;
+      if (b.aliasStarts !== a.aliasStarts) return b.aliasStarts - a.aliasStarts;
+      if (a.extraWordPenalty !== b.extraWordPenalty) return a.extraWordPenalty - b.extraWordPenalty;
+      return 0;
+    });
+  if (familyAliasMatch[0] && normalizedWords.length >= 2) return familyAliasMatch[0].record;
+
+  if (!coverageEligibilityProfile(normalized).eligible) return null;
   const scored = activeRecords
     .map((record) => {
       const haystack = [record.title, record.area, record.propertyType, ...record.aliases]
@@ -1570,11 +1672,15 @@ function findRecord(query) {
   const comparable = createComparableRecord(query);
   if (!scored.length) return comparable;
   const topRecord = scored[0].record;
+  const topScore = scored[0].score;
+  const topRecordTitleMatch = normalized === topRecord.title.toLowerCase();
+  const topRecordAliasMatch = topRecord.aliases.some((alias) => normalized === alias.toLowerCase());
   const topRecordAreaInQuery = normalized.includes(topRecord.area.toLowerCase()) ||
     topRecord.aliases.some((alias) => normalized.includes(alias.toLowerCase()) && !genericSearchAliases.includes(alias.toLowerCase()));
 
-  if (comparable && !topRecordAreaInQuery) return comparable;
-  if (scored[0].score >= 16) return topRecord;
+  if (topScore >= 16 && (topRecordTitleMatch || topRecordAliasMatch || topRecordAreaInQuery)) return topRecord;
+  if (comparable && !topRecordAreaInQuery && topScore < 40) return comparable;
+  if (topScore >= 16) return topRecord;
   return comparable;
 }
 

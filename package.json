@@ -4,6 +4,8 @@
   "private": true,
   "description": "RentIntel prototype with a lightweight auth backend",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "audit:search": "node ./scripts/audit-sample-search.mjs",
+    "consolidate:sample-data": "node ./scripts/consolidate-sample-data.mjs"
   }
 }
