@@ -7,6 +7,9 @@
     "start": "node server.js",
     "audit:search": "node ./scripts/audit-sample-search.mjs",
     "consolidate:sample-data": "node ./scripts/consolidate-sample-data.mjs",
-    "verify:production": "node ./scripts/spot-check-production.mjs"
+    "verify:production": "node ./scripts/spot-check-production.mjs",
+    "build:market-notes": "node ./scripts/build-market-notes.mjs",
+    "submit:sitemap": "node ./scripts/submit-sitemap-search-console.mjs",
+    "verify:market-notes": "node ./scripts/verify-market-notes-live.mjs"
   }
 }

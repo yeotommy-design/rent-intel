@@ -1,0 +1,91 @@
+{
+  "site": {
+    "baseUrl": "https://rent-intel.com",
+    "archivePath": "/market-notes.html",
+    "archiveTitle": "Market Notes",
+    "archiveDescription": "Short weekly RentIntel notes on where Singapore retail rent pressure is building, what coverage was added, and what decision cue matters next."
+  },
+  "notes": [
+    {
+      "slug": "tiong-bahru-shophouse-benchmark-gap",
+      "title": "Tiong Bahru shophouse quotes are still outrunning the benchmark",
+      "publishedAt": "2026-05-16",
+      "description": "This week’s RentIntel note on elevated Tiong Bahru shophouse asking rent, direct-search expansion, and the negotiation cue that matters next.",
+      "summary": "Tiong Bahru shophouse asking rent is still pressing above benchmark while more heartland and fringe clusters move straight into direct search.",
+      "lede": "Market Notes is the short weekly RentIntel release for people who want one fast read, not a long blog post. This week’s note is about what happens when a landlord story gets louder than the benchmark range, and why direct-search expansion changes decision speed even before a negotiation starts.",
+      "storyParagraphs": [
+        "Tiong Bahru shophouse asking rent is still pressing above the current benchmark range, which means the main question is no longer whether the landlord is quoting aggressively. The better question is whether frontage, approvals, and real footfall support that premium or whether the asking line is simply staying ahead of a calmer benchmark.",
+        "This week also pushed more heartland and fringe clusters directly into search. That matters because users can now compare first-answer results faster instead of sitting in a queue path before they even know whether a quoted rent looks stretched. Areas that just moved into direct coverage should still be checked against one nearby cluster before treating the first result as a final pricing position.",
+        "The decision cue this week is simple: keep the benchmark range visible before the landlord narrative takes over. Range first, story second. If the discussion moves beyond the headline gap, that is the point to open Workspace and move into chart context, source context, and the negotiation note."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Treat elevated shophouse quotes as a signal to test the evidence, not as proof that the whole micro-area has reset."
+        },
+        {
+          "label": "Coverage update",
+          "text": "Newly added direct-search areas are best used as fast comparison anchors, especially for heartland renewals and shortlist work."
+        },
+        {
+          "label": "Decision cue",
+          "text": "When a discussion becomes specific to frontage, fit-out, approvals, or landlord claims, move from public search into Workspace."
+        }
+      ]
+    },
+    {
+      "slug": "direct-search-coverage-makes-shortlists-faster",
+      "title": "Direct-search coverage is starting to shorten shortlist work",
+      "publishedAt": "2026-05-09",
+      "description": "A weekly RentIntel note on why direct-search coverage matters operationally and how to use first-answer comparisons without over-trusting them.",
+      "summary": "More direct-search retail records mean users can pressure-test shortlist areas earlier instead of waiting for manual review paths.",
+      "lede": "This week’s note is less about one dramatic rent spike and more about the compounding value of search coverage. As more places move into direct-search support, shortlist work becomes faster and less dependent on queue-based uncertainty.",
+      "storyParagraphs": [
+        "The practical value of direct-search coverage is that it lets users reject obviously stretched quotes earlier. That sounds simple, but it changes the workflow from 'wait for a better answer later' to 'make a first pass now and decide which areas deserve more effort.'",
+        "Coverage expansion does not mean every first answer should be treated as a final underwriting position. It means you can classify areas earlier into likely-high, fair-range, or needs-context buckets, then spend deeper review time only where the stakes justify it.",
+        "The main discipline is to use direct-search coverage as a decision accelerator, not as a substitute for chart context or source scrutiny. Faster first answers are valuable only if they still point you toward the right next question."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Use newly covered areas as comparison anchors when a shortlist spans both mature malls and fringe clusters."
+        },
+        {
+          "label": "Coverage update",
+          "text": "Track which queue items moved into direct search so the team knows when a previously slow area just became usable."
+        },
+        {
+          "label": "Decision cue",
+          "text": "If a first answer already shows a quote is stretched, move straight into negotiation framing instead of waiting for a perfect second source."
+        }
+      ]
+    },
+    {
+      "slug": "benchmark-range-before-landlord-story",
+      "title": "Keep the benchmark range visible before the landlord story takes over",
+      "publishedAt": "2026-05-02",
+      "description": "A short RentIntel note on why benchmark visibility should anchor the conversation before landlords shift it toward frontage and fit-out storytelling.",
+      "summary": "Landlord narratives become more persuasive when the benchmark range disappears from view too early in a rent conversation.",
+      "lede": "This note is about conversation order. In many retail rent discussions, the benchmark starts strong, then fades as the landlord narrative moves toward frontage, approvals, fit-out, scarcity, and momentum. That is exactly when the benchmark should stay visible.",
+      "storyParagraphs": [
+        "A benchmark range is not meant to end the conversation. It is meant to anchor it. If the rent story becomes entirely narrative-driven too early, teams can end up negotiating against emotion and urgency instead of a grounded range.",
+        "That does not mean frontage, approvals, or layout do not matter. It means those factors should explain a premium relative to the benchmark, not replace the benchmark altogether. The burden should stay on explaining the gap, not on pretending the gap no longer matters.",
+        "The most useful weekly habit is simple: keep the range visible until the discussion becomes unit-specific enough that source evidence and context panels genuinely add more signal than the headline benchmark alone."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Use the same benchmark-first discipline whether the quote is for a shophouse row, mall kiosk, or HDB-facing shop."
+        },
+        {
+          "label": "Coverage update",
+          "text": "Use Market Notes as a reminder that even better coverage should still feed back into benchmark-first thinking."
+        },
+        {
+          "label": "Decision cue",
+          "text": "If the rent discussion drifts into pure storytelling, bring the benchmark range back onto the table before moving further."
+        }
+      ]
+    }
+  ]
+}

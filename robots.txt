@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rent-intel.com/sitemap.xml

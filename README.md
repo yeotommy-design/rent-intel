@@ -32,6 +32,18 @@ npm run consolidate:sample-data
 npm run verify:production
 ```
 
+```bash
+npm run build:market-notes
+```
+
+```bash
+npm run verify:market-notes
+```
+
+```bash
+npm run submit:sitemap
+```
+
 Then open:
 
 ```text
@@ -186,3 +198,22 @@ After production deploys:
   - `Cuppage Rise annexe retail`
   - `Chinatown shophouse retail`
   - `Tampines Mall retail`
+
+## Market Notes publishing
+
+Market Notes now runs from structured content in:
+
+- `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/market-notes.json`
+
+Publishing flow:
+
+- Add or update a note in `data/market-notes.json`
+- Run `npm run build:market-notes`
+- Verify the live archive and latest article with `npm run verify:market-notes`
+- Submit the sitemap with `npm run submit:sitemap`
+
+Search Console submission requirements:
+
+- `GOOGLE_SEARCH_CONSOLE_ACCESS_TOKEN`
+- optional `RENTINTEL_SEARCH_CONSOLE_SITE_URL`
+- optional `RENTINTEL_SITEMAP_URL`
