@@ -2917,7 +2917,7 @@ function startDailyInsightTicker() {
 
   const reset = () => {
     dailyTickerPos = ticker.clientWidth;
-    text.style.transform = `translateX(${dailyTickerPos}px)`;
+    text.style.left = `${dailyTickerPos}px`;
   };
 
   reset();
@@ -2933,7 +2933,7 @@ function startDailyInsightTicker() {
     if (dailyTickerPos < -text.offsetWidth) {
       dailyTickerPos = ticker.clientWidth;
     }
-    text.style.transform = `translateX(${dailyTickerPos}px)`;
+    text.style.left = `${dailyTickerPos}px`;
     dailyTickerFrame = requestAnimationFrame(step);
   };
 

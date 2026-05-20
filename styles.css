@@ -7572,6 +7572,7 @@ a {
 }
 
 .ticker {
+  position: relative;
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
@@ -7579,6 +7580,7 @@ a {
 }
 
 .ticker p {
+  position: relative;
   display: inline-block;
   margin: 0;
   min-width: max-content;
