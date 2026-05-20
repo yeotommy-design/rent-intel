@@ -7585,11 +7585,7 @@ a {
   color: #07111c;
   font-size: 20px;
   font-weight: 850;
-  animation: tickerMove 38s linear infinite;
-}
-
-.ticker:hover p {
-  animation-play-state: paused;
+  animation: tickerMove 19s linear infinite;
 }
 
 .insight-strip a {
@@ -11588,11 +11584,11 @@ h1 {
 
   .ticker {
     grid-column: 1 / -1;
-    white-space: normal;
+    white-space: nowrap;
   }
 
   .ticker p {
-    animation: none;
+    animation: tickerMove 19s linear infinite;
   }
 
   .hero,

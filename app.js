@@ -2913,6 +2913,9 @@ async function init() {
 
   const daily = chooseDailyInsight();
   el.dailyInsight.textContent = daily.daily;
+  el.dailyInsight.style.animation = "none";
+  void el.dailyInsight.offsetWidth;
+  el.dailyInsight.style.animation = "";
   el.dailyInsightLink.addEventListener("click", () => {
     updateResult(daily);
     el.input.value = daily.title;
