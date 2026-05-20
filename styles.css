@@ -7586,6 +7586,7 @@ a {
   font-size: 20px;
   font-weight: 850;
   animation: tickerMove 19s linear infinite;
+  will-change: transform;
 }
 
 .insight-strip a {
@@ -11549,10 +11550,7 @@ h1 {
 
 @keyframes tickerMove {
   0% {
-    transform: translateX(0);
-  }
-  18% {
-    transform: translateX(0);
+    transform: translateX(100%);
   }
   100% {
     transform: translateX(-100%);
