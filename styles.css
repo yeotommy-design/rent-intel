@@ -7585,7 +7585,6 @@ a {
   color: #07111c;
   font-size: 20px;
   font-weight: 850;
-  animation: tickerMove 19s linear infinite;
   will-change: transform;
 }
 
@@ -11548,15 +11547,6 @@ h1 {
   background: var(--green);
 }
 
-@keyframes tickerMove {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
 @media (max-width: 920px) {
   .site-header {
     padding-left: 14px;
@@ -11586,7 +11576,7 @@ h1 {
   }
 
   .ticker p {
-    animation: tickerMove 19s linear infinite;
+    will-change: transform;
   }
 
   .hero,

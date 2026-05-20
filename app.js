@@ -14,6 +14,9 @@ let selectedRecord = null;
 let selectedRange = "5";
 let memberSession = null;
 let askingFeedState = null;
+let dailyTickerFrame = null;
+let dailyTickerLastTs = null;
+let dailyTickerPos = 0;
 
 const memberSessionKey = "rentintelMemberSession";
 const savedReportsKey = "rentintelSavedReports";
@@ -2897,6 +2900,46 @@ function renderCoverageHighlights() {
   });
 }
 
+function stopDailyInsightTicker() {
+  if (dailyTickerFrame) {
+    cancelAnimationFrame(dailyTickerFrame);
+    dailyTickerFrame = null;
+  }
+  dailyTickerLastTs = null;
+}
+
+function startDailyInsightTicker() {
+  const ticker = el.dailyInsight?.parentElement;
+  const text = el.dailyInsight;
+  if (!ticker || !text) return;
+
+  stopDailyInsightTicker();
+
+  const reset = () => {
+    dailyTickerPos = ticker.clientWidth;
+    text.style.transform = `translateX(${dailyTickerPos}px)`;
+  };
+
+  reset();
+
+  const step = (ts) => {
+    if (dailyTickerLastTs == null) {
+      dailyTickerLastTs = ts;
+    }
+    const dt = (ts - dailyTickerLastTs) / 1000;
+    dailyTickerLastTs = ts;
+
+    dailyTickerPos -= 110 * dt;
+    if (dailyTickerPos < -text.offsetWidth) {
+      dailyTickerPos = ticker.clientWidth;
+    }
+    text.style.transform = `translateX(${dailyTickerPos}px)`;
+    dailyTickerFrame = requestAnimationFrame(step);
+  };
+
+  dailyTickerFrame = requestAnimationFrame(step);
+}
+
 async function init() {
   sanitizeCoverageStorage();
   memberSession = loadStoredJson(memberSessionKey, null);
@@ -2913,13 +2956,12 @@ async function init() {
 
   const daily = chooseDailyInsight();
   el.dailyInsight.textContent = daily.daily;
-  el.dailyInsight.style.animation = "none";
-  void el.dailyInsight.offsetWidth;
-  el.dailyInsight.style.animation = "";
+  startDailyInsightTicker();
   el.dailyInsightLink.addEventListener("click", () => {
     updateResult(daily);
     el.input.value = daily.title;
   });
+  window.addEventListener("resize", startDailyInsightTicker);
 
   document.querySelectorAll("[data-query]").forEach((button) => {
     button.addEventListener("click", () => {
