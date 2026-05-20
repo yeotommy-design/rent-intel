@@ -189,6 +189,11 @@ const el = {
   dataFreshness: document.getElementById("dataFreshness")
 };
 
+function trackAnalyticsEvent(name, params = {}) {
+  if (typeof window === "undefined" || typeof window.rentIntelTrack !== "function") return;
+  window.rentIntelTrack(name, params);
+}
+
 let pendingCoverageQuery = "";
 
 function currentAskingFeed() {
@@ -2171,6 +2176,10 @@ function saveCoverageRequest(event) {
   const proposedCandidate = { requestedQuery: query, requestedArea, requestedPropertyType, name: `Coverage request: ${query}` };
   const eligibility = coverageEligibilityForCandidate(proposedCandidate);
   if (!eligibility.requestable) {
+    trackAnalyticsEvent("coverage_request_blocked", {
+      query,
+      eligibility_status: eligibility.status
+    });
     el.coverageRequestStatus.textContent =
       `${query} was not added. ${eligibility.reason}`;
     renderPublicCoverageQueue();
@@ -2223,6 +2232,15 @@ function saveCoverageRequest(event) {
   if (email) {
     addPublicWaitlistEmail(email);
   }
+
+  trackAnalyticsEvent("coverage_request_submit", {
+    query,
+    duplicate: duplicate ? "yes" : "no",
+    eligibility_status: eligibility.status,
+    requested_property_type: requestedPropertyType || "unspecified",
+    requested_use_case: requestedUseCase || "unspecified",
+    requested_urgency: requestedUrgency
+  });
 
   showNoMatch(query);
   const savedProfile = coverageStatusProfile(candidates[duplicateIndex]?.productionReadyAt ? "production ready" : candidates[duplicateIndex]?.status || "candidate review");
@@ -2444,6 +2462,11 @@ function savePublicInterest(event) {
     workspaceHref: toolbenchPreviewUrl(selectedRecord),
     createdAt: new Date().toISOString()
   });
+  trackAnalyticsEvent("saved_tools_interest_submit", {
+    record_id: selectedRecord.id,
+    area_title: selectedRecord.title,
+    confidence: selectedRecord.confidence
+  });
   el.publicInterestStatus.textContent =
     `${selectedRecord.title} saved for ${email}. Opening the account area.`;
   window.setTimeout(() => {
@@ -2546,6 +2569,11 @@ function saveCurrentReport() {
   }));
   writeSavedReports(reports);
   renderSavedReports();
+  trackAnalyticsEvent("saved_report", {
+    record_id: selectedRecord.id,
+    area_title: selectedRecord.title,
+    confidence: selectedRecord.confidence
+  });
   el.memberActionStatus.textContent = `${selectedRecord.title} saved to your account area and local prototype backend.`;
 }
 
@@ -2958,6 +2986,10 @@ async function init() {
   el.dailyInsight.textContent = daily.daily;
   startDailyInsightTicker();
   el.dailyInsightLink.addEventListener("click", () => {
+    trackAnalyticsEvent("daily_signal_click", {
+      area_title: daily.title,
+      confidence: daily.confidence
+    });
     updateResult(daily);
     el.input.value = daily.title;
   });
@@ -2979,9 +3011,15 @@ async function init() {
 
   el.form.addEventListener("submit", (event) => {
     event.preventDefault();
+    const query = el.input.value.trim();
     const result = findRecord(el.input.value);
+    trackAnalyticsEvent("search_submit", {
+      query,
+      result_status: result ? "matched" : "no_match",
+      matched_record: result?.title || ""
+    });
     if (result) updateResult(result);
-    else showNoMatch(el.input.value.trim());
+    else showNoMatch(query);
     renderSearchSuggestions();
     document.getElementById("search").scrollIntoView({ behavior: "smooth", block: "start" });
   });
