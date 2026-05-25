@@ -334,7 +334,7 @@ function sourceQaProfile(record) {
     ready: productionReady,
     warning: productionReady
       ? `${freshness.detail} Asking-rent source is production-ready; still verify unit-specific lease terms, GST, service charge, and permitted use.`
-      : `${freshness.detail} Pilot manual asking feed is connected, but production still needs licensed feed or verified daily capture workflow with QA logs. Source sync schedule: ${sourceSyncAutomationStatus().schedule}.`
+      : `${freshness.detail} Pilot manual asking feed is connected, but production still needs licensed feed or a verified daily capture workflow with QA logs. Target sync schedule: ${sourceSyncAutomationStatus().schedule}. Actual freshness depends on the latest completed capture, not the schedule alone.`
   };
 }
 
@@ -349,7 +349,7 @@ function renderDataFreshness(record) {
   const qa = sourceQaProfile(record);
   const health = String(feed.feedHealth || feed.connectionState || "").replace(/-/g, " ");
   const automation = sourceSyncAutomationStatus();
-  el.dataFreshness.textContent = `${updated} | Feed freshness: ${qa.freshnessLabel}${health ? ` | Feed state: ${health}` : ""} | Sync: ${automation.schedule}${automation.breachCount ? ` | Breaches: ${automation.breachCount}` : ""}`;
+  el.dataFreshness.textContent = `${updated} | Asking feed freshness: ${qa.freshnessLabel}${health ? ` | Feed state: ${health}` : ""} | Target sync: ${automation.schedule}${automation.breachCount ? ` | Breaches: ${automation.breachCount}` : ""}`;
 }
 
 function signalDrivers(record) {
@@ -1819,7 +1819,7 @@ function updateResult(record) {
     });
   }
   const sourceQa = sourceQaProfile(record);
-  el.sourceSummary.textContent = `${record.sourceSummary} Feed freshness: ${sourceQa.freshnessLabel}.`;
+  el.sourceSummary.textContent = `${record.sourceSummary} Asking feed freshness: ${sourceQa.freshnessLabel}.`;
   if (el.sourceQaPanel) {
     el.sourceQaPanel.dataset.ready = sourceQa.ready ? "true" : "false";
     el.sourceQaPanel.dataset.freshness = sourceQa.freshnessState;
