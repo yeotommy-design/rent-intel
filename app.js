@@ -62,6 +62,7 @@ const el = {
   sourceQaCaptured: document.getElementById("sourceQaCaptured"),
   sourceQaProduction: document.getElementById("sourceQaProduction"),
   sourceQaWarning: document.getElementById("sourceQaWarning"),
+  sourceQaSources: document.getElementById("sourceQaSources"),
   publicEvidenceSummary: document.getElementById("publicEvidenceSummary"),
   publicEvidenceList: document.getElementById("publicEvidenceList"),
   signalDrivers: document.getElementById("signalDrivers"),
@@ -200,6 +201,10 @@ function currentAskingFeed() {
   return askingFeedState || window.RENTINTEL_ASKING_RENT_FEED || { records: [] };
 }
 
+function currentSourceStatus() {
+  return window.RENTINTEL_SOURCE_STATUS || { status: [] };
+}
+
 function money(value) {
   return `S$${value.toFixed(2)} psf`;
 }
@@ -336,6 +341,64 @@ function sourceQaProfile(record) {
       ? `${freshness.detail} Asking-rent source is production-ready; still verify unit-specific lease terms, GST, service charge, and permitted use.`
       : `${freshness.detail} Pilot manual asking feed is connected, but production still needs licensed feed or a verified daily capture workflow with QA logs. Target sync schedule: ${sourceSyncAutomationStatus().schedule}. Actual freshness depends on the latest completed capture, not the schedule alone.`
   };
+}
+
+function sourceTimestampLabel(status, value) {
+  if (value) return formatShortDate(value);
+  if (status?.lastCompletedAt) return formatShortDate(status.lastCompletedAt);
+  return status?.timestampLabel || "Not live yet";
+}
+
+function sourceRefreshRows(record) {
+  const statusMap = new Map((currentSourceStatus().status || []).map((item) => [item.sourceId, item]));
+  const feed = currentAskingFeed();
+  const askingStatus = statusMap.get("asking-rent-feed") || {};
+  const askingCapturedAt = record?.askingSource?.capturedAt || askingStatus.lastCompletedAt || feed.updatedAt || "";
+  const askingFreshness = sourceFreshnessProfile(askingCapturedAt);
+  const buildRow = (sourceId, options = {}) => {
+    const status = statusMap.get(sourceId) || {};
+    return {
+      id: sourceId,
+      label: status.label || options.label || sourceId,
+      timestamp: sourceTimestampLabel(status, options.timestamp || ""),
+      target: status.refreshTarget || options.target || "Not set",
+      workflow: status.weeklyReviewStep || options.workflow || "Weekly review pending.",
+      state: options.state || "watch"
+    };
+  };
+  return [
+    buildRow("asking-rent-feed", {
+      state: askingFreshness.state,
+      timestamp: askingCapturedAt
+    }),
+    buildRow("ura-commercial-retail-rental-analysis", {
+      state: "watch"
+    }),
+    buildRow("hdb-commercial-data", {
+      state: "watch"
+    }),
+    buildRow("onemap-geospatial", {
+      state: "watch"
+    })
+  ];
+}
+
+function renderSourceRefreshRows(record) {
+  if (!el.sourceQaSources) return;
+  const rows = sourceRefreshRows(record);
+  el.sourceQaSources.replaceChildren();
+  rows.forEach((row) => {
+    const item = document.createElement("li");
+    item.dataset.state = row.state;
+    const label = document.createElement("span");
+    label.textContent = row.label;
+    const timestamp = document.createElement("strong");
+    timestamp.textContent = row.timestamp;
+    const detail = document.createElement("em");
+    detail.textContent = `Target: ${row.target}. ${row.workflow}`;
+    item.append(label, timestamp, detail);
+    el.sourceQaSources.append(item);
+  });
 }
 
 function renderDataFreshness(record) {
@@ -1819,7 +1882,7 @@ function updateResult(record) {
     });
   }
   const sourceQa = sourceQaProfile(record);
-  el.sourceSummary.textContent = `${record.sourceSummary} Asking feed freshness: ${sourceQa.freshnessLabel}.`;
+  el.sourceSummary.textContent = record.sourceSummary;
   if (el.sourceQaPanel) {
     el.sourceQaPanel.dataset.ready = sourceQa.ready ? "true" : "false";
     el.sourceQaPanel.dataset.freshness = sourceQa.freshnessState;
@@ -1829,6 +1892,7 @@ function updateResult(record) {
     el.sourceQaProduction.textContent = sourceQa.production;
     el.sourceQaWarning.textContent = sourceQa.warning;
   }
+  renderSourceRefreshRows(record);
   renderDataFreshness(record);
   if (el.publicEvidenceList) {
     const rows = publicEvidenceRows(record);

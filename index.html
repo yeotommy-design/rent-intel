@@ -10,6 +10,7 @@
     >
     <link rel="icon" href="./pulse-shared-transparent.png">
     <link rel="stylesheet" href="./styles.css?v=20260514-freepublic">
+    <link rel="stylesheet" href="./source-refresh-card.css?v=20260525-source-map">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
   </head>
@@ -385,6 +386,16 @@
                 <strong id="sourceQaProduction">Not ready</strong>
               </div>
               <p id="sourceQaWarning">Connect and QA the asking-rent source before using this as a final rent position.</p>
+              <div class="source-refresh-list" aria-label="Source timestamps and refresh workflow">
+                <strong class="source-refresh-title">Source timestamps</strong>
+                <ul id="sourceQaSources">
+                  <li>
+                    <span>Asking rent feed</span>
+                    <strong>Not connected</strong>
+                    <em>Target: Daily</em>
+                  </li>
+                </ul>
+              </div>
             </div>
             <div class="public-evidence-view" aria-label="Simplified public evidence preview">
               <div class="card-label">
@@ -786,10 +797,11 @@
 
     <script src="./data/rentintel-sample-data.js?v=20260508-1649"></script>
     <script src="./data/sources/asking-rent-feed.js?v=20260525-asking-pilot-refresh"></script>
+    <script src="./data/sources/source-status.js?v=20260525-source-status-map"></script>
     <script src="./data/sources/onemap-enrichment.js?v=20260512-onemap"></script>
     <script src="./asking-feed-adapter.js?v=20260510-feedhardening"></script>
     <script src="./onemap-enrichment-adapter.js?v=20260512-onemap"></script>
     <script src="./source-trust.js?v=20260510-pulseguide"></script>
-    <script src="./app.js?v=20260517-searchfix3"></script>
+    <script src="./app.js?v=20260525-source-map"></script>
   </body>
 </html>
