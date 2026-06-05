@@ -220,9 +220,17 @@ Market Notes now runs from structured content in:
 Publishing flow:
 
 - Add or update a note in `data/market-notes.json`
-- Run `npm run build:market-notes`
-- Verify the live archive and latest article with `npm run verify:market-notes`
+- Run `npm run publish:market-notes`
+- This now does three checks in order:
+  - rebuilds the archive, article pages, homepage note copy, robots, and sitemap
+  - fails if any generated Market Notes file is older than `data/market-notes.json`
+  - verifies that the live archive, live latest article, and live sitemap all include the newest note
 - Submit the sitemap with `npm run submit:sitemap`
+
+Runtime guard:
+
+- `server.js` now auto-rebuilds Market Notes artifacts before serving `/market-notes.html`, `/market-notes/...`, `/sitemap.xml`, `/robots.txt`, and the homepage whenever `data/market-notes.json` is newer than the generated files.
+- This means a newer weekly note source should no longer leave the archive or sitemap stale in normal server-backed use.
 
 Search Console submission requirements:
 

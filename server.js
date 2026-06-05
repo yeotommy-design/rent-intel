@@ -18,6 +18,12 @@ const SQLITE_FILE = path.join(DB_DIR, "prototype.sqlite");
 const ALERT_DELIVERY_DIR = path.join(DB_DIR, "alert-deliveries");
 const ASKING_FEED_FILE = path.join(ROOT_DIR, "data", "sources", "asking-rent-feed.json");
 const CONTEXT_SAMPLE_FILE = path.join(ROOT_DIR, "data", "sources", "rent-decision-context-sample.json");
+const MARKET_NOTES_SOURCE_FILE = path.join(ROOT_DIR, "data", "market-notes.json");
+const MARKET_NOTES_BUILD_SCRIPT = path.join(ROOT_DIR, "scripts", "build-market-notes.mjs");
+const MARKET_NOTES_ARCHIVE_FILE = path.join(ROOT_DIR, "market-notes.html");
+const SITEMAP_FILE = path.join(ROOT_DIR, "sitemap.xml");
+const ROBOTS_FILE = path.join(ROOT_DIR, "robots.txt");
+const HOMEPAGE_FILE = path.join(ROOT_DIR, "index.html");
 const SQLITE_BINARY = process.env.SQLITE3_BIN || "/usr/bin/sqlite3";
 const CURL_BINARY = process.env.CURL_BIN || "/usr/bin/curl";
 const DB_ENGINE = (process.env.RENTINTEL_DB_ENGINE || "sqlite").trim().toLowerCase();
@@ -29,6 +35,7 @@ const SMTP_PASS = String(process.env.RENTINTEL_SMTP_PASS || "").trim();
 const execFileAsync = promisify(execFile);
 let contextSeedSyncPromise = null;
 let ensureSqliteDbPromise = null;
+let ensureMarketNotesFreshPromise = null;
 
 const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
@@ -55,6 +62,75 @@ function createCode() {
 
 function randomToken(bytes = 24) {
   return crypto.randomBytes(bytes).toString("hex");
+}
+
+function marketNotesArtifactPathsFromPayload(payload = null) {
+  const notes = Array.isArray(payload?.notes) ? payload.notes : [];
+  return [
+    MARKET_NOTES_ARCHIVE_FILE,
+    SITEMAP_FILE,
+    ROBOTS_FILE,
+    HOMEPAGE_FILE,
+    ...notes
+      .map((note) => String(note?.slug || "").trim())
+      .filter(Boolean)
+      .map((slug) => path.join(ROOT_DIR, "market-notes", slug, "index.html"))
+  ];
+}
+
+function shouldCheckMarketNotesFreshness(requestPath = "") {
+  return requestPath === "/" ||
+    requestPath === "/index.html" ||
+    requestPath === "/market-notes" ||
+    requestPath === "/market-notes.html" ||
+    requestPath.startsWith("/market-notes/") ||
+    requestPath === "/sitemap.xml" ||
+    requestPath === "/robots.txt";
+}
+
+async function marketNotesBuildIsStale() {
+  let sourceStats;
+  try {
+    sourceStats = await fsp.stat(MARKET_NOTES_SOURCE_FILE);
+  } catch {
+    return false;
+  }
+  let payload = null;
+  try {
+    payload = JSON.parse(await fsp.readFile(MARKET_NOTES_SOURCE_FILE, "utf8"));
+  } catch {
+    return false;
+  }
+  const sourceTime = Number(sourceStats.mtimeMs || 0);
+  const artifactPaths = marketNotesArtifactPathsFromPayload(payload);
+  for (const artifactPath of artifactPaths) {
+    try {
+      const artifactStats = await fsp.stat(artifactPath);
+      if (Number(artifactStats.mtimeMs || 0) < sourceTime) {
+        return true;
+      }
+    } catch {
+      return true;
+    }
+  }
+  return false;
+}
+
+async function ensureMarketNotesArtifactsFresh() {
+  if (ensureMarketNotesFreshPromise) return ensureMarketNotesFreshPromise;
+  ensureMarketNotesFreshPromise = (async () => {
+    const stale = await marketNotesBuildIsStale();
+    if (!stale) return false;
+    await execFileAsync(process.execPath, [MARKET_NOTES_BUILD_SCRIPT], {
+      cwd: ROOT_DIR
+    });
+    return true;
+  })();
+  try {
+    return await ensureMarketNotesFreshPromise;
+  } finally {
+    ensureMarketNotesFreshPromise = null;
+  }
 }
 
 function deliveryStatusLabel(status = "") {
@@ -4225,6 +4301,13 @@ async function handleLogout(request, response) {
 
 async function serveStatic(request, response) {
   const requestPath = decodeURIComponent(new URL(request.url, `http://${request.headers.host}`).pathname);
+  if (shouldCheckMarketNotesFreshness(requestPath)) {
+    try {
+      await ensureMarketNotesArtifactsFresh();
+    } catch (error) {
+      console.error("Market Notes rebuild failed before static serve:", error instanceof Error ? error.message : error);
+    }
+  }
   const safePath = path.normalize(requestPath).replace(/^(\.\.[/\\])+/, "");
   let filePath = path.join(ROOT_DIR, safePath);
 
@@ -4437,6 +4520,12 @@ async function route(request, response) {
   }
 }
 
-http.createServer(route).listen(PORT, HOST, () => {
-  console.log(`RentIntel server running at http://${HOST}:${PORT}`);
-});
+ensureMarketNotesArtifactsFresh()
+  .catch((error) => {
+    console.error("Market Notes rebuild failed during startup:", error instanceof Error ? error.message : error);
+  })
+  .finally(() => {
+    http.createServer(route).listen(PORT, HOST, () => {
+      console.log(`RentIntel server running at http://${HOST}:${PORT}`);
+    });
+  });

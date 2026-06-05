@@ -9,6 +9,8 @@
     "consolidate:sample-data": "node ./scripts/consolidate-sample-data.mjs",
     "verify:production": "node ./scripts/spot-check-production.mjs",
     "build:market-notes": "node ./scripts/build-market-notes.mjs",
+    "check:market-notes": "node ./scripts/check-market-notes-generated.mjs",
+    "publish:market-notes": "npm run build:market-notes && npm run check:market-notes && npm run verify:market-notes",
     "submit:sitemap": "node ./scripts/submit-sitemap-search-console.mjs",
     "verify:market-notes": "node ./scripts/verify-market-notes-live.mjs"
   }
