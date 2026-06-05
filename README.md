@@ -54,6 +54,14 @@ What it supports today:
 
 - Serves the static prototype pages from one local app server
 - `GET /api/sources/asking-feed`
+- `GET /api/context/records`
+- `GET /api/context/records/:recordId`
+- `GET /api/context/records/:recordId/rent-signal`
+- `GET /api/context/records/:recordId/value-gap-signal`
+- `GET /api/context/records/:recordId/surrounding-businesses`
+- `GET /api/context/records/:recordId/unit-suitability`
+- `GET /api/context/records/:recordId/decision-notes`
+- `POST /api/context/records`
 - `POST /api/members/login/request-code`
 - `POST /api/members/login/verify-code`
 - `GET /api/members/me`
@@ -147,6 +155,10 @@ Source contract files:
 - `data/sources/sync-plan.md`
 - `data/sources/backend-schema.sql`
 - `data/sources/backend-api-contract.json`
+- `data/sources/unit-context-model.md`
+- `data/sources/surrounding-businesses-schema.json`
+- `data/sources/unit-suitability-schema.json`
+- `data/sources/unit-context-sample.json`
 
 A production build should sync:
 
@@ -217,3 +229,43 @@ Search Console submission requirements:
 - `GOOGLE_SEARCH_CONSOLE_ACCESS_TOKEN`
 - optional `RENTINTEL_SEARCH_CONSOLE_SITE_URL`
 - optional `RENTINTEL_SITEMAP_URL`
+
+## Next context layers
+
+The next structured product layers beyond rent signal are now defined in:
+
+- `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/unit-context-model.md`
+- `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/rent-signal-schema.json`
+- `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/value-gap-signal-schema.json`
+- `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/surrounding-businesses-schema.json`
+- `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/unit-suitability-schema.json`
+- `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/decision-notes-schema.json`
+- `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/unit-context-sample.json`
+- `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/rent-decision-context-sample.json`
+
+Recommended rollout:
+
+- Keep `below_benchmark` or `possible_value_gap` conservative until the
+  explanation layer is trustworthy
+- Build surrounding-business context first
+- Layer unit-suitability scoring on top second
+- Add value-gap interpretation and decision notes in the same backend pass
+- Add unit-specific overrides only when listing-level evidence is available
+
+Current V1 implementation path:
+
+- sample context records live in
+  `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/rent-decision-context-sample.json`
+- the app-facing context adapter now lives in
+  `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/api/context/mock-context-api.js`
+- it prefers the real `/api/context/records` route contract and only falls back
+  to the local sample bundle when the live route is unavailable
+- the first real `/api/context/records` implementation now runs in
+  `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/server.js`
+  and is currently backed by the shared V1 sample dataset
+- Workspace currently consumes that mock layer in
+  `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/member-toolbench.js`
+- backend handoff shape for the real implementation is defined in
+  `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/backend-api-contract.json`
+  and
+  `/Users/tommyyeo/Desktop/VerseIntel.nosync/rent-intel/data/sources/backend-schema.sql`
