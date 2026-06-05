@@ -9,11 +9,12 @@
       content="RentIntel Workspace for rent psf trend charts, saved reports, watchlist actions, and negotiation note export."
     >
     <link rel="icon" href="../../pulse-shared-transparent.png">
-    <link rel="stylesheet" href="../../styles.css?v=20260510-syncschedule">
+    <link rel="stylesheet" href="../../styles.css?v=20260603-filehandoff">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
+    <script src="../../api/context/mock-context-api.js?v=20260524-contextapi" defer></script>
   </head>
-  <body>
+  <body class="toolbench-page">
     <header class="site-header" aria-label="RentIntel workspace navigation">
       <div class="product-header-card">
         <a class="brand" href="../../index.html" aria-label="RentIntel home">
@@ -64,6 +65,102 @@
             <button type="submit">Search</button>
           </div>
           <div class="quick-picks" id="memberToolbenchPicks" aria-label="Workspace benchmark quick picks"></div>
+          <div class="workspace-v1-roster" id="workspaceV1Roster" aria-label="V1 context roster health">
+            <div class="workspace-v1-roster-copy">
+              <strong id="workspaceV1RosterTitle">V1 roster health</strong>
+              <p id="workspaceV1RosterCopy">The internal context roster will summarize how many modeled areas are strong, partial, or weak.</p>
+              <p class="workspace-v1-roster-origin" id="workspaceV1RosterOrigin">Roster review scope is currently local only in this preview/workspace.</p>
+              <p class="workspace-v1-pass-audit" id="workspaceV1RosterAudit">No review-pass restore or clear action recorded yet.</p>
+              <p class="workspace-v1-pass-sync" id="workspaceV1RosterSync">Backend sync is not active in this workspace mode.</p>
+              <p class="workspace-v1-pass-notice" id="workspaceV1RosterBackendNotice">Backend preview notice will appear here when the saved scope closes automatically.</p>
+              <button class="workspace-v1-backend-badge" id="workspaceV1RosterBackend" type="button" hidden>No saved backend review scope yet.</button>
+              <div class="workspace-v1-backend-preview" id="workspaceV1RosterBackendPreview" hidden>
+                <strong>Saved backend review scope</strong>
+                <p id="workspaceV1RosterBackendScope">Scope: all</p>
+                <p id="workspaceV1RosterCurrentScope">Current: all</p>
+                <p id="workspaceV1RosterBackendCompare">Comparison: matches current scope.</p>
+                <p id="workspaceV1RosterBackendItem">Active item: none</p>
+                <p id="workspaceV1RosterBackendItemStatus">Item status: unknown</p>
+                <p class="workspace-v1-backend-focus-hint" id="workspaceV1RosterBackendFocusHint" hidden>Focus restored to the last backend-preview action.</p>
+                <p id="workspaceV1RosterBackendResolved">Resolved: 0</p>
+                <p id="workspaceV1RosterBackendUpdated">Synced: pending</p>
+                <div class="workspace-v1-roster-actions">
+                  <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1RosterRestoreJump" type="button" hidden>Restore and jump</button>
+                </div>
+              </div>
+              <div class="workspace-v1-roster-actions">
+                <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1RosterRestore" type="button" hidden>Restore backend scope</button>
+                <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1RosterClear" type="button" hidden>Clear local pass</button>
+              </div>
+            </div>
+            <dl class="workspace-v1-roster-metrics">
+              <div data-filter="all" role="button" tabindex="0" aria-label="Show all V1 records">
+                <dt>Total</dt>
+                <dd id="workspaceV1RosterTotal">0</dd>
+              </div>
+              <div data-state="strong" data-filter="strong" role="button" tabindex="0" aria-label="Show strong V1 records">
+                <dt>Strong</dt>
+                <dd id="workspaceV1RosterStrong">0</dd>
+              </div>
+              <div data-state="partial" data-filter="partial" role="button" tabindex="0" aria-label="Show partial V1 records">
+                <dt>Partial</dt>
+                <dd id="workspaceV1RosterPartial">0</dd>
+              </div>
+              <div data-state="weak" data-filter="weak" role="button" tabindex="0" aria-label="Show weak V1 records">
+                <dt>Weak</dt>
+                <dd id="workspaceV1RosterWeak">0</dd>
+              </div>
+              <div data-filter="current" role="button" tabindex="0" aria-label="Show current V1 record">
+                <dt>Current</dt>
+                <dd id="workspaceV1RosterCurrent">-</dd>
+              </div>
+            </dl>
+            <p class="workspace-v1-roster-current-trend" id="workspaceV1RosterCurrentTrend" hidden>Current record trajectory will appear here after the decision state changes.</p>
+            <div class="workspace-v1-roster-sort" id="workspaceV1RosterSort" aria-label="Quick-pick sort mode">
+              <button type="button" data-sort="default">Default</button>
+              <button type="button" data-sort="improving">Best improving</button>
+              <button type="button" data-sort="attention">Needs attention</button>
+              <button type="button" id="workspaceV1RosterFocusStrongest">Focus strongest</button>
+              <button type="button" id="workspaceV1RosterFocusWeakest">Focus weakest</button>
+              <button type="button" id="workspaceV1RosterReturnCurrent">Return to current</button>
+              <button type="button" id="workspaceV1RosterBookmarkLens">Bookmark lane</button>
+              <button type="button" id="workspaceV1RosterOpenBookmark">Open bookmark</button>
+              <button type="button" id="workspaceV1RosterOpenPriorityBookmark">Open highest-priority lane</button>
+              <button type="button" id="workspaceV1RosterApplyPlanningAction">Apply lane plan</button>
+              <button type="button" id="workspaceV1RosterFollowRecoveryTarget">Follow recovery target</button>
+              <span class="workspace-v1-roster-route-badge" id="workspaceV1RosterRouteBadge" hidden>Route state will appear here.</span>
+              <button type="button" id="workspaceV1RosterRefreshBookmark">Refresh stale lane</button>
+              <button type="button" id="workspaceV1RosterResetLens">Reset queue lens</button>
+            </div>
+            <p class="workspace-v1-roster-sort-summary" id="workspaceV1RosterSortSummary">Queue summary will appear here.</p>
+            <p class="workspace-v1-roster-sort-explainer" id="workspaceV1RosterSortExplainer" hidden>Queue work explanation will appear here.</p>
+            <p class="workspace-v1-roster-sort-summary" id="workspaceV1RosterPrioritySummary" hidden>Highest-priority lane will appear here.</p>
+            <div class="workspace-v1-roster-route-link-wrap" id="workspaceV1RosterRouteLinkWrap" hidden>
+              <p class="workspace-v1-roster-route-link" id="workspaceV1RosterRouteLinkHint" hidden>Highest-priority summary and route state are linked.</p>
+              <button type="button" class="workspace-v1-roster-route-link-reset" id="workspaceV1RosterRouteLinkReset" hidden>Reset route tips</button>
+            </div>
+            <div class="workspace-v1-roster-sort-memory" id="workspaceV1RosterSortMemoryWrap" hidden>
+              <div class="workspace-v1-roster-sort-memory-copy">
+                <p id="workspaceV1RosterSortMemory">Queue memory will appear here when a session queue lens is active.</p>
+                <div class="workspace-v1-roster-sort-memory-activity" id="workspaceV1RosterSortMemoryActivity" hidden>Recent lane actions will appear here.</div>
+              </div>
+              <button type="button" id="workspaceV1RosterDismissMemory">Hide</button>
+            </div>
+            <div class="workspace-v1-roster-recent-actions" id="workspaceV1RosterRecentActions" hidden>
+              <span class="workspace-v1-roster-recent-actions-label">Recent lane replay:</span>
+              <div class="workspace-v1-roster-recent-actions-list" id="workspaceV1RosterRecentActionsList"></div>
+              <button type="button" class="workspace-v1-roster-recent-actions-undo" id="workspaceV1RosterRecentActionsUndo" hidden>Undo</button>
+              <button type="button" class="workspace-v1-roster-recent-actions-clear" id="workspaceV1RosterRecentActionsClear">Clear</button>
+            </div>
+            <p class="workspace-v1-roster-sort-bookmark" id="workspaceV1RosterSortBookmark" hidden>Saved lane will appear here when a queue bookmark is active.</p>
+            <div class="workspace-v1-roster-sort-bookmark-list" id="workspaceV1RosterSortBookmarkList" hidden></div>
+            <div class="workspace-v1-roster-breakdown">
+              <strong id="workspaceV1RosterBreakdownTitle">Needs review by layer</strong>
+              <div class="workspace-v1-roster-breakdown-list" id="workspaceV1RosterBreakdownList" aria-live="polite">
+                <span>No weak or partial layers tracked yet.</span>
+              </div>
+            </div>
+          </div>
           <p class="search-coverage-note">Direct records load first. Other recognized Singapore areas open as comparable estimates until direct coverage is added.</p>
           <p class="account-status" id="memberToolbenchSearchStatus" aria-live="polite"></p>
         </form>
@@ -74,6 +171,47 @@
           <span id="toolbenchAccessLabel">Workspace</span>
           <strong id="toolbenchAccessTitle">Workspace ready</strong>
           <p id="toolbenchAccessCopy">Run a deeper rent check here, then save the result or return to public search when you want another area.</p>
+          <p class="workspace-render-mode" id="toolbenchRenderMode" hidden>Render mode: Standard workspace browser.</p>
+          <p class="workspace-handoff-note" id="toolbenchWorkspaceHandoffNotice" hidden>
+            Static file preview is open. Launch the full local workspace to restore session-backed queue memory, backend review handoff, and live workspace actions.
+          </p>
+          <div class="workspace-handoff-actions" id="toolbenchWorkspaceHandoffActions" hidden>
+            <button type="button" id="toolbenchOpenFullWorkspace">Open full local workspace</button>
+            <span id="toolbenchWorkspaceHandoffTarget">Local workspace target will appear here.</span>
+          </div>
+          <div class="workspace-render-mode-actions" id="toolbenchRenderModeActions" hidden>
+            <button type="button" id="toolbenchRenderModeAuto">Auto</button>
+            <button type="button" id="toolbenchRenderModeStandard">Standard</button>
+            <button type="button" id="toolbenchRenderModeSafe">Embed-safe</button>
+          </div>
+          <details class="workspace-render-diagnostics" id="toolbenchRenderDiagnostics">
+            <summary>View browser diagnostics</summary>
+            <p id="toolbenchRenderDiagnosticsCopy">Browser diagnostics will appear here.</p>
+            <p class="workspace-render-diagnostics-assessment" id="toolbenchRenderDiagnosticsAssessment">Render assessment will appear here.</p>
+            <p class="workspace-render-diagnostics-comparison" id="toolbenchRenderDiagnosticsComparison" hidden>Current comparison will appear here.</p>
+            <p class="workspace-render-diagnostics-status" id="toolbenchRenderDiagnosticsStatus">Diagnosis status: comparison in progress.</p>
+            <div class="workspace-render-diagnostics-history" id="toolbenchRenderDiagnosticsHistory" hidden>
+              <strong>Recent mode checks</strong>
+              <div id="toolbenchRenderDiagnosticsHistoryList">No mode switches yet.</div>
+            </div>
+            <div class="workspace-render-diagnostics-verdict" id="toolbenchRenderDiagnosticsVerdict" hidden>
+              <strong>Comparison verdict</strong>
+              <p id="toolbenchRenderDiagnosticsVerdictCopy">No comparison verdict recorded yet.</p>
+            </div>
+            <p class="workspace-render-diagnostics-demo" id="toolbenchRecoveryTargetDemoNote">
+              Recovery demo seeds a saved attention lane with pressure reopen memory and a learned lead recovery target so follow-target controls can be tested locally.
+            </p>
+            <div class="workspace-render-diagnostics-actions">
+              <button type="button" id="toolbenchCopyRenderDiagnostics">Copy diagnostics</button>
+              <button type="button" id="toolbenchMarkRenderSame">Mark same in both</button>
+              <button type="button" id="toolbenchMarkRenderDifferent">Mark different across modes</button>
+              <button type="button" id="toolbenchClearRenderVerdict">Clear verdict</button>
+              <button type="button" id="toolbenchEnableRecoveryTargetDemo">Enable recovery demo</button>
+              <button type="button" id="toolbenchDisableRecoveryTargetDemo">Disable recovery demo</button>
+              <a id="toolbenchOpenStandardMode" href="./index.html?embed-safe=0">Open force standard</a>
+              <a id="toolbenchOpenSafeMode" href="./index.html?embed-safe=1">Open force embed-safe</a>
+            </div>
+          </details>
         </div>
         <div class="workspace-access-actions">
           <a id="toolbenchAccountLink" href="../account/">Open Saved Tools</a>
@@ -205,6 +343,16 @@
               <strong id="toolbenchSourceQaProduction">Not ready</strong>
             </div>
             <p id="toolbenchSourceQaWarning">Connect and QA the asking-rent source before using this as a final rent position.</p>
+            <div class="source-refresh-list" aria-label="Workspace source timestamps and refresh workflow">
+              <strong class="source-refresh-title">Source timestamps</strong>
+              <ul id="toolbenchSourceQaSources">
+                <li>
+                  <span>Asking rent feed</span>
+                  <strong>Not connected</strong>
+                  <em>Target: Daily</em>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="signal-depth member-signal-depth workspace-signal-depth">
@@ -247,9 +395,309 @@
             <span>Source Timeline</span>
             <strong id="workspaceSourceTimelineSummary">Source timeline starts after the first search</strong>
           </div>
+          <p class="workspace-source-timeline-note" id="workspaceSourceTimelineNote" hidden>Source handoff details appear here.</p>
+          <div class="workspace-source-timeline-actions" id="workspaceSourceTimelineActions" hidden aria-label="Refreshed V1 layers"></div>
           <ol id="workspaceSourceTimelineList">
             <li data-state="pending"><span>Start</span><strong>Search a benchmark to begin the source timeline</strong></li>
           </ol>
+        </section>
+      </details>
+
+      <details class="workspace-detail-group">
+        <summary>
+          <span>V1 Context Layer</span>
+          <strong>Below benchmark, surrounding trade, and suitability</strong>
+        </summary>
+        <section class="workspace-evidence-pack" id="workspaceV1ContextPack" aria-label="Workspace V1 decision context">
+          <div class="card-label workspace-v1-context-head">
+            <div>
+              <span>V1 Internal Layer</span>
+              <strong id="workspaceV1ContextSummary">Search to load the internal decision context</strong>
+            </div>
+            <button type="button" class="workspace-v1-context-why-toggle" id="workspaceV1ContextWhyToggle" hidden>Why this read</button>
+          </div>
+          <p class="workspace-v1-context-why" id="workspaceV1ContextWhy" hidden>Commercial-read reasoning appears here once a linked V1 context record is loaded.</p>
+          <p class="workspace-v1-context-meta" id="workspaceV1ContextMeta">Metadata appears here once a linked V1 context record is loaded.</p>
+          <div class="workspace-v1-decision-snapshot" aria-label="V1 decision snapshot">
+            <article data-snapshot-key="opportunity">
+              <span>What Helps</span>
+              <strong id="workspaceV1SnapshotOpportunityTitle">Not loaded</strong>
+              <p id="workspaceV1SnapshotOpportunityCopy">Search a linked area to surface the strongest commercial upside.</p>
+              <small id="workspaceV1SnapshotOpportunityMeta">Driver details appear here after a linked V1 context loads.</small>
+            </article>
+            <article data-snapshot-key="constraint">
+              <span>What Blocks</span>
+              <strong id="workspaceV1SnapshotConstraintTitle">Not loaded</strong>
+              <p id="workspaceV1SnapshotConstraintCopy">Search a linked area to surface the main commercial constraint.</p>
+              <small id="workspaceV1SnapshotConstraintMeta">Driver details appear here after a linked V1 context loads.</small>
+            </article>
+            <article data-snapshot-key="nextMove">
+              <span>What To Do Now</span>
+              <strong id="workspaceV1SnapshotNextTitle">Not loaded</strong>
+              <p id="workspaceV1SnapshotNextCopy">Search a linked area to surface the best next internal action.</p>
+              <small id="workspaceV1SnapshotNextMeta">Driver details appear here after a linked V1 context loads.</small>
+            </article>
+          </div>
+          <div class="workspace-v1-decision-outcome" data-snapshot-key="outcome" aria-label="V1 decision outcome">
+            <span>Decision Outcome</span>
+            <strong id="workspaceV1SnapshotOutcomeTitle">Not loaded</strong>
+            <p id="workspaceV1SnapshotOutcomeCopy">Search a linked area to surface the current internal decision state.</p>
+            <small id="workspaceV1SnapshotOutcomeReason">Outcome reasoning appears here after a linked V1 context loads.</small>
+            <small id="workspaceV1SnapshotOutcomePriority">Priority details appear here after a linked V1 context loads.</small>
+            <small id="workspaceV1SnapshotOutcomeHistory" hidden>Last-change details appear here after the decision outcome changes.</small>
+          </div>
+          <div class="workspace-evidence-pack-grid">
+            <article>
+              <span>Rent Signal</span>
+              <strong id="workspaceV1SignalTitle">Not loaded</strong>
+              <p id="workspaceV1SignalCopy">The benchmark verdict and gap will appear here for sample-linked areas.</p>
+            </article>
+            <article>
+              <span>Value Gap</span>
+              <strong id="workspaceV1ValueGapTitle">Not loaded</strong>
+              <p id="workspaceV1ValueGapCopy">Below-benchmark logic stays conservative until context is clear.</p>
+            </article>
+            <article>
+              <span>Surrounding Trade</span>
+              <strong id="workspaceV1SurroundingTitle">Not loaded</strong>
+              <p id="workspaceV1SurroundingCopy">Nearby trade pattern, operator mix, and competition notes will appear here.</p>
+            </article>
+            <article>
+              <span>Best Fit</span>
+              <strong id="workspaceV1FitTitle">Not loaded</strong>
+              <p id="workspaceV1FitCopy">Use-case fit and approval risk will appear here.</p>
+            </article>
+          </div>
+          <div class="signal-depth member-signal-depth workspace-signal-depth">
+            <strong id="workspaceV1DecisionTitle">Search to load the V1 decision note</strong>
+            <p id="workspaceV1DecisionCopy">This internal layer is where below-benchmark logic, suitability, and watchouts will be validated before public rollout.</p>
+            <ul id="workspaceV1Watchouts">
+              <li>Search a sample-linked area such as Serangoon HDB retail, Bedok HDB retail, or Tiong Bahru shophouse.</li>
+            </ul>
+          </div>
+          <div class="workspace-evidence-pack-grid">
+            <article>
+              <span>Top Operators</span>
+              <strong id="workspaceV1OperatorsTitle">Not loaded</strong>
+              <p id="workspaceV1OperatorsCopy">Recognizable nearby operators will be summarized here.</p>
+            </article>
+            <article>
+              <span>Competition</span>
+              <strong id="workspaceV1CompetitionTitle">Not loaded</strong>
+              <p id="workspaceV1CompetitionCopy">Direct competition and complementary trade support will appear here.</p>
+            </article>
+            <article>
+              <span>Good For</span>
+              <strong id="workspaceV1GoodFitTitle">Not loaded</strong>
+              <p id="workspaceV1GoodFitCopy">Strong or conditional use cases will appear here.</p>
+            </article>
+            <article>
+              <span>Use Caution</span>
+              <strong id="workspaceV1CautionTitle">Not loaded</strong>
+              <p id="workspaceV1CautionCopy">Weak-fit or approval-risk notes will appear here.</p>
+            </article>
+          </div>
+          <div class="workspace-v1-health" id="workspaceV1Health">
+            <div class="card-label">
+              <span>Record Health</span>
+              <strong id="workspaceV1HealthTitle">No linked V1 record yet</strong>
+            </div>
+            <p id="workspaceV1HealthCopy">Search a linked sample area to see whether this context bundle is structurally complete enough for internal use.</p>
+            <div class="workspace-v1-health-actions">
+              <button class="workspace-v1-health-action" id="workspaceV1HealthAction" type="button">Next: link a V1 record to see the most useful fix path.</button>
+              <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1HealthNextRecord" type="button">Next incomplete record</button>
+              <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1HealthResetPass" type="button">Start new pass</button>
+            </div>
+            <p class="workspace-v1-health-queue" id="workspaceV1HealthQueue">Review queue will appear once incomplete records are loaded.</p>
+            <p class="workspace-v1-health-origin" id="workspaceV1HealthOrigin">Review pass is currently local to this browser session.</p>
+            <p class="workspace-v1-pass-audit" id="workspaceV1HealthAudit">No review-pass restore or clear action recorded yet.</p>
+            <p class="workspace-v1-pass-sync" id="workspaceV1HealthSync">Backend sync is not active in this workspace mode.</p>
+            <p class="workspace-v1-health-progress" id="workspaceV1HealthProgress">Resolved this pass: 0.</p>
+            <p class="workspace-v1-health-finish" id="workspaceV1HealthFinish" hidden>Current review scope complete.</p>
+            <ul id="workspaceV1HealthList">
+              <li>No health checks available yet.</li>
+            </ul>
+          </div>
+          <form class="workspace-v1-editor" id="workspaceV1Editor" aria-label="V1 internal context editor">
+            <div class="card-label">
+              <span>V1 Internal Editor</span>
+              <strong id="workspaceV1EditorTitle">Load a linked sample area to edit the decision layer</strong>
+            </div>
+            <div class="workspace-v1-editor-nav" id="workspaceV1EditorNav" aria-label="V1 editor sections">
+              <button type="button" data-section-target="rent-signal">Rent Signal</button>
+              <button type="button" data-section-target="value-gap">Value Gap</button>
+              <button type="button" data-section-target="surrounding-trade">Surrounding Trade</button>
+              <button type="button" data-section-target="suitability">Suitability</button>
+              <button type="button" data-section-target="decision-note">Decision Note</button>
+            </div>
+            <div class="workspace-v1-editor-grid">
+              <section class="workspace-v1-editor-section" data-section="rent-signal">
+                <div class="workspace-v1-editor-section-title">
+                  <span>Section</span>
+                  <strong>Rent Signal</strong>
+                </div>
+                <div class="workspace-v1-signal-grid" aria-label="Editable rent signal">
+                  <label>
+                    <span>Verdict</span>
+                    <select id="workspaceV1VerdictInput">
+                      <option value="">Select verdict</option>
+                      <option value="below_benchmark">Below benchmark</option>
+                      <option value="fair">Fair</option>
+                      <option value="high">High</option>
+                      <option value="stretched">Stretched</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Confidence</span>
+                    <select id="workspaceV1ConfidenceInput">
+                      <option value="">Select confidence</option>
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Benchmark low psf</span>
+                    <input id="workspaceV1BenchmarkLowInput" type="number" inputmode="decimal" step="0.1" min="0" placeholder="0.0" />
+                  </label>
+                  <label>
+                    <span>Benchmark high psf</span>
+                    <input id="workspaceV1BenchmarkHighInput" type="number" inputmode="decimal" step="0.1" min="0" placeholder="0.0" />
+                  </label>
+                  <label>
+                    <span>Asking psf</span>
+                    <input id="workspaceV1AskingPsfInput" type="number" inputmode="decimal" step="0.1" min="0" placeholder="0.0" />
+                  </label>
+                  <label>
+                    <span>Gap percent</span>
+                    <input id="workspaceV1GapPercentInput" type="text" readonly placeholder="Auto-calculated on save" />
+                  </label>
+                </div>
+              </section>
+              <section class="workspace-v1-editor-section" data-section="decision-note">
+                <div class="workspace-v1-editor-section-title">
+                  <span>Section</span>
+                  <strong>Decision Note</strong>
+                </div>
+                <label>
+                  <span>Decision summary</span>
+                  <textarea id="workspaceV1DecisionInput" rows="3" placeholder="No decision summary loaded yet."></textarea>
+                </label>
+                <label>
+                  <span>Negotiation angle</span>
+                  <textarea id="workspaceV1AngleInput" rows="4" placeholder="No negotiation angle loaded yet."></textarea>
+                </label>
+                <label>
+                  <span>Watchouts (one per line)</span>
+                  <textarea id="workspaceV1WatchoutsInput" rows="5" placeholder="No watchouts loaded yet."></textarea>
+                </label>
+              </section>
+              <section class="workspace-v1-editor-section" data-section="value-gap">
+                <div class="workspace-v1-editor-section-title">
+                  <span>Section</span>
+                  <strong>Value Gap</strong>
+                </div>
+                <label>
+                  <span>Value-gap summary</span>
+                  <textarea id="workspaceV1ValueGapInput" rows="3" placeholder="No value-gap summary loaded yet."></textarea>
+                </label>
+                <div class="workspace-v1-signal-grid" aria-label="Editable value-gap signal">
+                  <label>
+                    <span>Value-gap status</span>
+                    <select id="workspaceV1ValueGapStatusInput">
+                      <option value="">Select status</option>
+                      <option value="below_benchmark">Below benchmark</option>
+                      <option value="possible_value_gap">Possible value gap</option>
+                      <option value="not_below_benchmark">Not below benchmark</option>
+                      <option value="review">Review</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Gap direction</span>
+                    <select id="workspaceV1GapDirectionInput">
+                      <option value="">Select direction</option>
+                      <option value="below_range">Below range</option>
+                      <option value="within_range">Within range</option>
+                      <option value="above_range">Above range</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Value-gap score</span>
+                    <input id="workspaceV1ValueGapScoreInput" type="number" inputmode="numeric" step="1" min="0" max="100" placeholder="0" />
+                  </label>
+                </div>
+                <label>
+                  <span>Likely drivers (one per line)</span>
+                  <textarea id="workspaceV1LikelyDriversInput" rows="4" placeholder="weaker_visibility_than_peers"></textarea>
+                </label>
+                <label>
+                  <span>Value-gap caution flags (one per line)</span>
+                  <textarea id="workspaceV1ValueGapCautionsInput" rows="4" placeholder="premium_needs_stronger_support"></textarea>
+                </label>
+              </section>
+              <section class="workspace-v1-editor-section" data-section="surrounding-trade">
+                <div class="workspace-v1-editor-section-title">
+                  <span>Section</span>
+                  <strong>Surrounding Trade</strong>
+                </div>
+                <label>
+                  <span>Trade pattern summary</span>
+                  <textarea id="workspaceV1TradePatternInput" rows="4" placeholder="No surrounding-business summary loaded yet."></textarea>
+                </label>
+                <label>
+                  <span>Category mix (category | count | signal)</span>
+                  <textarea id="workspaceV1CategoryMixInput" rows="5" placeholder="grocery_convenience | 6 | dominant"></textarea>
+                </label>
+                <label>
+                  <span>Notable operators (name | category | distance | relation | brand signal)</span>
+                  <textarea id="workspaceV1OperatorsInput" rows="5" placeholder="NTUC FairPrice | grocery_convenience | 70 | nearby_cluster | anchor"></textarea>
+                </label>
+                <label>
+                  <span>Competition flags (one per line)</span>
+                  <textarea id="workspaceV1CompetitionFlagsInput" rows="4" placeholder="moderate_direct_competition_for_fnb"></textarea>
+                </label>
+                <label>
+                  <span>Complementary flags (one per line)</span>
+                  <textarea id="workspaceV1ComplementaryFlagsInput" rows="4" placeholder="daily_needs_trade_support"></textarea>
+                </label>
+                <label>
+                  <span>Daypart signals (one per line)</span>
+                  <textarea id="workspaceV1DaypartSignalsInput" rows="4" placeholder="steady_lunch_trade"></textarea>
+                </label>
+              </section>
+              <section class="workspace-v1-editor-section" data-section="suitability">
+                <div class="workspace-v1-editor-section-title">
+                  <span>Section</span>
+                  <strong>Suitability</strong>
+                </div>
+                <label>
+                  <span>Fit scores (use case | score | verdict | approval risk)</span>
+                  <textarea id="workspaceV1FitScoresInput" rows="5" placeholder="grocery_convenience | 82 | strong_fit | low"></textarea>
+                </label>
+                <label>
+                  <span>Best-fit rationale</span>
+                  <textarea id="workspaceV1GoodFitInput" rows="4" placeholder="No best-fit rationale loaded yet."></textarea>
+                </label>
+                <label>
+                  <span>Caution watchouts (one per line)</span>
+                  <textarea id="workspaceV1CautionInput" rows="4" placeholder="No caution watchouts loaded yet."></textarea>
+                </label>
+              </section>
+            </div>
+            <div class="workspace-v1-validation" id="workspaceV1Validation" aria-live="polite">
+              <div class="workspace-v1-validation-head">
+                <strong id="workspaceV1ValidationTitle">V1 validation</strong>
+                <button type="button" class="workspace-v1-validation-clear" id="workspaceV1ValidationClear" hidden>Clear section filter</button>
+              </div>
+              <ul id="workspaceV1ValidationList">
+                <li>No validation issues yet.</li>
+              </ul>
+            </div>
+            <div class="workspace-v1-editor-actions">
+              <button type="submit" id="workspaceV1SaveButton">Save V1 context</button>
+              <p class="account-status" id="workspaceV1EditorStatus" aria-live="polite"></p>
+            </div>
+          </form>
         </section>
       </details>
 
@@ -617,9 +1065,9 @@
   <footer class="site-footer compact-footer" id="verseintel">
     <div class="footer-main">
       <div class="footer-brand">
-        <strong><span>Verse</span><span>Intel</span></strong>
+        <strong class="verseintel-wordmark" aria-label="VerseIntel"><span>Verse</span><span>Intel</span></strong>
         <small>Signals Across Every Verse</small>
-        <p>RentIntel is a VerseIntel product.</p>
+        <p>RentIntel is a <span class="verseintel-inline" aria-label="VerseIntel"><span>Verse</span><span>Intel</span></span> product.</p>
       </div>
       <nav aria-label="Footer links">
         <a href="../../about.html">About</a>
@@ -639,12 +1087,13 @@
   </footer>
 
   <script src="../../data/rentintel-sample-data.js"></script>
-  <script src="../../data/sources/asking-rent-feed.js?v=20260509-asking-pilot"></script>
+  <script src="../../data/sources/asking-rent-feed.js?v=20260525-asking-pilot-refresh"></script>
+<script src="../../data/sources/source-status.js?v=20260525-source-status-map"></script>
 <script src="../../data/sources/onemap-enrichment.js?v=20260512-onemap"></script>
 <script src="../../asking-feed-adapter.js?v=20260510-feedhardening"></script>
 <script src="../../onemap-enrichment-adapter.js?v=20260512-onemap"></script>
 <script src="../../source-trust.js?v=20260510-next5i"></script>
 <script src="../../auth-client.js?v=20260510-authcutover"></script>
-<script src="../../member-toolbench.js?v=20260510-feedhardening"></script>
+<script src="../../member-toolbench.js?v=20260603-filehandoff"></script>
 </body>
 </html>

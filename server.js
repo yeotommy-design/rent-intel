@@ -17,6 +17,7 @@ const DB_FILE = path.join(DB_DIR, "prototype-db.json");
 const SQLITE_FILE = path.join(DB_DIR, "prototype.sqlite");
 const ALERT_DELIVERY_DIR = path.join(DB_DIR, "alert-deliveries");
 const ASKING_FEED_FILE = path.join(ROOT_DIR, "data", "sources", "asking-rent-feed.json");
+const CONTEXT_SAMPLE_FILE = path.join(ROOT_DIR, "data", "sources", "rent-decision-context-sample.json");
 const SQLITE_BINARY = process.env.SQLITE3_BIN || "/usr/bin/sqlite3";
 const CURL_BINARY = process.env.CURL_BIN || "/usr/bin/curl";
 const DB_ENGINE = (process.env.RENTINTEL_DB_ENGINE || "sqlite").trim().toLowerCase();
@@ -26,6 +27,8 @@ const SMTP_URL = String(process.env.RENTINTEL_SMTP_URL || "").trim();
 const SMTP_USER = String(process.env.RENTINTEL_SMTP_USER || "").trim();
 const SMTP_PASS = String(process.env.RENTINTEL_SMTP_PASS || "").trim();
 const execFileAsync = promisify(execFile);
+let contextSeedSyncPromise = null;
+let ensureSqliteDbPromise = null;
 
 const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
@@ -115,7 +118,12 @@ async function ensureDb() {
   await fsp.mkdir(DB_DIR, { recursive: true });
   await fsp.mkdir(ALERT_DELIVERY_DIR, { recursive: true });
   if (DB_ENGINE === "sqlite") {
-    await ensureSqliteDb();
+    if (!ensureSqliteDbPromise) {
+      ensureSqliteDbPromise = ensureSqliteDb().finally(() => {
+        ensureSqliteDbPromise = null;
+      });
+    }
+    await ensureSqliteDbPromise;
     return;
   }
   try {
@@ -130,11 +138,15 @@ async function buildInitialDbState() {
   const seedMembers = JSON.parse(await fsp.readFile(path.join(ROOT_DIR, "data", "rentintel-members.json"), "utf8"));
   const members = Array.isArray(seedMembers.members) ? seedMembers.members.map(toMemberRecord).filter(Boolean) : [];
   const seedAskingFeed = JSON.parse(await fsp.readFile(ASKING_FEED_FILE, "utf8"));
+  const contextSeed = JSON.parse(await fsp.readFile(CONTEXT_SAMPLE_FILE, "utf8"));
+  const contextRecords = Array.isArray(contextSeed.records) ? contextSeed.records : [];
   return {
     members,
     loginCodes: [],
     sessions: [],
+    contextRecords,
     savedReports: [],
+    toolbenchReviewPasses: [],
     watchlist: [],
     alertRules: [],
     alertDeliveries: [],
@@ -189,6 +201,7 @@ async function readDb() {
   db.loginCodes = Array.isArray(db.loginCodes) ? db.loginCodes : [];
   db.sessions = Array.isArray(db.sessions) ? db.sessions : [];
   db.savedReports = Array.isArray(db.savedReports) ? db.savedReports : [];
+  db.toolbenchReviewPasses = Array.isArray(db.toolbenchReviewPasses) ? db.toolbenchReviewPasses : [];
   db.watchlist = Array.isArray(db.watchlist) ? db.watchlist : [];
   db.alertRules = Array.isArray(db.alertRules) ? db.alertRules : [];
   db.alertDeliveries = Array.isArray(db.alertDeliveries) ? db.alertDeliveries : [];
@@ -254,6 +267,7 @@ function sqliteJsonLiteral(value) {
 
 async function runSqlite(sql, options = {}) {
   const args = [];
+  args.push("-cmd", ".timeout 5000");
   if (options.json) args.push("-json");
   args.push(SQLITE_FILE, sql);
   const { stdout } = await execFileAsync(SQLITE_BINARY, args, {
@@ -336,6 +350,14 @@ async function ensureSqliteDb() {
     );
     create index if not exists idx_sessions_member_email
       on sessions(member_email, created_at desc);
+    create table if not exists context_records (
+      id text primary key,
+      record_id text not null unique,
+      payload_json text not null,
+      updated_at text not null
+    );
+    create index if not exists idx_context_records_record_id
+      on context_records(record_id, updated_at desc);
     create table if not exists member_saved_reports (
       id text primary key,
       member_email text not null,
@@ -345,6 +367,14 @@ async function ensureSqliteDb() {
     );
     create index if not exists idx_member_saved_reports_member_email
       on member_saved_reports(member_email, updated_at desc);
+    create table if not exists member_toolbench_review_passes (
+      id text primary key,
+      member_email text not null unique,
+      payload_json text not null,
+      updated_at text not null
+    );
+    create index if not exists idx_member_toolbench_review_passes_member_email
+      on member_toolbench_review_passes(member_email, updated_at desc);
     create table if not exists member_watchlist_areas (
       id text primary key,
       member_email text not null,
@@ -467,14 +497,19 @@ async function ensureSqliteDb() {
     create index if not exists idx_backend_handoff_audit_member_email
       on backend_handoff_audit(member_email, generated_at desc);
   `);
+  await ensureSqliteContextTables();
   await recordSqliteMigration("001-normalized-member-core", "Normalize member/auth/report/watchlist/alert-rule tables.");
   await recordSqliteMigration("002-normalized-member-admin", "Normalize notification preferences, promo codes, activation requests, and role audit.");
   await recordSqliteMigration("003-normalized-source-ops", "Normalize source review, sync, freshness, production evidence, and handoff audit.");
   await recordSqliteMigration("004-route-sql-and-ops-report", "Add direct SQL route helpers, transactions, and ops reporting.");
   await recordSqliteMigration("005-source-route-sql", "Move source/admin workflows onto direct SQLite route reads and transactional writes.");
+  await recordSqliteMigration("007-member-toolbench-review-pass", "Persist member-scoped V1 Workspace review pass state.");
   const existing = await runSqlite("select id from app_state where id = 1;", { json: true });
   const rows = existing ? JSON.parse(existing) : [];
-  if (Array.isArray(rows) && rows.length) return;
+  if (Array.isArray(rows) && rows.length) {
+    await syncSqliteContextSeed();
+    return;
+  }
   let initialState;
   try {
     const raw = await fsp.readFile(DB_FILE, "utf8");
@@ -483,6 +518,21 @@ async function ensureSqliteDb() {
     initialState = await buildInitialDbState();
   }
   await writeSqliteDb(initialState, { mirrorJson: true });
+  await syncSqliteContextSeed();
+}
+
+async function ensureSqliteContextTables() {
+  await runSqlite(`
+    create table if not exists context_records (
+      id text primary key,
+      record_id text not null unique,
+      payload_json text not null,
+      updated_at text not null
+    );
+    create index if not exists idx_context_records_record_id
+      on context_records(record_id, updated_at desc);
+  `);
+  await recordSqliteMigration("006-context-records-v1", "Persist V1 context records for rent signal, value gap, surrounding businesses, suitability, and decision notes.");
 }
 
 function sqliteRowJsonInsert(table, rows, options = {}) {
@@ -611,6 +661,83 @@ async function sqliteReadReportsByMember(email) {
   return await sqliteSelectPayloadRows("member_saved_reports", sqliteWhereEquals("member_email", normalizeEmail(email)), "updated_at desc");
 }
 
+async function sqliteReadToolbenchReviewPass(email) {
+  return await sqliteSelectPayloadRow("member_toolbench_review_passes", sqliteWhereEquals("member_email", normalizeEmail(email)), "updated_at desc");
+}
+
+async function sqliteReadContextRecords() {
+  await ensureSqliteContextTables();
+  return await sqliteSelectPayloadRows("context_records", "", "updated_at desc");
+}
+
+async function sqliteReadContextRecord(recordId) {
+  await ensureSqliteContextTables();
+  const normalizedRecordId = String(recordId || "").trim();
+  if (!normalizedRecordId) return null;
+  return await sqliteSelectPayloadRow(
+    "context_records",
+    `${sqliteWhereEquals("record_id", normalizedRecordId)} or ${sqliteWhereEquals("id", normalizedRecordId)}`,
+    "updated_at desc"
+  );
+}
+
+async function sqliteUpsertContextRecord(record) {
+  await ensureSqliteContextTables();
+  const contextRecordId = String(record.contextRecordId || record.recordId || randomToken(10)).trim();
+  const recordId = String(record.recordId || "").trim();
+  await runSqliteTransaction(`
+    insert into context_records (id, record_id, payload_json, updated_at)
+    values (
+      ${sqliteJsonLiteral(contextRecordId)},
+      ${sqliteJsonLiteral(recordId)},
+      ${sqliteJsonLiteral(JSON.stringify(record))},
+      ${sqliteJsonLiteral(record.capturedAt || new Date().toISOString())}
+    )
+    on conflict(record_id) do update set
+      id = excluded.id,
+      payload_json = excluded.payload_json,
+      updated_at = excluded.updated_at;
+  `);
+}
+
+async function syncSqliteContextSeed() {
+  await ensureSqliteContextTables();
+  const sampleRecords = await readContextSampleRecords();
+  if (!Array.isArray(sampleRecords) || !sampleRecords.length) return;
+  const existingRecords = await sqliteReadContextRecords();
+  const existingById = new Map();
+  existingRecords.forEach((record) => {
+    const key = contextRecordKey(record);
+    if (key) existingById.set(key, record);
+  });
+  const synced = syncStoredContextRecordsWithSample(existingRecords, sampleRecords);
+  if (!synced.changed) return;
+  const recordsToUpsert = synced.records.filter((record) => {
+    const key = contextRecordKey(record);
+    if (!key) return false;
+    const existingRecord = existingById.get(key);
+    if (!existingRecord) return true;
+    return !hasContextOverrideMetadata(existingRecord);
+  });
+  for (const record of recordsToUpsert) {
+    await sqliteUpsertContextRecord(record);
+  }
+}
+
+async function ensureContextSeedReady() {
+  if (!contextSeedSyncPromise) {
+    const syncSeed = DB_ENGINE === "sqlite" ? syncSqliteContextSeed : syncJsonContextSeed;
+    contextSeedSyncPromise = (async () => {
+      try {
+        await syncSeed();
+      } finally {
+        contextSeedSyncPromise = null;
+      }
+    })();
+  }
+  await contextSeedSyncPromise;
+}
+
 async function sqliteReadWatchlistByMember(email) {
   return await sqliteSelectPayloadRows("member_watchlist_areas", sqliteWhereEquals("member_email", normalizeEmail(email)), "added_at desc");
 }
@@ -708,6 +835,21 @@ async function sqliteUpsertReport(report) {
       ${sqliteJsonLiteral(JSON.stringify(report))},
       ${sqliteJsonLiteral(report.updatedAt || report.savedAt || new Date().toISOString())}
     );
+  `);
+}
+
+async function sqliteSaveToolbenchReviewPass(reviewPass) {
+  await runSqliteTransaction(`
+    insert into member_toolbench_review_passes (id, member_email, payload_json, updated_at)
+    values (
+      ${sqliteJsonLiteral(String(reviewPass.id || reviewPass.email || randomToken(10)))},
+      ${sqliteJsonLiteral(normalizeEmail(reviewPass.email || reviewPass.memberEmail || ""))},
+      ${sqliteJsonLiteral(JSON.stringify(reviewPass))},
+      ${sqliteJsonLiteral(reviewPass.updatedAt || new Date().toISOString())}
+    )
+    on conflict(member_email) do update set
+      payload_json = excluded.payload_json,
+      updated_at = excluded.updated_at;
   `);
 }
 
@@ -1318,6 +1460,7 @@ async function sqliteUpsertBackendHandoffAudit(audit) {
 }
 
 async function readSqliteDb() {
+  await ensureSqliteContextTables();
   const raw = await runSqlite("select state_json from app_state where id = 1;", { json: true });
   const rows = raw ? JSON.parse(raw) : [];
   const stateJson = rows[0]?.state_json || "{}";
@@ -1325,7 +1468,9 @@ async function readSqliteDb() {
   const normalizedMembers = await readSqliteJsonTable("members", "updated_at");
   const normalizedLoginCodes = await readSqliteJsonTable("login_codes", "created_at");
   const normalizedSessions = await readSqliteJsonTable("sessions", "created_at");
+  const normalizedContextRecords = await readSqliteJsonTable("context_records", "updated_at");
   const normalizedSavedReports = await readSqliteJsonTable("member_saved_reports", "updated_at");
+  const normalizedToolbenchReviewPasses = await readSqliteJsonTable("member_toolbench_review_passes", "updated_at");
   const normalizedWatchlist = await readSqliteJsonTable("member_watchlist_areas", "added_at");
   const normalizedAlertRules = await readSqliteJsonTable("member_alert_rules", "updated_at");
   const normalizedNotificationPreferences = await readSqliteJsonTable("member_notification_preferences", "updated_at");
@@ -1350,9 +1495,15 @@ async function readSqliteDb() {
   db.sessions = normalizedSessions.length
     ? normalizedSessions
     : (Array.isArray(db.sessions) ? db.sessions : []);
+  db.contextRecords = normalizedContextRecords.length
+    ? normalizedContextRecords
+    : (Array.isArray(db.contextRecords) ? db.contextRecords : []);
   db.savedReports = normalizedSavedReports.length
     ? normalizedSavedReports
     : (Array.isArray(db.savedReports) ? db.savedReports : []);
+  db.toolbenchReviewPasses = normalizedToolbenchReviewPasses.length
+    ? normalizedToolbenchReviewPasses
+    : (Array.isArray(db.toolbenchReviewPasses) ? db.toolbenchReviewPasses : []);
   db.watchlist = normalizedWatchlist.length
     ? normalizedWatchlist
     : (Array.isArray(db.watchlist) ? db.watchlist : []);
@@ -1453,7 +1604,9 @@ async function readSqliteDb() {
     (!normalizedMembers.length && db.members.length) ||
     (!normalizedLoginCodes.length && db.loginCodes.length) ||
     (!normalizedSessions.length && db.sessions.length) ||
+    (!normalizedContextRecords.length && db.contextRecords.length) ||
     (!normalizedSavedReports.length && db.savedReports.length) ||
+    (!normalizedToolbenchReviewPasses.length && db.toolbenchReviewPasses.length) ||
     (!normalizedWatchlist.length && db.watchlist.length) ||
     (!normalizedAlertRules.length && db.alertRules.length) ||
     (!normalizedNotificationPreferences.length && Object.keys(db.notificationPreferences).length) ||
@@ -1507,8 +1660,22 @@ async function writeSqliteDb(db, options = {}) {
       sortColumn: "created_at",
       sortAt: "createdAt"
     })}
+    ${sqliteRowJsonInsert("context_records", (db.contextRecords || []).map((row) => ({
+      ...row,
+      id: row.contextRecordId || row.recordId || randomToken(10),
+      memberEmail: String(row.recordId || "").trim()
+    })), {
+      emailField: "memberEmail",
+      emailColumn: "record_id",
+      sortColumn: "updated_at",
+      sortAt: "capturedAt"
+    })}
     ${sqliteRowJsonInsert("member_saved_reports", db.savedReports, {
       includeRecordId: true,
+      sortColumn: "updated_at",
+      sortAt: "updatedAt"
+    })}
+    ${sqliteRowJsonInsert("member_toolbench_review_passes", db.toolbenchReviewPasses, {
       sortColumn: "updated_at",
       sortAt: "updatedAt"
     })}
@@ -1862,6 +2029,23 @@ function normalizeNotificationPreferencePayload(payload = {}, memberEmail = "") 
     activationUpdates: Boolean(payload.activationUpdates),
     watchlistAlerts: Boolean(payload.watchlistAlerts),
     sourceSyncAlerts: Boolean(payload.sourceSyncAlerts),
+    updatedAt: new Date().toISOString()
+  };
+}
+
+function normalizeToolbenchReviewPassPayload(payload = {}, memberEmail = "") {
+  const email = normalizeEmail(payload.email || payload.memberEmail || memberEmail);
+  return {
+    id: String(payload.id || email || randomToken(10)).trim(),
+    email,
+    quickPickFilter: String(payload.quickPickFilter || "all").trim() || "all",
+    quickPickLayerFilter: String(payload.quickPickLayerFilter || "").trim(),
+    resolvedKeys: Array.isArray(payload.resolvedKeys)
+      ? payload.resolvedKeys.filter((key) => typeof key === "string" && key.includes("::"))
+      : [],
+    activeReviewKey: typeof payload.activeReviewKey === "string" && payload.activeReviewKey.includes("::")
+      ? payload.activeReviewKey
+      : "",
     updatedAt: new Date().toISOString()
   };
 }
@@ -2688,6 +2872,40 @@ async function handleMemberReports(request, response) {
       await writeDb(db);
     }
     return json(response, 200, { ok: true, report });
+  }
+
+  return methodNotAllowed(response);
+}
+
+async function handleMemberToolbenchReviewPass(request, response) {
+  const lookup = await lookupSession(request);
+  const member = requireMemberSession(lookup, response);
+  if (!member) return;
+  const { db } = lookup;
+
+  if (request.method === "GET") {
+    const reviewPass = DB_ENGINE === "sqlite"
+      ? await sqliteReadToolbenchReviewPass(member.email)
+      : (Array.isArray(db.toolbenchReviewPasses)
+        ? db.toolbenchReviewPasses.find((entry) => normalizeEmail(entry.email || entry.memberEmail) === member.email) || null
+        : null);
+    return json(response, 200, { ok: true, reviewPass });
+  }
+
+  if (request.method === "POST") {
+    const body = await readBody(request);
+    const reviewPass = normalizeToolbenchReviewPassPayload(body, member.email);
+    if (DB_ENGINE === "sqlite") {
+      await sqliteSaveToolbenchReviewPass(reviewPass);
+    } else {
+      const current = Array.isArray(db.toolbenchReviewPasses) ? db.toolbenchReviewPasses : [];
+      const existingIndex = current.findIndex((entry) => normalizeEmail(entry.email || entry.memberEmail) === member.email);
+      if (existingIndex >= 0) current[existingIndex] = reviewPass;
+      else current.unshift(reviewPass);
+      db.toolbenchReviewPasses = current;
+      await writeDb(db);
+    }
+    return json(response, 200, { ok: true, reviewPass });
   }
 
   return methodNotAllowed(response);
@@ -3572,6 +3790,382 @@ async function handleBackendHandoffAudit(request, response) {
   return methodNotAllowed(response);
 }
 
+function normalizeContextId(value = "") {
+  return String(value).trim().toLowerCase();
+}
+
+function cloneContextPayload(value) {
+  return value == null ? value : JSON.parse(JSON.stringify(value));
+}
+
+function contextRecordKey(record = {}) {
+  return normalizeContextId(record.recordId || record.contextRecordId || "");
+}
+
+function hasContextOverrideMetadata(record = {}) {
+  return Boolean(
+    String(record.savedAt || "").trim() ||
+    String(record.updatedAt || "").trim() ||
+    (
+      record.updatedScope &&
+      typeof record.updatedScope === "object" &&
+      Object.keys(record.updatedScope).length
+    )
+  );
+}
+
+function refreshedContextLayerKeys(storedRecord = {}, sampleRecord = {}) {
+  const layers = [
+    ["rent-signal", storedRecord.rentSignal, sampleRecord.rentSignal],
+    ["value-gap", storedRecord.valueGapSignal, sampleRecord.valueGapSignal],
+    ["surrounding-trade", storedRecord.surroundingBusinesses, sampleRecord.surroundingBusinesses],
+    ["suitability", storedRecord.unitSuitability, sampleRecord.unitSuitability],
+    ["decision-note", storedRecord.decisionNotes, sampleRecord.decisionNotes]
+  ];
+  return layers
+    .filter(([, before, after]) => JSON.stringify(before ?? null) !== JSON.stringify(after ?? null))
+    .map(([key]) => key);
+}
+
+function syncStoredContextRecordsWithSample(storedRecords = [], sampleRecords = []) {
+  const storedById = new Map();
+  const syncedRecords = [];
+  const seen = new Set();
+  let changed = false;
+  let inserted = 0;
+  let refreshed = 0;
+  let preservedOverrides = 0;
+
+  storedRecords.forEach((record) => {
+    const key = contextRecordKey(record);
+    if (key) storedById.set(key, record);
+  });
+
+  sampleRecords.forEach((sampleRecord) => {
+    const key = contextRecordKey(sampleRecord);
+    if (!key) return;
+    const storedRecord = storedById.get(key);
+    seen.add(key);
+    if (!storedRecord) {
+      syncedRecords.push({
+        ...sampleRecord,
+        contextOrigin: "sample-backed"
+      });
+      changed = true;
+      inserted += 1;
+      return;
+    }
+    if (hasContextOverrideMetadata(storedRecord)) {
+      syncedRecords.push(storedRecord);
+      preservedOverrides += 1;
+      return;
+    }
+    const refreshedLayers = refreshedContextLayerKeys(storedRecord, sampleRecord);
+    syncedRecords.push({
+      ...sampleRecord,
+      contextOrigin: "refreshed-from-sample",
+      contextOriginLayers: refreshedLayers
+    });
+    if (JSON.stringify(storedRecord) !== JSON.stringify(sampleRecord)) {
+      changed = true;
+      refreshed += 1;
+    }
+  });
+
+  storedRecords.forEach((record) => {
+    const key = contextRecordKey(record);
+    if (!key || seen.has(key)) return;
+    syncedRecords.push(record);
+  });
+
+  return {
+    records: syncedRecords,
+    changed,
+    inserted,
+    refreshed,
+    preservedOverrides
+  };
+}
+
+function computeContextHealthSummary(record = {}) {
+  const rentSignal = record.rentSignal || {};
+  const valueGap = record.valueGapSignal || {};
+  const surrounding = record.surroundingBusinesses || {};
+  const fitScores = Array.isArray(record.unitSuitability?.fitScores) ? record.unitSuitability.fitScores : [];
+  const decisionNotes = record.decisionNotes || {};
+  const checks = [
+    {
+      key: "rent_signal",
+      label: "Rent signal",
+      ok:
+        Number.isFinite(rentSignal.benchmarkLowPsf) &&
+        Number.isFinite(rentSignal.benchmarkHighPsf) &&
+        Number.isFinite(rentSignal.askingPsf) &&
+        Boolean(rentSignal.verdict) &&
+        Boolean(rentSignal.confidence)
+    },
+    {
+      key: "value_gap",
+      label: "Value gap",
+      ok:
+        Boolean(valueGap.status) &&
+        Boolean(valueGap.gapDirection) &&
+        typeof valueGap.summary === "string" &&
+        valueGap.summary.trim().length > 0
+    },
+    {
+      key: "surrounding_trade",
+      label: "Surrounding trade",
+      ok:
+        Array.isArray(surrounding.categoryMix) &&
+        surrounding.categoryMix.length > 0 &&
+        typeof surrounding.tradePattern === "string" &&
+        surrounding.tradePattern.trim().length > 0
+    },
+    {
+      key: "suitability",
+      label: "Suitability",
+      ok:
+        fitScores.length > 0 &&
+        fitScores.some((item) => Number.isFinite(item?.score)) &&
+        fitScores.some((item) => typeof item?.rationale === "string" && item.rationale.trim().length > 0)
+    },
+    {
+      key: "decision_note",
+      label: "Decision note",
+      ok:
+        typeof decisionNotes.summary === "string" &&
+        decisionNotes.summary.trim().length > 0 &&
+        typeof decisionNotes.negotiationAngle === "string" &&
+        decisionNotes.negotiationAngle.trim().length > 0
+    }
+  ];
+  const passed = checks.filter((check) => check.ok).length;
+  const state = passed >= checks.length ? "strong" : passed >= 3 ? "partial" : "weak";
+  return {
+    state,
+    passed,
+    total: checks.length,
+    checks: checks.map((check) => ({
+      key: check.key,
+      label: check.label,
+      ok: check.ok
+    }))
+  };
+}
+
+function contextSummary(record = {}) {
+  return {
+    contextRecordId: record.contextRecordId || "",
+    recordId: record.recordId || "",
+    subjectType: record.subjectType || "",
+    subjectRef: record.subjectRef || "",
+    capturedAt: record.capturedAt || "",
+    savedAt: record.savedAt || "",
+    updatedAt: record.updatedAt || "",
+    contextOrigin: record.contextOrigin || "",
+    contextOriginLayers: Array.isArray(record.contextOriginLayers) ? [...record.contextOriginLayers] : [],
+    updatedScope: cloneContextPayload(record.updatedScope || null),
+    contextHealth: computeContextHealthSummary(record)
+  };
+}
+
+async function readContextSampleRecords() {
+  const payload = JSON.parse(await fsp.readFile(CONTEXT_SAMPLE_FILE, "utf8"));
+  return Array.isArray(payload?.records) ? payload.records : [];
+}
+
+async function writeContextSampleRecords(records) {
+  await fsp.writeFile(
+    CONTEXT_SAMPLE_FILE,
+    `${JSON.stringify({ records }, null, 2)}\n`,
+    "utf8"
+  );
+}
+
+async function readContextSampleRecord(recordId) {
+  const normalizedId = normalizeContextId(recordId);
+  if (!normalizedId) return null;
+  const records = await readContextSampleRecords();
+  return records.find((record) =>
+    normalizeContextId(record.recordId) === normalizedId ||
+    normalizeContextId(record.contextRecordId) === normalizedId
+  ) || null;
+}
+
+async function syncJsonContextSeed() {
+  const db = await readDb();
+  const sampleRecords = await readContextSampleRecords();
+  if (!Array.isArray(sampleRecords) || !sampleRecords.length) return;
+  const current = Array.isArray(db.contextRecords) ? db.contextRecords : [];
+  const synced = syncStoredContextRecordsWithSample(current, sampleRecords);
+  if (!synced.changed) return;
+  db.contextRecords = synced.records;
+  await writeDb(db);
+}
+
+async function readContextRecordsFromStore() {
+  const sampleRecords = await readContextSampleRecords();
+  const mergeContextRecords = (storedRecords = []) => {
+    const merged = new Map();
+    sampleRecords.forEach((record) => {
+      const key = normalizeContextId(record.recordId || record.contextRecordId || "");
+      if (key) merged.set(key, record);
+    });
+    storedRecords.forEach((record) => {
+      const key = normalizeContextId(record.recordId || record.contextRecordId || "");
+      if (key) merged.set(key, record);
+    });
+    return Array.from(merged.values());
+  };
+  await ensureContextSeedReady();
+  if (DB_ENGINE === "sqlite") {
+    const records = await sqliteReadContextRecords();
+    return mergeContextRecords(records);
+  }
+  const db = await readDb();
+  return mergeContextRecords(Array.isArray(db.contextRecords) ? db.contextRecords : []);
+}
+
+async function readContextRecordFromStore(recordId) {
+  await ensureContextSeedReady();
+  if (DB_ENGINE === "sqlite") {
+    const record = await sqliteReadContextRecord(recordId);
+    return record || await readContextSampleRecord(recordId);
+  }
+  const db = await readDb();
+  const normalizedId = normalizeContextId(recordId);
+  const records = Array.isArray(db.contextRecords) ? db.contextRecords : [];
+  return (
+    records.find((record) =>
+      normalizeContextId(record.recordId) === normalizedId ||
+      normalizeContextId(record.contextRecordId) === normalizedId
+    ) || await readContextSampleRecord(recordId)
+  );
+}
+
+function normalizeContextRecordPayload(body = {}) {
+  const contextRecordId = String(body.contextRecordId || "").trim();
+  const recordId = String(body.recordId || "").trim();
+  const subjectType = String(body.subjectType || "").trim();
+  const subjectRef = String(body.subjectRef || "").trim();
+  const capturedAt = String(body.capturedAt || "").trim() || new Date().toISOString().slice(0, 10);
+  const savedAt = String(body.savedAt || "").trim();
+  const updatedAt = String(body.updatedAt || "").trim();
+
+  return {
+    contextRecordId,
+    recordId,
+    subjectType,
+    subjectRef,
+    capturedAt,
+    savedAt,
+    updatedAt,
+    contextOrigin: "saved-override",
+    contextOriginLayers: [],
+    updatedScope: cloneContextPayload(body.updatedScope || null),
+    rentSignal: cloneContextPayload(body.rentSignal || null),
+    valueGapSignal: cloneContextPayload(body.valueGapSignal || null),
+    surroundingBusinesses: cloneContextPayload(body.surroundingBusinesses || null),
+    unitSuitability: cloneContextPayload(body.unitSuitability || null),
+    decisionNotes: cloneContextPayload(body.decisionNotes || null)
+  };
+}
+
+async function handleContextRecords(request, response) {
+  if (request.method === "GET") {
+    const records = await readContextRecordsFromStore();
+    return json(response, 200, {
+      ok: true,
+      contextRecords: records.map(contextSummary)
+    });
+  }
+
+  if (request.method === "POST") {
+    const body = await readBody(request);
+    const record = normalizeContextRecordPayload(body);
+    if (!record.contextRecordId || !record.recordId || !record.subjectType || !record.subjectRef) {
+      return json(response, 400, {
+        ok: false,
+        error: "contextRecordId, recordId, subjectType, and subjectRef are required"
+      });
+    }
+
+    const records = await readContextRecordsFromStore();
+    const existingIndex = records.findIndex((entry) =>
+      normalizeContextId(entry.recordId) === normalizeContextId(record.recordId) ||
+      normalizeContextId(entry.contextRecordId) === normalizeContextId(record.contextRecordId)
+    );
+    if (DB_ENGINE === "sqlite") {
+      await sqliteUpsertContextRecord(record);
+    } else {
+      const db = await readDb();
+      const current = Array.isArray(db.contextRecords) ? db.contextRecords : [];
+      const currentIndex = current.findIndex((entry) =>
+        normalizeContextId(entry.recordId) === normalizeContextId(record.recordId) ||
+        normalizeContextId(entry.contextRecordId) === normalizeContextId(record.contextRecordId)
+      );
+      if (currentIndex >= 0) current[currentIndex] = record;
+      else current.unshift(record);
+      db.contextRecords = current;
+      await writeDb(db);
+    }
+
+    return json(response, existingIndex >= 0 ? 200 : 201, {
+      ok: true,
+      contextRecord: contextSummary(record),
+      contextHealth: computeContextHealthSummary(record),
+      rentSignal: cloneContextPayload(record.rentSignal || null),
+      valueGapSignal: cloneContextPayload(record.valueGapSignal || null),
+      surroundingBusinesses: cloneContextPayload(record.surroundingBusinesses || null),
+      unitSuitability: cloneContextPayload(record.unitSuitability || null),
+      decisionNotes: cloneContextPayload(record.decisionNotes || null)
+    });
+  }
+
+  return methodNotAllowed(response);
+}
+
+async function handleContextRecord(request, response, recordId) {
+  if (request.method !== "GET") return methodNotAllowed(response);
+  const record = await readContextRecordFromStore(recordId);
+  if (!record) return json(response, 404, { ok: false, error: "Context record not found" });
+  return json(response, 200, {
+    ok: true,
+    contextRecord: contextSummary(record),
+    contextHealth: computeContextHealthSummary(record),
+    rentSignal: cloneContextPayload(record.rentSignal || null),
+    valueGapSignal: cloneContextPayload(record.valueGapSignal || null),
+    surroundingBusinesses: cloneContextPayload(record.surroundingBusinesses || null),
+    unitSuitability: cloneContextPayload(record.unitSuitability || null),
+    decisionNotes: cloneContextPayload(record.decisionNotes || null)
+  });
+}
+
+async function handleContextRecordLayer(request, response, recordId, layerPath) {
+  if (request.method !== "GET") return methodNotAllowed(response);
+  const record = await readContextRecordFromStore(recordId);
+  if (!record) return json(response, 404, { ok: false, error: "Context record not found" });
+
+  const layerMap = {
+    "rent-signal": ["rentSignal", record.rentSignal || null],
+    "value-gap-signal": ["valueGapSignal", record.valueGapSignal || null],
+    "surrounding-businesses": ["surroundingBusinesses", record.surroundingBusinesses || null],
+    "unit-suitability": ["unitSuitability", record.unitSuitability || null],
+    "decision-notes": ["decisionNotes", record.decisionNotes || null]
+  };
+
+  const layerEntry = layerMap[layerPath];
+  if (!layerEntry) return notFound(response);
+
+  const [fieldName, fieldValue] = layerEntry;
+  return json(response, 200, {
+    ok: true,
+    contextRecord: contextSummary(record),
+    [fieldName]: cloneContextPayload(fieldValue)
+  });
+}
+
 async function handleDeleteMemberReport(request, response, recordId) {
   if (request.method !== "DELETE") return methodNotAllowed(response);
   const lookup = await lookupSession(request);
@@ -3714,6 +4308,20 @@ async function route(request, response) {
     if (pathname === "/api/sources/asking-feed") {
       return await handleSourceAskingFeed(request, response);
     }
+    if (pathname === "/api/context/records") {
+      return await handleContextRecords(request, response);
+    }
+    if (pathname.startsWith("/api/context/records/")) {
+      const contextPath = pathname.slice("/api/context/records/".length);
+      const pathParts = contextPath.split("/").filter(Boolean).map((part) => decodeURIComponent(part));
+      const [recordId, layerPath] = pathParts;
+      if (recordId && layerPath) {
+        return await handleContextRecordLayer(request, response, recordId, layerPath);
+      }
+      if (recordId) {
+        return await handleContextRecord(request, response, recordId);
+      }
+    }
     if (pathname === "/api/members/login/request-code") {
       return await handleRequestCode(request, response);
     }
@@ -3725,6 +4333,9 @@ async function route(request, response) {
     }
     if (pathname === "/api/members/reports") {
       return await handleMemberReports(request, response);
+    }
+    if (pathname === "/api/members/toolbench/review-pass") {
+      return await handleMemberToolbenchReviewPass(request, response);
     }
     if (pathname.startsWith("/api/members/reports/")) {
       const recordId = decodeURIComponent(pathname.slice("/api/members/reports/".length));
