@@ -8455,6 +8455,43 @@ a {
   cursor: default;
 }
 
+.public-intent-preview-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.public-intent-preview-list > p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.public-intent-preview-item {
+  border: 1px solid rgba(25, 107, 85, 0.16);
+  border-radius: 10px;
+  padding: 12px;
+  background: #f8fbf7;
+}
+
+.public-intent-preview-item strong {
+  display: block;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.public-intent-preview-item span,
+.public-intent-preview-item small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.public-intent-preview-item small {
+  font-size: 12px;
+}
+
 .activation-request-panel {
   border-color: rgba(53, 93, 124, 0.26);
 }

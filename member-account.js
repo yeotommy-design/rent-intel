@@ -24,6 +24,7 @@ const notificationPreferencesKey = "rentintelNotificationPreferences";
 const toolbenchPreviewRecordKey = "rentintelToolbenchPreviewRecord";
 const pendingLoginKey = "rentintelPendingLogin";
 const pendingMemberIntentKey = "rentintelPendingMemberIntent";
+const pendingPublicChecksKey = "rentintelPendingPublicChecks";
 const validPromoCode = "RENTINTEL-PILOT";
 const defaultAlertMaxRetries = 2;
 const freshnessPolicyAdminEmails = new Set(["active@rent-intel.com"]);
@@ -67,6 +68,18 @@ const accountEl = {
   savePublicIntentButton: document.getElementById("savePublicIntentButton"),
   clearPublicIntentButton: document.getElementById("clearPublicIntentButton"),
   publicIntentStatus: document.getElementById("publicIntentStatus"),
+  publicChecksIntentPanel: document.getElementById("publicChecksIntentPanel"),
+  publicChecksIntentTitle: document.getElementById("publicChecksIntentTitle"),
+  publicChecksIntentCopy: document.getElementById("publicChecksIntentCopy"),
+  publicChecksIntentCountMetric: document.getElementById("publicChecksIntentCountMetric"),
+  publicChecksIntentPinnedMetric: document.getElementById("publicChecksIntentPinnedMetric"),
+  publicChecksIntentNotesMetric: document.getElementById("publicChecksIntentNotesMetric"),
+  publicChecksIntentMovedMetric: document.getElementById("publicChecksIntentMovedMetric"),
+  publicChecksIntentList: document.getElementById("publicChecksIntentList"),
+  openPublicChecksWorkspace: document.getElementById("openPublicChecksWorkspace"),
+  savePublicChecksButton: document.getElementById("savePublicChecksButton"),
+  clearPublicChecksButton: document.getElementById("clearPublicChecksButton"),
+  publicChecksIntentStatus: document.getElementById("publicChecksIntentStatus"),
   dashboard: document.getElementById("accountDashboard"),
   accountAccessBanner: document.getElementById("accountAccessBanner"),
   accountAccessLabel: document.getElementById("accountAccessLabel"),
@@ -2194,6 +2207,10 @@ function notificationPreferences() {
 
 function pendingMemberIntent() {
   return loadStoredJson(pendingMemberIntentKey, null);
+}
+
+function pendingPublicChecksIntent() {
+  return loadStoredJson(pendingPublicChecksKey, null);
 }
 
 function savedReportsForCurrentMember() {
@@ -4346,6 +4363,71 @@ function renderPublicIntent() {
   }
 }
 
+function renderPublicChecksIntent() {
+  if (!accountEl.publicChecksIntentPanel) return;
+  const intent = pendingPublicChecksIntent();
+  const checks = Array.isArray(intent?.checks) ? intent.checks : [];
+  if (!checks.length) {
+    accountEl.publicChecksIntentPanel.hidden = true;
+    return;
+  }
+
+  const pinnedCount = checks.filter((check) => check?.pinned).length;
+  const noteCount = checks.filter((check) => String(check?.note || "").trim()).length;
+  const latest = checks
+    .map((check) => String(check?.savedAt || ""))
+    .filter(Boolean)
+    .sort((left, right) => right.localeCompare(left))[0];
+
+  accountEl.publicChecksIntentPanel.hidden = false;
+  accountEl.publicChecksIntentTitle.textContent = `${checks.length} recent public ${checks.length === 1 ? "check" : "checks"} ready to save`;
+  accountEl.publicChecksIntentCopy.textContent =
+    "These recent homepage checks can move into Saved Tools as member reports so you can reopen them from Workspace later.";
+  accountEl.publicChecksIntentCountMetric.textContent = String(checks.length);
+  accountEl.publicChecksIntentPinnedMetric.textContent = pinnedCount ? String(pinnedCount) : "0";
+  accountEl.publicChecksIntentNotesMetric.textContent = noteCount ? String(noteCount) : "0";
+  accountEl.publicChecksIntentMovedMetric.textContent = latest ? formatShortDate(latest) : "Just now";
+  accountEl.openPublicChecksWorkspace.href = "../../index.html#search";
+  accountEl.savePublicChecksButton.disabled = !sessionHasFreeTools(currentSession) || Boolean(intent.savedAt);
+  accountEl.publicChecksIntentStatus.textContent = intent.savedAt
+    ? `Saved to member reports on ${formatShortDate(intent.savedAt)}.`
+    : sessionHasFreeTools(currentSession)
+      ? "Save these checks as reports to keep them in Saved Tools."
+      : "Open the free saved tools session to save these checks as reports.";
+
+  accountEl.publicChecksIntentList.replaceChildren();
+  checks.slice(0, 4).forEach((check) => {
+    const item = document.createElement("article");
+    item.className = "public-intent-preview-item";
+
+    const title = document.createElement("strong");
+    title.textContent = check.title || "Saved public check";
+
+    const meta = document.createElement("span");
+    meta.textContent = `${check.verdict || "Saved result"} • ${check.gap > 0 ? "+" : ""}${Number(check.gap || 0)}% gap`;
+
+    item.append(title, meta);
+
+    if (check.note) {
+      const note = document.createElement("small");
+      note.textContent = `Note: ${check.note}`;
+      item.append(note);
+    } else if (check.pinned) {
+      const pinned = document.createElement("small");
+      pinned.textContent = "Pinned in public recent checks";
+      item.append(pinned);
+    }
+
+    accountEl.publicChecksIntentList.append(item);
+  });
+
+  if (checks.length > 4) {
+    const more = document.createElement("p");
+    more.textContent = `${checks.length - 4} more ${checks.length - 4 === 1 ? "check" : "checks"} will save too.`;
+    accountEl.publicChecksIntentList.append(more);
+  }
+}
+
 function requestPublicIntentActivation() {
   const intent = pendingMemberIntent();
   if (!intent || !currentSession) {
@@ -4388,10 +4470,88 @@ async function savePublicIntentAsReport() {
   accountEl.publicIntentStatus.textContent = `${record.title} saved as a report.`;
 }
 
+function enrichSavedReportFromPublicCheck(recordId, bridge) {
+  if (!recordId) return;
+  const memberEmail = normalizeEmail(currentSession?.email);
+  const applyBridge = (report) => {
+    const reportEmail = normalizeEmail(report.memberEmail || memberEmail);
+    if (report.recordId !== recordId || reportEmail !== memberEmail) return report;
+    const existingNote = String(report.negotiationNote || "").trim();
+    const publicNoteLine = bridge.note ? `Public note: ${bridge.note}` : "";
+    const negotiationNote = publicNoteLine && !existingNote.includes(publicNoteLine)
+      ? `${existingNote ? `${existingNote}\n\n` : ""}${publicNoteLine}`
+      : existingNote;
+    return normalizeBackendReport({
+      ...report,
+      negotiationNote,
+      updatedAt: new Date().toISOString(),
+      saveMetadata: {
+        ...(report.saveMetadata || {}),
+        publicBridge: {
+          note: bridge.note || "",
+          pinned: Boolean(bridge.pinned),
+          importedAt: new Date().toISOString(),
+          source: "public-recent-checks"
+        }
+      }
+    });
+  };
+
+  const localReports = loadStoredJson(savedReportsKey, []).map(applyBridge);
+  const backendReports = backendSavedReports().map(applyBridge);
+  writeStoredJson(savedReportsKey, localReports);
+  writeStoredJson(backendSavedReportsKey, backendReports);
+}
+
+async function savePublicChecksAsReports() {
+  const intent = pendingPublicChecksIntent();
+  const checks = Array.isArray(intent?.checks) ? intent.checks : [];
+  if (!checks.length) {
+    accountEl.publicChecksIntentStatus.textContent = "No public checks are waiting to save.";
+    return;
+  }
+  if (!sessionHasFreeTools(currentSession)) {
+    accountEl.publicChecksIntentStatus.textContent = "Open the free saved tools session to save these checks as reports.";
+    return;
+  }
+
+  let saved = 0;
+  let skipped = 0;
+  for (const check of checks) {
+    const record = rentRecordList().find((entry) => entry.id === check.recordId);
+    if (!record) {
+      skipped += 1;
+      continue;
+    }
+    await saveRecordAsReport(record);
+    enrichSavedReportFromPublicCheck(check.recordId, check);
+    saved += 1;
+  }
+
+  writeStoredJson(pendingPublicChecksKey, {
+    ...intent,
+    savedAt: new Date().toISOString(),
+    savedCount: saved
+  });
+  renderSavedReports();
+  renderPublicChecksIntent();
+  renderMemberCommandCenter();
+  accountEl.publicChecksIntentStatus.textContent = skipped
+    ? `${saved} public checks saved as reports. ${skipped} could not be matched locally.`
+    : `${saved} public checks saved as reports.`;
+  recordActivity("Public checks imported", `${saved} recent public ${saved === 1 ? "check" : "checks"} saved as reports`);
+}
+
 function clearPublicIntent() {
   localStorage.removeItem(pendingMemberIntentKey);
   renderPublicIntent();
   recordActivity("Public handoff cleared", "Public free rent-check context removed.");
+}
+
+function clearPublicChecksIntent() {
+  localStorage.removeItem(pendingPublicChecksKey);
+  renderPublicChecksIntent();
+  recordActivity("Public checks handoff cleared", "Recent public checks handoff removed from Saved Tools.");
 }
 
 function savedReportTrustBucket(report) {
@@ -9044,6 +9204,7 @@ function renderDashboard() {
   const state = accessStateForSession(currentSession);
   accountEl.dashboard.hidden = false;
   renderPublicIntent();
+  renderPublicChecksIntent();
   renderAccessBanner(hasAccess);
   accountEl.memberStatus.textContent = currentSession.memberStatus;
   accountEl.subscriptionStatus.textContent = currentSession.subscriptionStatus;
@@ -9155,6 +9316,7 @@ async function initAccount() {
     currentSession = freeToolsSession();
   }
   renderPublicIntent();
+  renderPublicChecksIntent();
   accountEl.emailStatus.textContent =
     "Free saved tools are already open. Use email sign-in only if you want a separate saved-tools session later.";
   renderDashboard();
@@ -9276,6 +9438,14 @@ async function initAccount() {
 
   accountEl.clearPublicIntentButton.addEventListener("click", () => {
     clearPublicIntent();
+  });
+
+  accountEl.savePublicChecksButton?.addEventListener("click", async () => {
+    await savePublicChecksAsReports();
+  });
+
+  accountEl.clearPublicChecksButton?.addEventListener("click", () => {
+    clearPublicChecksIntent();
   });
 
   accountEl.askingSourceForm.addEventListener("submit", async (event) => {

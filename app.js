@@ -22,6 +22,7 @@ let publicCompareRecordIds = [];
 const memberSessionKey = "rentintelMemberSession";
 const savedReportsKey = "rentintelSavedReports";
 const publicRecentChecksKey = "rentintelPublicRecentChecks";
+const pendingPublicChecksKey = "rentintelPendingPublicChecks";
 const backendSavedReportsKey = "rentintelBackendSavedReports";
 const joinedMembersKey = "rentintelJoinedMembers";
 const pendingMemberIntentKey = "rentintelPendingMemberIntent";
@@ -189,6 +190,7 @@ const el = {
   decisionNoteStatus: document.getElementById("decisionNoteStatus"),
   publicRecentChecksSummary: document.getElementById("publicRecentChecksSummary"),
   publicRecentChecksList: document.getElementById("publicRecentChecksList"),
+  movePublicRecentChecksButton: document.getElementById("movePublicRecentChecksButton"),
   importPublicRecentChecksButton: document.getElementById("importPublicRecentChecksButton"),
   publicRecentChecksImportInput: document.getElementById("publicRecentChecksImportInput"),
   copyPublicRecentChecksButton: document.getElementById("copyPublicRecentChecksButton"),
@@ -2391,6 +2393,31 @@ function clearPublicRecentChecks() {
   setDecisionNoteStatus("Cleared public recent checks from this browser.");
 }
 
+function handoffPublicRecentChecksToAccount() {
+  const checks = getPublicRecentChecks();
+  if (!checks.length) {
+    setDecisionNoteStatus("Save at least one public result before moving checks to Saved Tools.");
+    return;
+  }
+  writeStoredJson(pendingPublicChecksKey, {
+    createdAt: new Date().toISOString(),
+    total: checks.length,
+    checks: checks.map((check) => ({
+      recordId: check.recordId,
+      title: check.title,
+      verdict: check.verdict || "",
+      asking: Number(check.asking || 0),
+      fairRange: check.fairRange || null,
+      gap: Number(check.gap || 0),
+      pinned: Boolean(check.pinned),
+      note: String(check.note || "").trim().slice(0, 140),
+      savedAt: check.savedAt || new Date().toISOString()
+    }))
+  });
+  setDecisionNoteStatus(`${checks.length} public checks ready for Saved Tools.`);
+  window.location.href = "./members/account/?intent=public-checks";
+}
+
 function publicRecentChecksPayload() {
   const checks = getPublicRecentChecks();
   return {
@@ -2613,6 +2640,9 @@ function renderPublicRecentChecks() {
   const checks = getPublicRecentChecks();
   if (el.copyPublicRecentChecksButton) {
     el.copyPublicRecentChecksButton.hidden = !checks.length;
+  }
+  if (el.movePublicRecentChecksButton) {
+    el.movePublicRecentChecksButton.hidden = !checks.length;
   }
   if (el.downloadPublicRecentChecksButton) {
     el.downloadPublicRecentChecksButton.hidden = !checks.length;
@@ -3863,6 +3893,7 @@ async function init() {
   el.copyCoverageQueueButton?.addEventListener("click", copyCoverageQueue);
   el.downloadCoverageQueueButton?.addEventListener("click", downloadCoverageQueue);
   el.savePublicResultButton?.addEventListener("click", savePublicResult);
+  el.movePublicRecentChecksButton?.addEventListener("click", handoffPublicRecentChecksToAccount);
   el.importPublicRecentChecksButton?.addEventListener("click", openPublicRecentChecksImport);
   el.publicRecentChecksImportInput?.addEventListener("change", importPublicRecentChecks);
   el.copyPublicRecentChecksButton?.addEventListener("click", copyPublicRecentChecks);

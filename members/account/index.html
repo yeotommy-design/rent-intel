@@ -130,6 +130,41 @@
           </div>
           <p class="account-status" id="publicIntentStatus" aria-live="polite"></p>
         </article>
+
+        <article class="account-panel public-intent-panel" id="publicChecksIntentPanel" hidden>
+          <div class="card-label">
+            <span>Recent Public Checks</span>
+            <strong id="publicChecksIntentTitle">Nothing moved from public checks yet</strong>
+          </div>
+          <p id="publicChecksIntentCopy">Move public checks from the homepage into Saved Tools to keep them as member reports.</p>
+          <dl class="public-intent-metrics">
+            <div>
+              <dt>Checks</dt>
+              <dd id="publicChecksIntentCountMetric">-</dd>
+            </div>
+            <div>
+              <dt>Pinned</dt>
+              <dd id="publicChecksIntentPinnedMetric">-</dd>
+            </div>
+            <div>
+              <dt>With notes</dt>
+              <dd id="publicChecksIntentNotesMetric">-</dd>
+            </div>
+            <div>
+              <dt>Latest moved</dt>
+              <dd id="publicChecksIntentMovedMetric">-</dd>
+            </div>
+          </dl>
+          <div class="public-intent-preview-list" id="publicChecksIntentList">
+            <p>No recent public checks are waiting here yet.</p>
+          </div>
+          <div class="public-intent-actions">
+            <a id="openPublicChecksWorkspace" href="../../index.html#search">Open Public Search</a>
+            <button type="button" id="savePublicChecksButton">Save all as Reports</button>
+            <button type="button" id="clearPublicChecksButton">Clear Handoff</button>
+          </div>
+          <p class="account-status" id="publicChecksIntentStatus" aria-live="polite"></p>
+        </article>
       </section>
 
       <section class="account-dashboard" id="accountDashboard" hidden aria-label="RentIntel saved tools dashboard">
@@ -1273,6 +1308,6 @@
     <script src="../../data/sources/source-status.js?v=20260525-source-status-map"></script>
     <script src="../../source-trust.js?v=20260510-next5i"></script>
     <script src="../../auth-client.js?v=20260510-authcutover"></script>
-    <script src="../../member-account.js?v=20260510-syncschedule"></script>
+    <script src="../../member-account.js?v=20260606-publicchecksbridge"></script>
   </body>
 </html>
