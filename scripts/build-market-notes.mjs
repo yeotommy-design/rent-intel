@@ -278,17 +278,70 @@ function renderRobots(site) {
   return `User-agent: *\nAllow: /\n\nSitemap: ${site.baseUrl}/sitemap.xml\n`;
 }
 
+function renderHomepageMarketNotesSection(latest) {
+  const useIt = Array.isArray(latest?.useIt) ? latest.useIt : [];
+  const areaWatch = useIt[0] || { label: "Area Watch", text: latest?.summary || "" };
+  const coverageUpdate = useIt[1] || { label: "Coverage Update", text: latest?.summary || "" };
+  const decisionCue = useIt[2] || { label: "Decision Cue", text: latest?.summary || "" };
+
+  const areaWatchHeading = latest?.title ? `${latest.title}.` : "Latest weekly rent watch.";
+  const coverageHeading = coverageUpdate.text
+    ? coverageUpdate.text
+    : "The latest weekly note includes one fresh coverage update.";
+  const decisionHeading = decisionCue.text
+    ? decisionCue.text
+    : "The latest weekly note includes one practical decision cue.";
+
+  return `      <section class="market-notes-section" aria-label="RentIntel market notes" style="width:min(1180px, calc(100% - 40px)); margin:0 auto; padding:8px 0 16px;">
+        <div class="market-notes-shell" style="width:100%;">
+          <div class="section-heading compact">
+            <p>Market Notes</p>
+            <h2>Short weekly notes on what changed, where pressure is building, and what RentIntel added.</h2>
+          </div>
+          <div class="market-notes-grid">
+            <article class="market-notes-feature">
+              <div class="card-label">
+                <span>This Week</span>
+                <strong>Weekly release every Monday</strong>
+              </div>
+              <h3>One live rent pattern, one coverage update, and one decision cue.</h3>
+              <p>
+                Market Notes is the short weekly RentIntel release for people who want to stay close to what
+                actually changed in Singapore retail rent without reading a long article every time.
+              </p>
+              <div class="market-notes-actions">
+                <a href="./market-notes.html">Read Market Notes</a>
+                <a href="./members/account/index.html#marketNotesSignup">Get weekly notes by email</a>
+              </div>
+            </article>
+            <article class="market-note-card">
+              <span>${escapeHtml(areaWatch.label)}</span>
+              <strong>${escapeHtml(areaWatchHeading)}</strong>
+              <p>${escapeHtml(areaWatch.text || latest?.summary || "")}</p>
+            </article>
+            <article class="market-note-card">
+              <span>${escapeHtml(coverageUpdate.label)}</span>
+              <strong>${escapeHtml(coverageHeading)}</strong>
+              <p>${escapeHtml(coverageUpdate.text || latest?.summary || "")}</p>
+            </article>
+            <article class="market-note-card">
+              <span>${escapeHtml(decisionCue.label)}</span>
+              <strong>${escapeHtml(decisionHeading)}</strong>
+              <p>${escapeHtml(decisionCue.text || latest?.summary || "")}</p>
+            </article>
+          </div>
+        </div>
+      </section>`;
+}
+
 function updateHomepageCopy(latest) {
   let source = fs.readFileSync(homepagePath, "utf8");
-  source = source.replace("Weekly release every Friday", "Weekly release every Monday");
-  source = source.replace(
-    /<strong>Tiong Bahru shophouse is still running above benchmark\.<\/strong>/,
-    `<strong>${escapeHtml(latest.title)}.</strong>`
-  );
-  source = source.replace(
-    /Weekly notes can flag where asking pressure is staying elevated even when the public benchmark is more restrained\./,
-    escapeHtml(latest.summary)
-  );
+  const marketNotesStart = source.indexOf('      <section class="market-notes-section"');
+  const coverageStart = source.indexOf('      <section class="coverage-highlights-section"');
+  if (marketNotesStart === -1 || coverageStart === -1 || coverageStart <= marketNotesStart) {
+    throw new Error("Could not locate homepage Market Notes section for update.");
+  }
+  source = `${source.slice(0, marketNotesStart)}${renderHomepageMarketNotesSection(latest)}\n\n${source.slice(coverageStart)}`;
   fs.writeFileSync(homepagePath, source);
 }
 

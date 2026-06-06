@@ -66,9 +66,6 @@ const el = {
   publicEvidenceSummary: document.getElementById("publicEvidenceSummary"),
   publicEvidenceList: document.getElementById("publicEvidenceList"),
   signalDrivers: document.getElementById("signalDrivers"),
-  heroAnswerTitle: document.getElementById("heroAnswerTitle"),
-  heroAnswerCopy: document.getElementById("heroAnswerCopy"),
-  heroToolbenchLink: document.getElementById("heroToolbenchLink"),
   heroBriefPanel: document.getElementById("heroBriefPanel"),
   heroBriefTitle: document.getElementById("heroBriefTitle"),
   heroBriefCopy: document.getElementById("heroBriefCopy"),
@@ -1917,8 +1914,6 @@ function updateResult(record) {
     item.textContent = driver;
     el.signalDrivers.append(item);
   });
-  el.heroAnswerTitle.textContent = record.title;
-  el.heroAnswerCopy.textContent = record.mobileSummary;
   renderPulseGuide(record);
   renderHeroBrief(record);
   renderDecisionNotePreview(record);
@@ -2392,9 +2387,6 @@ function syncToolbenchPreviewRecord(record = selectedRecord) {
   });
   if (el.publicToolbenchLink) {
     el.publicToolbenchLink.href = toolbenchPreviewUrl(record);
-  }
-  if (el.heroToolbenchLink) {
-    el.heroToolbenchLink.href = toolbenchPreviewUrl(record);
   }
   if (el.chartPreviewLink) {
     el.chartPreviewLink.href = toolbenchPreviewUrl(record);
