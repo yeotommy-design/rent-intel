@@ -13353,6 +13353,18 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   margin-top: 12px;
 }
 
+.public-recent-checks-clear {
+  min-height: 38px;
+  border: 1px solid rgba(25, 107, 85, 0.22);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: #fffdf9;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
 .public-recent-checks-list {
   display: grid;
   gap: 8px;
@@ -13407,8 +13419,16 @@ button.workspace-v1-context-why-clause[data-active="true"] {
 }
 
 .public-recent-check-open:focus-visible,
-.public-recent-check-compare:focus-visible {
+.public-recent-check-compare:focus-visible,
+.public-recent-check-remove:focus-visible,
+.public-recent-checks-clear:focus-visible {
   outline: none;
+}
+
+.public-recent-check-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .public-recent-check-compare {
@@ -13427,6 +13447,18 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   border-color: rgba(25, 107, 85, 0.3);
   background: var(--green);
   color: #ffffff;
+}
+
+.public-recent-check-remove {
+  min-height: 38px;
+  border: 1px solid rgba(182, 70, 54, 0.18);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: #fff6f3;
+  color: var(--red);
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
 }
 
 .public-compare-panel {

@@ -189,6 +189,7 @@ const el = {
   decisionNoteStatus: document.getElementById("decisionNoteStatus"),
   publicRecentChecksSummary: document.getElementById("publicRecentChecksSummary"),
   publicRecentChecksList: document.getElementById("publicRecentChecksList"),
+  clearPublicRecentChecksButton: document.getElementById("clearPublicRecentChecksButton"),
   publicComparePanel: document.getElementById("publicComparePanel"),
   publicCompareSummary: document.getElementById("publicCompareSummary"),
   publicCompareGrid: document.getElementById("publicCompareGrid"),
@@ -2359,6 +2360,24 @@ function writePublicRecentChecks(checks) {
   writeStoredJson(publicRecentChecksKey, checks.slice(0, 6));
 }
 
+function removePublicRecentCheck(recordId) {
+  const nextChecks = getPublicRecentChecks().filter((item) => item.recordId !== recordId);
+  writePublicRecentChecks(nextChecks);
+  publicCompareRecordIds = publicCompareRecordIds.filter((id) => id !== recordId);
+  renderPublicRecentChecks();
+  renderPublicComparePanel();
+  const removed = rentRecords.find((entry) => entry.id === recordId);
+  setDecisionNoteStatus(`${removed?.title || "Saved result"} removed from recent checks.`);
+}
+
+function clearPublicRecentChecks() {
+  writePublicRecentChecks([]);
+  publicCompareRecordIds = [];
+  renderPublicRecentChecks();
+  renderPublicComparePanel();
+  setDecisionNoteStatus("Cleared public recent checks from this browser.");
+}
+
 function getPublicCompareRecords() {
   return publicCompareRecordIds
     .map((recordId) => rentRecords.find((entry) => entry.id === recordId))
@@ -2444,6 +2463,9 @@ function savePublicResult() {
 function renderPublicRecentChecks() {
   if (!el.publicRecentChecksSummary || !el.publicRecentChecksList) return;
   const checks = getPublicRecentChecks();
+  if (el.clearPublicRecentChecksButton) {
+    el.clearPublicRecentChecksButton.hidden = !checks.length;
+  }
   el.publicRecentChecksSummary.textContent = checks.length
     ? `${checks.length} saved in this browser`
     : "No saved public checks yet";
@@ -2485,7 +2507,18 @@ function renderPublicRecentChecks() {
       togglePublicCompare(check.recordId);
     });
 
-    item.append(openButton, compareButton);
+    const controls = document.createElement("div");
+    controls.className = "public-recent-check-controls";
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.className = "public-recent-check-remove";
+    removeButton.textContent = "Remove";
+    removeButton.addEventListener("click", () => {
+      removePublicRecentCheck(check.recordId);
+    });
+
+    controls.append(compareButton, removeButton);
+    item.append(openButton, controls);
     el.publicRecentChecksList.append(item);
   });
   renderPublicComparePanel();
@@ -3647,6 +3680,7 @@ async function init() {
   el.copyCoverageQueueButton?.addEventListener("click", copyCoverageQueue);
   el.downloadCoverageQueueButton?.addEventListener("click", downloadCoverageQueue);
   el.savePublicResultButton?.addEventListener("click", savePublicResult);
+  el.clearPublicRecentChecksButton?.addEventListener("click", clearPublicRecentChecks);
   el.shareDecisionSummaryButton?.addEventListener("click", shareDecisionSummary);
   el.copyDecisionNoteButton?.addEventListener("click", copyDecisionNote);
   el.downloadDecisionNoteButton?.addEventListener("click", downloadDecisionNote);
