@@ -3032,7 +3032,7 @@ async function init() {
     el.dailyInsight.textContent = "RentIntel data is unavailable. Check the local data file.";
     return;
   }
-  selectedRecord = initialRecordFromUrl() || rentRecords[0];
+  selectedRecord = initialRecordFromUrl() || chooseDailyInsight();
   renderDataFreshness(selectedRecord);
   renderRentMovers();
   renderCoverageHighlights();
