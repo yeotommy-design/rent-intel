@@ -189,6 +189,8 @@ const el = {
   decisionNoteStatus: document.getElementById("decisionNoteStatus"),
   publicRecentChecksSummary: document.getElementById("publicRecentChecksSummary"),
   publicRecentChecksList: document.getElementById("publicRecentChecksList"),
+  copyPublicRecentChecksButton: document.getElementById("copyPublicRecentChecksButton"),
+  downloadPublicRecentChecksButton: document.getElementById("downloadPublicRecentChecksButton"),
   clearPublicRecentChecksButton: document.getElementById("clearPublicRecentChecksButton"),
   publicComparePanel: document.getElementById("publicComparePanel"),
   publicCompareSummary: document.getElementById("publicCompareSummary"),
@@ -2387,6 +2389,56 @@ function clearPublicRecentChecks() {
   setDecisionNoteStatus("Cleared public recent checks from this browser.");
 }
 
+function publicRecentChecksPayload() {
+  const checks = getPublicRecentChecks();
+  return {
+    exportedAt: new Date().toISOString(),
+    total: checks.length,
+    checks: checks.map((check) => ({
+      title: check.title,
+      recordId: check.recordId,
+      verdict: check.verdict,
+      asking: check.asking,
+      fairRange: check.fairRange,
+      gap: check.gap,
+      pinned: Boolean(check.pinned),
+      note: check.note || "",
+      savedAt: check.savedAt || ""
+    }))
+  };
+}
+
+async function copyPublicRecentChecks() {
+  const payload = publicRecentChecksPayload();
+  if (!payload.total) {
+    setDecisionNoteStatus("No saved public checks to copy yet.");
+    return;
+  }
+  try {
+    await copyTextToClipboard(JSON.stringify(payload, null, 2));
+    setDecisionNoteStatus(`${payload.total} public checks copied.`);
+  } catch (error) {
+    console.warn("Public recent checks copy failed.", error);
+    setDecisionNoteStatus("Copy failed. Use Download checks instead.");
+  }
+}
+
+function downloadPublicRecentChecks() {
+  const payload = publicRecentChecksPayload();
+  if (!payload.total) {
+    setDecisionNoteStatus("No saved public checks to download yet.");
+    return;
+  }
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `rentintel-public-checks-${new Date().toISOString().slice(0, 10)}.json`;
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setDecisionNoteStatus(`${payload.total} public checks downloaded.`);
+}
+
 function togglePinnedPublicRecentCheck(recordId) {
   const checks = getPublicRecentChecks().map((item) => ({
     ...item,
@@ -2510,6 +2562,12 @@ function savePublicResult() {
 function renderPublicRecentChecks() {
   if (!el.publicRecentChecksSummary || !el.publicRecentChecksList) return;
   const checks = getPublicRecentChecks();
+  if (el.copyPublicRecentChecksButton) {
+    el.copyPublicRecentChecksButton.hidden = !checks.length;
+  }
+  if (el.downloadPublicRecentChecksButton) {
+    el.downloadPublicRecentChecksButton.hidden = !checks.length;
+  }
   if (el.clearPublicRecentChecksButton) {
     el.clearPublicRecentChecksButton.hidden = !checks.length;
   }
@@ -3756,6 +3814,8 @@ async function init() {
   el.copyCoverageQueueButton?.addEventListener("click", copyCoverageQueue);
   el.downloadCoverageQueueButton?.addEventListener("click", downloadCoverageQueue);
   el.savePublicResultButton?.addEventListener("click", savePublicResult);
+  el.copyPublicRecentChecksButton?.addEventListener("click", copyPublicRecentChecks);
+  el.downloadPublicRecentChecksButton?.addEventListener("click", downloadPublicRecentChecks);
   el.clearPublicRecentChecksButton?.addEventListener("click", clearPublicRecentChecks);
   el.shareDecisionSummaryButton?.addEventListener("click", shareDecisionSummary);
   el.copyDecisionNoteButton?.addEventListener("click", copyDecisionNote);

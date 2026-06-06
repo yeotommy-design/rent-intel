@@ -13353,6 +13353,15 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   margin-top: 12px;
 }
 
+.public-recent-checks-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.public-recent-checks-export,
 .public-recent-checks-clear {
   min-height: 38px;
   border: 1px solid rgba(25, 107, 85, 0.22);
@@ -13433,6 +13442,7 @@ button.workspace-v1-context-why-clause[data-active="true"] {
 .public-recent-check-open:focus-visible,
 .public-recent-check-compare:focus-visible,
 .public-recent-check-remove:focus-visible,
+.public-recent-checks-export:focus-visible,
 .public-recent-checks-clear:focus-visible {
   outline: none;
 }
