@@ -2403,6 +2403,26 @@ function togglePinnedPublicRecentCheck(recordId) {
   );
 }
 
+function updatePublicRecentCheckNote(recordId, note) {
+  const cleaned = String(note || "").trim().slice(0, 140);
+  const checks = getPublicRecentChecks().map((item) =>
+    item.recordId === recordId
+      ? {
+          ...item,
+          note: cleaned
+        }
+      : item
+  );
+  writePublicRecentChecks(checks);
+  renderPublicRecentChecks();
+  const target = checks.find((item) => item.recordId === recordId);
+  setDecisionNoteStatus(
+    cleaned
+      ? `Saved note for ${target?.title || "saved result"}.`
+      : `Cleared note for ${target?.title || "saved result"}.`
+  );
+}
+
 function getPublicCompareRecords() {
   return publicCompareRecordIds
     .map((recordId) => rentRecords.find((entry) => entry.id === recordId))
@@ -2479,6 +2499,7 @@ function savePublicResult() {
     fairRange: selectedRecord.fairRange,
     gap: selectedRecord.gap,
     pinned: getPublicRecentChecks().find((item) => item.recordId === selectedRecord.id)?.pinned || false,
+    note: getPublicRecentChecks().find((item) => item.recordId === selectedRecord.id)?.note || "",
     savedAt: new Date().toISOString()
   });
   writePublicRecentChecks(checks);
@@ -2518,6 +2539,13 @@ function renderPublicRecentChecks() {
     meta.textContent = `${check.verdict} • ${money(check.asking)} asking • ${check.gap > 0 ? "+" : ""}${check.gap}%`;
     openButton.append(title, meta);
 
+    if (check.note) {
+      const note = document.createElement("small");
+      note.className = "public-recent-check-note";
+      note.textContent = check.note;
+      openButton.append(note);
+    }
+
     openButton.addEventListener("click", () => {
       const record = rentRecords.find((entry) => entry.id === check.recordId);
       if (!record) return;
@@ -2544,6 +2572,19 @@ function renderPublicRecentChecks() {
       togglePinnedPublicRecentCheck(check.recordId);
     });
 
+    const noteButton = document.createElement("button");
+    noteButton.type = "button";
+    noteButton.className = "public-recent-check-note-button";
+    noteButton.textContent = check.note ? "Edit note" : "Add note";
+    noteButton.addEventListener("click", () => {
+      const next = window.prompt(
+        `Add a short note for ${check.title}:`,
+        check.note || ""
+      );
+      if (next === null) return;
+      updatePublicRecentCheckNote(check.recordId, next);
+    });
+
     const removeButton = document.createElement("button");
     removeButton.type = "button";
     removeButton.className = "public-recent-check-remove";
@@ -2552,7 +2593,7 @@ function renderPublicRecentChecks() {
       removePublicRecentCheck(check.recordId);
     });
 
-    controls.append(pinButton, compareButton, removeButton);
+    controls.append(pinButton, compareButton, noteButton, removeButton);
     item.append(openButton, controls);
     el.publicRecentChecksList.append(item);
   });

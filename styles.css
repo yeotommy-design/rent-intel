@@ -13423,6 +13423,13 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   line-height: 1.35;
 }
 
+.public-recent-check-note {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 760;
+  line-height: 1.35;
+}
+
 .public-recent-check-open:focus-visible,
 .public-recent-check-compare:focus-visible,
 .public-recent-check-remove:focus-visible,
@@ -13461,6 +13468,18 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   padding: 0 12px;
   background: #fffdf9;
   color: var(--green);
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.public-recent-check-note-button {
+  min-height: 38px;
+  border: 1px solid rgba(53, 93, 124, 0.18);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: rgba(232, 242, 249, 0.68);
+  color: var(--blue);
   font-size: 13px;
   font-weight: 850;
   cursor: pointer;
