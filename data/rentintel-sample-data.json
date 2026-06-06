@@ -474,18 +474,18 @@
       "propertyType": "HDB retail",
       "area": "Bedok",
       "confidence": "Medium confidence",
-      "decision": "Asking rent looks stretched for standard Bedok heartland retail.",
-      "reason": "Current asking rent is well above nearby HDB-linked benchmarks. Only pay up if the shop has bus interchange spillover, food approval, or unusually strong corner frontage.",
+      "decision": "Asking rent sits below the benchmark range and may be under-value.",
+      "reason": "Current asking rent is estimated around 9% below the latest HDB-linked benchmark. That can be a genuine value opening, but it can also reflect weaker frontage, hidden lease friction, or lower daily draw. Check why it is cheaper before treating it as a bargain.",
       "official": 8.9,
-      "asking": 11.7,
-      "gap": 31,
+      "asking": 8.1,
+      "gap": -9,
       "drivers": [
-        "Bedok town-centre footfall can support a premium for units near the interchange and food cluster.",
-        "Clinic, food, and service uses can create a rent gap versus standard neighbourhood shops.",
-        "Comparable HDB-linked evidence still points to room for negotiation.",
-        "The current spread is wider than a normal heartland fair-range outcome."
+        "The quoted rent sits below the usual heartland benchmark for comparable Bedok rows.",
+        "A cheaper ask can reflect weaker frontage, fit-out drag, or a softer micro-location rather than a true bargain.",
+        "If nearby Bedok rows still price higher, the discount may be real value worth checking quickly.",
+        "Lease structure, reinstatement burden, and permitted-use limits can explain part of the discount."
       ],
-      "daily": "Bedok HDB retail asking rent is estimated near S$11.70 psf, about 31% above the latest HDB-linked benchmark. Confidence is medium because frontage and permitted-use differences matter a lot in Bedok town-centre stock.",
+      "daily": "Bedok HDB retail asking rent is estimated near S$8.10 psf, about 9% below the latest HDB-linked benchmark. It may be a value opening, but the reason for the discount still needs checking.",
       "series": [
         [
           "2021 Q1",
@@ -547,10 +547,10 @@
         "low": 8.4,
         "high": 10.6
       },
-      "actionLabel": "Push back",
-      "action": "Push back above S$10.60 psf unless the unit has interchange spillover, food approval, or proven heavy daily traffic.",
+      "actionLabel": "Check value case",
+      "action": "Test why the rent sits below S$8.40 psf before treating it as a bargain.",
       "sourceSummary": "Official benchmark: HDB-linked east-side heartland retail context. Asking estimate: current Bedok listing signal and interchange-adjacent premium.",
-      "mobileSummary": "Likely high. Push back above S$10.60 psf unless the unit has interchange spillover or special use value."
+      "mobileSummary": "Looks under-value. Check hidden issues before treating below S$8.40 psf as a bargain."
     },
     {
       "id": "ang-mo-kio-retail",
@@ -1837,18 +1837,18 @@
       "propertyType": "HDB and neighbourhood retail",
       "area": "Yishun",
       "confidence": "Medium confidence",
-      "decision": "Asking rent looks high for standard Yishun heartland retail.",
-      "reason": "Yishun can support some better suburban demand near Northpoint and MRT flow, but ordinary neighbourhood units should not clear this spread without strong footfall evidence.",
+      "decision": "Asking rent looks below the benchmark range and may be under-value.",
+      "reason": "Current asking rent is estimated around 12% below the latest Yishun benchmark range. That can create room for value, but only if the lower ask is not hiding weak frontage, low visibility, hand-back cost, or shorter lease value.",
       "official": 9.1,
-      "asking": 11.4,
-      "gap": 25,
+      "asking": 8,
+      "gap": -12,
       "drivers": [
-        "Northpoint and transport-linked flow support some premium over plain neighbourhood stock.",
-        "The current spread still looks rich for standard heartland frontage.",
-        "Unit positioning near the main node matters more than the headline town name.",
-        "Fit-out burden should be used to negotiate back from the asking line."
+        "The quoted rent is below the usual benchmark band for Yishun retail rows.",
+        "The discount may reflect weaker visibility, a quieter stretch, or heavier fit-out work needed.",
+        "If nearby Northpoint and town-centre options still ask more, the value case becomes more believable.",
+        "Lease structure and reinstatement terms can make a cheap ask less attractive than it first looks."
       ],
-      "daily": "Yishun retail asking rent is estimated near S$11.40 psf, about 25% above the latest benchmark. Better central units can support more, but ordinary stock still looks expensive at this level.",
+      "daily": "Yishun retail asking rent is estimated near S$8.00 psf, about 12% below the latest benchmark range. It could be under-value, but the cause of the discount still needs checking.",
       "series": [
         [
           "2021 Q1",
@@ -1910,10 +1910,10 @@
         "low": 8.5,
         "high": 10.7
       },
-      "actionLabel": "Negotiate",
-      "action": "Negotiate above S$10.70 psf unless the unit sits in stronger Northpoint or MRT-linked flow.",
+      "actionLabel": "Validate bargain",
+      "action": "Check why the asking rent is below S$8.50 psf before treating the discount as real value.",
       "sourceSummary": "Official benchmark: north-heartland retail trend. Asking estimate: Northpoint and Yishun Central listing signals.",
-      "mobileSummary": "Likely high. Negotiate above S$10.70 psf unless footfall is clearly stronger."
+      "mobileSummary": "Possible under-value. Confirm frontage, terms, and hidden costs before calling it a bargain."
     },
     {
       "id": "sengkang-retail",
@@ -2111,18 +2111,18 @@
       "propertyType": "Prime downtown retail",
       "area": "Marina Bay",
       "confidence": "High confidence",
-      "decision": "Asking rent is elevated but broadly plausible for stronger Marina Bay retail.",
-      "reason": "Marina Bay commands real transport, office, and tourist demand, so the premium is believable. The decision should rest on frontage quality, building adjacency, and whether the unit actually captures that premium traffic.",
+      "decision": "Asking rent is below the prime benchmark range and may be under-value.",
+      "reason": "Current Marina Bay asking rent is estimated around 11% below the latest transaction-backed benchmark. In a prime area, that can be meaningful value, but it can also reflect weaker floor position, tourism softness, restricted visibility, or lease terms that reduce the true upside.",
       "official": 31,
-      "asking": 35.7,
-      "gap": 15,
+      "asking": 27.6,
+      "gap": -11,
       "drivers": [
-        "Office-worker and visitor demand support a genuine downtown rent premium.",
-        "The premium is more believable here than in standard fringe retail zones.",
-        "Weak circulation or hidden frontage should still be discounted hard.",
-        "Service-charge and fit-out economics matter because absolute rent is already high."
+        "The asking rent is below the normal benchmark band for Marina Bay retail.",
+        "A lower ask in a prime cluster can mean real value, but it can also signal weaker floor position or lower passing trade.",
+        "If comparable prime malls and Bay rows are still holding firmer levels, the discount deserves a closer look.",
+        "Service charge, operating restrictions, and handover condition can explain why the headline rent looks cheap."
       ],
-      "daily": "Marina Bay retail asking rent is estimated near S$35.70 psf, about 15% above the latest benchmark. The premium is believable, but only for units with real office, visitor, and transit exposure.",
+      "daily": "Marina Bay retail asking rent is estimated near S$27.60 psf, about 11% below the latest prime benchmark. That may be value, but the reason for the cheaper ask still matters.",
       "series": [
         [
           "2021 Q1",
@@ -2184,10 +2184,10 @@
         "low": 29,
         "high": 34.2
       },
-      "actionLabel": "Validate frontage",
-      "action": "Validate frontage and office spillover above S$34.20 psf before accepting the premium.",
+      "actionLabel": "Check why cheaper",
+      "action": "Verify why the rent sits below S$29.00 psf before treating it as a prime-area bargain.",
       "sourceSummary": "Official benchmark: downtown prime retail trend. Asking estimate: Marina Bay and MBFC listing signals.",
-      "mobileSummary": "Elevated but plausible. Validate frontage and office spillover above S$34.20 psf."
+      "mobileSummary": "Possible under-value. Check floor position and lease terms before calling Marina Bay cheap."
     },
     {
       "id": "city-hall-retail",

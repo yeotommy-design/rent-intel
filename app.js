@@ -108,6 +108,8 @@ const el = {
   rentMoversList: document.getElementById("rentMoversList"),
   freshnessWatchSummary: document.getElementById("freshnessWatchSummary"),
   freshnessWatchList: document.getElementById("freshnessWatchList"),
+  underValueSummary: document.getElementById("underValueSummary"),
+  underValueList: document.getElementById("underValueList"),
   coverageHighlightsSummary: document.getElementById("coverageHighlightsSummary"),
   coverageHighlightsList: document.getElementById("coverageHighlightsList"),
   coverageStatusSummary: document.getElementById("coverageStatusSummary"),
@@ -449,6 +451,13 @@ function signalDrivers(record) {
 }
 
 function actionChecklist(record) {
+  if (record?.gap <= -8) {
+    return [
+      "Check frontage quality, visibility, and unit condition before assuming the rent is a bargain.",
+      "Confirm lease term, reinstatement, service charge, GST, and any hidden restrictions.",
+      "Compare nearby options to see whether the discount is real or a warning sign."
+    ];
+  }
   const property = String(record?.propertyType || "").toLowerCase();
   const area = String(record?.area || "").toLowerCase();
   if (area.includes("chinatown") || property.includes("shophouse")) {
@@ -482,12 +491,14 @@ function actionChecklist(record) {
 function pulseGuideProfile(record) {
   const gap = Number(record?.gap || 0);
   const fairHigh = record?.fairRange?.high || record?.official || 0;
+  const fairLow = record?.fairRange?.low || record?.official || 0;
   const isProduction = Boolean(record?.askingSource?.productionReady) ||
     String(record?.confidence || "").toLowerCase().includes("production");
   const isSample = record?.prototypeSource === "coverage-request" ||
     String(record?.confidence || "").toLowerCase().includes("sample") ||
     String(record?.confidence || "").toLowerCase().includes("comparable");
   const upperLine = fairHigh ? money(fairHigh) : "the fair range";
+  const lowerLine = fairLow ? money(fairLow) : "the lower bound";
 
   if (isSample) {
     return {
@@ -506,6 +517,27 @@ function pulseGuideProfile(record) {
         label: "Pulse Next Step",
         title: "Move to evidence review.",
         copy: `Next: treat ${upperLine} as temporary until reviewed.`
+      }
+    };
+  }
+
+  if (gap <= -8) {
+    return {
+      tone: "read",
+      hero: {
+        label: "Pulse Read",
+        title: "Asking rent may be under-value.",
+        copy: `Next: check why it sits below ${lowerLine}.`
+      },
+      decision: {
+        label: "Pulse Opportunity",
+        title: "Check whether the discount is real or a warning sign.",
+        copy: "Next: verify lease terms, unit condition, frontage, and hidden constraints."
+      },
+      next: {
+        label: "Pulse Next Step",
+        title: "Validate the value case.",
+        copy: `Next: only treat ${lowerLine} as a bargain if the unit and terms still hold up.`
       }
     };
   }
@@ -1423,6 +1455,9 @@ function verificationPrompt(record) {
   if (confidence.includes("comparable")) {
     return "Use Workspace to request direct source coverage, then compare asking evidence before making an offer.";
   }
+  if (record?.gap <= -8) {
+    return "Check why the asking rent sits below range before treating it as a bargain: unit condition, frontage, lease terms, and hidden constraints still matter.";
+  }
   if (record?.gap >= 20) {
     return "Check the 5-year chart, source split, and landlord discussion note before accepting the asking rent.";
   }
@@ -1444,6 +1479,10 @@ function publicDecisionNote(record) {
     body = `The gap is wide enough that the note should push for a meaningful counter based on benchmark evidence, comparable area pressure, and any missing proof behind the landlord's premium.`;
   } else if (record.gap >= 10) {
     body = `The premium may still be defensible, but the note should ask for clearer support on frontage, fit-out condition, and recent comparables before treating the asking rent as fair.`;
+  } else if (record.gap <= -8) {
+    lead = `RentIntel reads ${record.title} as potentially under-value because the current asking rent sits ${gapText.replace("-", "")}% below the current fair range.`;
+    body = `That can be a genuine value opening, but the decision note should first rule out weaker frontage, hidden lease constraints, fit-out burden, or poor micro-location before calling it a bargain.`;
+    next = `Use the preview to confirm source freshness, compare against the fair range of ${moneyRange(record.fairRange)}, and then check whether the discounted ask still fits the operating model.`;
   } else if (record.gap <= 0) {
     lead = `RentIntel reads ${record.title} as relatively defensible because the current asking rent sits within or below the current fair range.`;
     body = `The decision note should still confirm source freshness, lease terms, and unit-specific factors, but the public signal does not show an obvious premium problem.`;
@@ -1457,6 +1496,7 @@ function publicDecisionAngles(record) {
   const trust = benchmarkTrustProfile(record);
   const highGap = record.gap >= 15;
   const strongGap = record.gap >= 22;
+  const underValue = record.gap <= -8;
   const fairRange = moneyRange(record.fairRange);
   const area = record.area;
   const propertyType = String(record.propertyType || "retail space").toLowerCase();
@@ -1464,22 +1504,28 @@ function publicDecisionAngles(record) {
   return [
     {
       label: "New lease",
-      title: highGap ? "Anchor below the asking premium" : "Use the fair range as the opening guardrail",
-      copy: highGap
+      title: underValue ? "Check why the ask is below range" : highGap ? "Anchor below the asking premium" : "Use the fair range as the opening guardrail",
+      copy: underValue
+        ? `For a new ${propertyType} decision in ${area}, do not assume cheap means good. Start with the fair range of ${fairRange}, then verify the reason the ask is discounted.`
+        : highGap
         ? `For a new ${propertyType} decision in ${area}, start from the fair range of ${fairRange} and ask the landlord to prove why the premium should hold.`
         : `For a new ${propertyType} decision in ${area}, the note should begin with the fair range of ${fairRange} and then test any unit-specific premium carefully.`
     },
     {
       label: "Renewal",
-      title: strongGap ? "Challenge the increase as a market claim" : "Separate true market change from negotiation posture",
-      copy: strongGap
+      title: underValue ? "Make sure the cheap renewal is still workable" : strongGap ? "Challenge the increase as a market claim" : "Separate true market change from negotiation posture",
+      copy: underValue
+        ? `If this is a renewal discussion, check whether the lower ask hides a shorter term, hand-back burden, or unit weakness before treating it as a clean win.`
+        : strongGap
         ? `If this is a renewal discussion, RentIntel should treat the gap as a claim that needs stronger proof than ${trust.title.toLowerCase()} alone currently provides.`
         : `If this is a renewal discussion, compare the landlord's requested move against the benchmark trend and freshness before accepting it as a fair reset.`
     },
     {
       label: "Area comparison",
-      title: "Check nearby options before conceding pressure",
-      copy: `Use comparable areas and source freshness to decide whether ${area} is genuinely tight, or whether nearby options weaken the landlord's position in the note.`
+      title: underValue ? "Check whether nearby options confirm the bargain" : "Check nearby options before conceding pressure",
+      copy: underValue
+        ? `If nearby options are still materially higher, the value case may be real. If not, treat the discount more cautiously and check for hidden weaknesses.`
+        : `Use comparable areas and source freshness to decide whether ${area} is genuinely tight, or whether nearby options weaken the landlord's position in the note.`
     }
   ];
 }
@@ -2760,6 +2806,7 @@ function drawRentChart() {
 }
 
 function pressureStatus(record) {
+  if (record.gap <= -8) return { key: "under", label: "Value" };
   if (record.gap >= 22) return { key: "high", label: "High" };
   if (record.gap >= 10) return { key: "watch", label: "Watch" };
   return { key: "fair", label: "Fair" };
@@ -2846,6 +2893,13 @@ function topRentMovers() {
     .slice(0, 4);
 }
 
+function underValueRows() {
+  return [...rentRecords]
+    .filter((record) => Number(record?.gap || 0) <= -8)
+    .sort((a, b) => a.gap - b.gap)
+    .slice(0, 4);
+}
+
 function freshnessWatchRows() {
   return [...rentRecords]
     .map((record) => ({ record, freshness: sourceQaProfile(record) }))
@@ -2859,7 +2913,7 @@ function freshnessWatchRows() {
 }
 
 function renderRentMovers() {
-  if (!el.rentMoversList || !el.freshnessWatchList) return;
+  if (!el.rentMoversList || !el.freshnessWatchList || !el.underValueList || !el.underValueSummary) return;
 
   const movers = topRentMovers();
   el.rentMoversSummary.textContent = `${movers.length} areas to watch`;
@@ -2920,6 +2974,45 @@ function renderRentMovers() {
       document.getElementById("search").scrollIntoView({ behavior: "smooth", block: "start" });
     });
     el.freshnessWatchList.append(row);
+  });
+
+  const underValue = underValueRows();
+  el.underValueSummary.textContent = underValue.length
+    ? `${underValue.length} areas below range`
+    : "No below-range signals yet";
+  el.underValueList.replaceChildren();
+  if (!underValue.length) {
+    const empty = document.createElement("p");
+    empty.textContent = "RentIntel is not seeing any clear below-range asking signals in the current sample yet.";
+    el.underValueList.append(empty);
+    return;
+  }
+
+  underValue.forEach((record) => {
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "rent-mover-row";
+    row.dataset.status = "under";
+    row.dataset.active = selectedRecord && record.id === selectedRecord.id ? "true" : "false";
+
+    const copy = document.createElement("span");
+    const title = document.createElement("strong");
+    title.textContent = record.title;
+    const detail = document.createElement("small");
+    detail.textContent = `${record.decision} | ${moneyRange(record.fairRange)}`;
+    copy.append(title, detail);
+
+    const metric = document.createElement("b");
+    metric.textContent = `${record.gap}%`;
+
+    row.append(copy, metric);
+    row.addEventListener("click", () => {
+      el.input.value = record.title;
+      updateResult(record);
+      renderSearchSuggestions();
+      document.getElementById("search").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    el.underValueList.append(row);
   });
 }
 

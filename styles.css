@@ -11202,6 +11202,12 @@ h1 {
     linear-gradient(180deg, rgba(246, 252, 248, 0.98), rgba(240, 249, 245, 0.96));
 }
 
+.hero-brief-panel[data-status="under"] {
+  background:
+    radial-gradient(circle at top right, rgba(209, 233, 248, 0.32), transparent 42%),
+    linear-gradient(180deg, rgba(247, 252, 255, 0.98), rgba(239, 247, 252, 0.96));
+}
+
 .hero-brief-panel[data-status="watch"] {
   background:
     radial-gradient(circle at top right, rgba(244, 227, 178, 0.24), transparent 40%),
@@ -11618,6 +11624,10 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   background: var(--green-2);
 }
 
+.pressure-focus[data-status="under"] {
+  background: rgba(224, 240, 251, 0.98);
+}
+
 .pressure-focus[data-status="watch"] {
   background: #fff5d6;
 }
@@ -11808,6 +11818,10 @@ button.workspace-v1-context-why-clause[data-active="true"] {
 
 .pressure-row[data-status="watch"] i::before {
   background: var(--gold);
+}
+
+.pressure-row[data-status="under"] i::before {
+  background: var(--blue);
 }
 
 .pressure-row[data-status="high"] i::before {
@@ -13233,7 +13247,7 @@ button.workspace-v1-context-why-clause[data-active="true"] {
 
 .rent-movers-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -13321,6 +13335,11 @@ button.workspace-v1-context-why-clause[data-active="true"] {
 .rent-mover-row[data-status="watch"] b {
   background: rgba(180, 117, 34, 0.14);
   color: var(--gold);
+}
+
+.rent-mover-row[data-status="under"] b {
+  background: rgba(53, 93, 124, 0.12);
+  color: var(--blue);
 }
 
 .rent-mover-row[data-status="fair"] b,

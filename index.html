@@ -9,7 +9,7 @@
       content="Check Singapore retail asking rent against benchmark signals, area context, and trust cues. RentIntel helps tenants, landlords, and operators review whether a rent looks fair."
     >
     <link rel="icon" href="./pulse-shared-transparent.png">
-    <link rel="stylesheet" href="./styles.css?v=20260514-freepublic">
+    <link rel="stylesheet" href="./styles.css?v=20260606-undervalue">
     <link rel="stylesheet" href="./source-refresh-card.css?v=20260525-source-map">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
@@ -458,7 +458,7 @@
       <section class="rent-movers-section" aria-label="Latest area updates and rent movers">
         <div class="section-heading compact">
           <p>Latest Area Updates</p>
-          <h2>See which retail areas are running hot, holding fair, or needing review.</h2>
+          <h2>See which retail areas are running hot, looking under-value, or needing review.</h2>
         </div>
         <div class="rent-movers-grid">
           <article class="rent-movers-card">
@@ -477,6 +477,15 @@
             </div>
             <div class="rent-movers-list" id="freshnessWatchList">
               <p>Loading source freshness watch...</p>
+            </div>
+          </article>
+          <article class="rent-movers-card">
+            <div class="card-label">
+              <span>Under-Value Watch</span>
+              <strong id="underValueSummary">Scanning for below-range areas</strong>
+            </div>
+            <div class="rent-movers-list" id="underValueList">
+              <p>Loading below-range signals...</p>
             </div>
           </article>
         </div>
@@ -779,13 +788,13 @@
       </div>
     </footer>
 
-    <script src="./data/rentintel-sample-data.js?v=20260508-1649"></script>
+    <script src="./data/rentintel-sample-data.js?v=20260606-undervalue"></script>
     <script src="./data/sources/asking-rent-feed.js?v=20260525-asking-pilot-refresh"></script>
     <script src="./data/sources/source-status.js?v=20260525-source-status-map"></script>
     <script src="./data/sources/onemap-enrichment.js?v=20260512-onemap"></script>
     <script src="./asking-feed-adapter.js?v=20260510-feedhardening"></script>
     <script src="./onemap-enrichment-adapter.js?v=20260512-onemap"></script>
     <script src="./source-trust.js?v=20260510-pulseguide"></script>
-    <script src="./app.js?v=20260525-source-map"></script>
+    <script src="./app.js?v=20260606-undervalue"></script>
   </body>
 </html>
