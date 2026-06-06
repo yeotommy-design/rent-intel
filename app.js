@@ -494,6 +494,50 @@ function actionChecklist(record) {
   ];
 }
 
+function decisionOutcomeLabel(record) {
+  const gap = Number(record?.gap || 0);
+  if (gap <= -8) return "Possible under-value";
+  if (gap >= 18) return "Likely high";
+  if (gap >= 8) return "Needs validation";
+  return "Closer to range";
+}
+
+function decisionActionProfile(record) {
+  const gap = Number(record?.gap || 0);
+  const fairLow = record?.fairRange?.low || record?.official || 0;
+  const fairHigh = record?.fairRange?.high || record?.official || 0;
+
+  if (gap <= -8) {
+    return {
+      label: "Check why it's cheaper",
+      copy: `Start with nearby businesses, frontage, lease terms, and hidden costs. If those still look solid, the ask below ${money(fairLow)} may be real value.`,
+      mobile: `Possible under-value. Check why it is cheaper before treating it as a bargain.`
+    };
+  }
+
+  if (gap >= 18) {
+    return {
+      label: "Push back with evidence",
+      copy: `Use the fair range as the anchor and ask the landlord to prove anything above ${money(fairHigh)} with frontage, use, or fit-out evidence.`,
+      mobile: `Likely high. Push back unless the premium above ${money(fairHigh)} is clearly supported.`
+    };
+  }
+
+  if (gap >= 8) {
+    return {
+      label: "Ask for proof",
+      copy: `The rent may still work, but ask for clearer support before accepting anything above ${money(fairHigh)}.`,
+      mobile: `Needs validation. Ask for proof before accepting the premium.`
+    };
+  }
+
+  return {
+    label: "Confirm terms",
+    copy: `The rent is closer to range. Confirm lease terms, nearby businesses, and source freshness before you say yes.`,
+    mobile: `Closer to range. Confirm terms and local context before deciding.`
+  };
+}
+
 function pulseGuideProfile(record) {
   const gap = Number(record?.gap || 0);
   const fairHigh = record?.fairRange?.high || record?.official || 0;
@@ -641,11 +685,12 @@ function renderHeroBrief(record) {
   if (!record || !el.heroBriefTitle) return;
   const pulse = pulseGuideProfile(record);
   const status = pressureStatus(record);
+  const action = decisionActionProfile(record);
   if (el.heroBriefPanel) {
     el.heroBriefPanel.dataset.status = status.key;
   }
   el.heroBriefTitle.textContent = pulse.hero.title;
-  el.heroBriefCopy.textContent = `${record.actionLabel || "Use the fair range first."} ${pulse.next.copy}`;
+  el.heroBriefCopy.textContent = `${action.label}. ${pulse.next.copy}`;
   el.heroBriefTrust.textContent = record.confidence;
   el.heroBriefRange.textContent = moneyRange(record.fairRange);
   el.heroBriefGap.textContent = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
@@ -1617,7 +1662,7 @@ function renderDecisionNotePreview(record) {
   const note = publicDecisionNote(record);
   const angles = publicDecisionAngles(record);
   el.decisionNotePreviewTitle.textContent = record.title;
-  el.decisionNoteDecision.textContent = record.decision;
+  el.decisionNoteDecision.textContent = decisionOutcomeLabel(record);
   el.decisionNoteRange.textContent = moneyRange(record.fairRange);
   el.decisionNoteTrust.textContent = trust.title;
   el.decisionNotePreviewLead.textContent = note.lead;
@@ -1966,6 +2011,7 @@ function updateResult(record) {
   el.noMatch.dataset.coverageStatus = "";
   selectedRecord = record;
   const confidence = confidenceProfile(record);
+  const action = decisionActionProfile(record);
   renderSearchResultState(searchResultProfile(record));
   el.resultTitle.textContent = record.title;
   el.confidenceBadge.textContent = record.confidence;
@@ -1988,15 +2034,15 @@ function updateResult(record) {
     el.publicTrustCopy.textContent = publicTrust.copy;
     renderPublicTrustGuide(publicTrust);
   }
-  el.rentDecision.textContent = record.decision;
+  el.rentDecision.textContent = `${decisionOutcomeLabel(record)} for this area.`;
   el.rentReason.textContent = record.reason;
-  el.mobileSummary.textContent = record.mobileSummary;
+  el.mobileSummary.textContent = action.mobile;
   el.officialMetric.textContent = money(record.official);
   el.askingMetric.textContent = money(record.asking);
   el.gapMetric.textContent = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
   el.fairRangeMetric.textContent = moneyRange(record.fairRange);
-  el.actionLabel.textContent = record.actionLabel;
-  el.actionCopy.textContent = record.action;
+  el.actionLabel.textContent = action.label;
+  el.actionCopy.textContent = action.copy;
   if (el.actionChecklist) {
     el.actionChecklist.replaceChildren();
     actionChecklist(record).forEach((action) => {
