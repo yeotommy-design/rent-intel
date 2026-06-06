@@ -12472,6 +12472,66 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   color: var(--red);
 }
 
+.public-verdict {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+  border: 1px solid rgba(24, 32, 27, 0.08);
+  border-radius: 10px;
+  padding: 12px 13px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.public-verdict strong {
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.15;
+}
+
+.public-verdict p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 760;
+  line-height: 1.4;
+}
+
+.public-verdict[data-verdict="value"] {
+  border-color: rgba(25, 107, 85, 0.22);
+  background: rgba(234, 245, 239, 0.74);
+}
+
+.public-verdict[data-verdict="value"] strong {
+  color: var(--green);
+}
+
+.public-verdict[data-verdict="verify"] {
+  border-color: rgba(53, 93, 124, 0.2);
+  background: rgba(232, 242, 249, 0.7);
+}
+
+.public-verdict[data-verdict="verify"] strong {
+  color: var(--blue);
+}
+
+.public-verdict[data-verdict="supported"] {
+  border-color: rgba(180, 117, 34, 0.24);
+  background: rgba(255, 248, 227, 0.74);
+}
+
+.public-verdict[data-verdict="supported"] strong {
+  color: var(--gold);
+}
+
+.public-verdict[data-verdict="high"] {
+  border-color: rgba(182, 70, 54, 0.22);
+  background: rgba(255, 240, 236, 0.76);
+}
+
+.public-verdict[data-verdict="high"] strong {
+  color: var(--red);
+}
+
 .trust-badge,
 .conversion-prompt {
   display: grid;

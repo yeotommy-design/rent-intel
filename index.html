@@ -9,7 +9,7 @@
       content="Check Singapore retail asking rent against benchmark signals, area context, and trust cues. RentIntel helps tenants, landlords, and operators review whether a rent looks fair."
     >
     <link rel="icon" href="./pulse-shared-transparent.png">
-    <link rel="stylesheet" href="./styles.css?v=20260606-nearbycontext">
+    <link rel="stylesheet" href="./styles.css?v=20260606-verdict">
     <link rel="stylesheet" href="./source-refresh-card.css?v=20260525-source-map">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
@@ -267,6 +267,10 @@
               <span id="confidenceSource">Direct record</span>
               <span id="confidenceEvidence">Transaction benchmark + asking signal</span>
               <span id="confidenceUse">Review evidence</span>
+            </div>
+            <div class="public-verdict" id="publicVerdict" data-verdict="high">
+              <strong id="publicVerdictLabel">Premium looks overstated</strong>
+              <p id="publicVerdictCopy">The asking rent is above range and the surrounding context does not yet justify accepting the premium at face value.</p>
             </div>
             <h3 id="rentDecision">Likely high for this area.</h3>
             <div class="mobile-summary" id="mobileSummary">Likely high. Push back unless the premium above S$14.60 psf is clearly supported.</div>
@@ -832,6 +836,6 @@
     <script src="./asking-feed-adapter.js?v=20260510-feedhardening"></script>
     <script src="./onemap-enrichment-adapter.js?v=20260512-onemap"></script>
     <script src="./source-trust.js?v=20260510-pulseguide"></script>
-    <script src="./app.js?v=20260606-nearbycontext"></script>
+    <script src="./app.js?v=20260606-verdict"></script>
   </body>
 </html>

@@ -39,6 +39,9 @@ const el = {
   confidenceSource: document.getElementById("confidenceSource"),
   confidenceEvidence: document.getElementById("confidenceEvidence"),
   confidenceUse: document.getElementById("confidenceUse"),
+  publicVerdict: document.getElementById("publicVerdict"),
+  publicVerdictLabel: document.getElementById("publicVerdictLabel"),
+  publicVerdictCopy: document.getElementById("publicVerdictCopy"),
   trustBadge: document.getElementById("trustBadge"),
   trustBadgeTitle: document.getElementById("trustBadgeTitle"),
   trustBadgeCopy: document.getElementById("trustBadgeCopy"),
@@ -507,6 +510,44 @@ function decisionOutcomeLabel(record) {
   return "Closer to range";
 }
 
+function publicVerdictProfile(record) {
+  const gap = Number(record?.gap || 0);
+  const nearby = nearbyBusinessProfile(record);
+  const nearbyTitle = String(nearby.title || "").toLowerCase();
+  const destinationLed = nearbyTitle.includes("mall") || nearbyTitle.includes("shophouse") || nearbyTitle.includes("office");
+  const neighbourhoodLed = nearbyTitle.includes("daily-needs") || nearbyTitle.includes("mixed local");
+
+  if (gap <= -8) {
+    return {
+      key: "value",
+      label: "Possible value",
+      copy: "The ask is below range, but it only looks attractive if the unit still fits the surrounding trade mix and does not hide a weaker row."
+    };
+  }
+
+  if (gap >= 18 && neighbourhoodLed) {
+    return {
+      key: "high",
+      label: "Premium looks overstated",
+      copy: "The rent is well above range, and this local trade mix does not automatically justify paying a strong premium without better row-specific proof."
+    };
+  }
+
+  if (gap >= 10 && destinationLed) {
+    return {
+      key: "supported",
+      label: "Premium may be justified",
+      copy: "The surrounding trade mix can support a stronger rent line, but the exact unit still needs proof on frontage, traffic path, and visibility."
+    };
+  }
+
+  return {
+    key: "verify",
+    label: "Fair but verify",
+    copy: "The asking rent is not clearly broken, but lease terms, micro-location, and source freshness still need checking before you commit."
+  };
+}
+
 function decisionActionProfile(record) {
   const gap = Number(record?.gap || 0);
   const fairLow = record?.fairRange?.low || record?.official || 0;
@@ -702,6 +743,16 @@ function renderHeroBrief(record) {
   el.heroBriefTrust.textContent = record.confidence;
   el.heroBriefRange.textContent = moneyRange(record.fairRange);
   el.heroBriefGap.textContent = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
+}
+
+function renderPublicVerdict(record) {
+  if (!record || !el.publicVerdictLabel) return;
+  const verdict = publicVerdictProfile(record);
+  if (el.publicVerdict) {
+    el.publicVerdict.dataset.verdict = verdict.key;
+  }
+  el.publicVerdictLabel.textContent = verdict.label;
+  el.publicVerdictCopy.textContent = verdict.copy;
 }
 
 function setupPulseInteractions(root = document) {
@@ -2096,6 +2147,7 @@ function updateResult(record) {
   }
   renderSourceRefreshRows(record);
   renderDataFreshness(record);
+  renderPublicVerdict(record);
   if (el.publicEvidenceList) {
     const rows = publicEvidenceRows(record);
     el.publicEvidenceSummary.textContent = `${rows.length} evidence checks`;
