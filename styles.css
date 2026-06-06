@@ -13394,6 +13394,11 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   background: rgba(234, 245, 239, 0.6);
 }
 
+.public-recent-check-item[data-pinned="true"] {
+  border-color: rgba(180, 117, 34, 0.26);
+  background: rgba(255, 248, 227, 0.68);
+}
+
 .public-recent-check-open {
   display: grid;
   gap: 4px;
@@ -13429,6 +13434,24 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+}
+
+.public-recent-check-pin {
+  min-height: 38px;
+  border: 1px solid rgba(180, 117, 34, 0.22);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: #fff8e3;
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.public-recent-check-item[data-pinned="true"] .public-recent-check-pin {
+  border-color: rgba(180, 117, 34, 0.3);
+  background: var(--gold);
+  color: #ffffff;
 }
 
 .public-recent-check-compare {

@@ -2357,7 +2357,16 @@ function getPublicRecentChecks() {
 }
 
 function writePublicRecentChecks(checks) {
-  writeStoredJson(publicRecentChecksKey, checks.slice(0, 6));
+  const normalized = checks.map((check) => ({
+    ...check,
+    pinned: Boolean(check.pinned)
+  }));
+  normalized.sort((left, right) => {
+    if (left.pinned && !right.pinned) return -1;
+    if (right.pinned && !left.pinned) return 1;
+    return String(right.savedAt || "").localeCompare(String(left.savedAt || ""));
+  });
+  writeStoredJson(publicRecentChecksKey, normalized.slice(0, 6));
 }
 
 function removePublicRecentCheck(recordId) {
@@ -2376,6 +2385,22 @@ function clearPublicRecentChecks() {
   renderPublicRecentChecks();
   renderPublicComparePanel();
   setDecisionNoteStatus("Cleared public recent checks from this browser.");
+}
+
+function togglePinnedPublicRecentCheck(recordId) {
+  const checks = getPublicRecentChecks().map((item) => ({
+    ...item,
+    pinned: item.recordId === recordId ? !item.pinned : false
+  }));
+  writePublicRecentChecks(checks);
+  renderPublicRecentChecks();
+  const pinned = checks.find((item) => item.recordId === recordId)?.pinned;
+  const target = rentRecords.find((entry) => entry.id === recordId);
+  setDecisionNoteStatus(
+    pinned
+      ? `${target?.title || "Saved result"} pinned to the top of recent checks.`
+      : `${target?.title || "Saved result"} unpinned.`
+  );
 }
 
 function getPublicCompareRecords() {
@@ -2453,6 +2478,7 @@ function savePublicResult() {
     asking: selectedRecord.asking,
     fairRange: selectedRecord.fairRange,
     gap: selectedRecord.gap,
+    pinned: getPublicRecentChecks().find((item) => item.recordId === selectedRecord.id)?.pinned || false,
     savedAt: new Date().toISOString()
   });
   writePublicRecentChecks(checks);
@@ -2481,6 +2507,7 @@ function renderPublicRecentChecks() {
     const item = document.createElement("article");
     item.className = "public-recent-check-item";
     if (publicCompareRecordIds.includes(check.recordId)) item.dataset.selected = "true";
+    if (check.pinned) item.dataset.pinned = "true";
 
     const openButton = document.createElement("button");
     openButton.type = "button";
@@ -2509,6 +2536,14 @@ function renderPublicRecentChecks() {
 
     const controls = document.createElement("div");
     controls.className = "public-recent-check-controls";
+    const pinButton = document.createElement("button");
+    pinButton.type = "button";
+    pinButton.className = "public-recent-check-pin";
+    pinButton.textContent = check.pinned ? "Pinned" : "Pin";
+    pinButton.addEventListener("click", () => {
+      togglePinnedPublicRecentCheck(check.recordId);
+    });
+
     const removeButton = document.createElement("button");
     removeButton.type = "button";
     removeButton.className = "public-recent-check-remove";
@@ -2517,7 +2552,7 @@ function renderPublicRecentChecks() {
       removePublicRecentCheck(check.recordId);
     });
 
-    controls.append(compareButton, removeButton);
+    controls.append(pinButton, compareButton, removeButton);
     item.append(openButton, controls);
     el.publicRecentChecksList.append(item);
   });
