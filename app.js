@@ -65,6 +65,12 @@ const el = {
   sourceQaSources: document.getElementById("sourceQaSources"),
   publicEvidenceSummary: document.getElementById("publicEvidenceSummary"),
   publicEvidenceList: document.getElementById("publicEvidenceList"),
+  nearbyBusinessTitle: document.getElementById("nearbyBusinessTitle"),
+  nearbyBusinessSummary: document.getElementById("nearbyBusinessSummary"),
+  nearbyBusinessTags: document.getElementById("nearbyBusinessTags"),
+  nearbyBusinessSupportTitle: document.getElementById("nearbyBusinessSupportTitle"),
+  nearbyBusinessSupportCopy: document.getElementById("nearbyBusinessSupportCopy"),
+  nearbyBusinessMeta: document.getElementById("nearbyBusinessMeta"),
   signalDrivers: document.getElementById("signalDrivers"),
   heroBriefPanel: document.getElementById("heroBriefPanel"),
   heroBriefTitle: document.getElementById("heroBriefTitle"),
@@ -1447,6 +1453,81 @@ function publicEvidenceRows(record) {
   return rows;
 }
 
+function nearbyBusinessProfile(record) {
+  const area = String(record?.area || "").toLowerCase();
+  const property = String(record?.propertyType || "").toLowerCase();
+  const planningArea = record?.oneMap?.planningArea || record?.area || "the area";
+
+  if (area.includes("orchard") || property.includes("shopping centre") || property.includes("mall")) {
+    return {
+      title: "Mall and destination spend mix",
+      summary: "Nearby businesses likely depend on mall traffic, tourism, beauty spend, and destination dining rather than only neighbourhood convenience demand.",
+      tags: ["Fashion brands", "Beauty & wellness", "Cafes", "Desserts", "Tourist spend"],
+      supportTitle: "What this can support",
+      supportCopy: "A stronger mall and destination mix can support premium rent, but floor position, frontage, and the exact traffic path still decide whether the quoted line is justified.",
+      meta: `${planningArea} context: use nearby mall anchors and footfall flow to judge whether the unit sits in the stronger or weaker part of the area.`
+    };
+  }
+
+  if (property.includes("shophouse") || area.includes("chinatown") || area.includes("joo chiat") || area.includes("outram") || area.includes("tiong bahru")) {
+    return {
+      title: "Shophouse lifestyle and dining mix",
+      summary: "Nearby businesses likely lean toward F&B, boutique retail, bars, beauty, fitness, and tourist or weekend footfall rather than pure daily-needs trade.",
+      tags: ["Cafes & restaurants", "Bars", "Boutique retail", "Fitness studios", "Tourist traffic"],
+      supportTitle: "What this can support",
+      supportCopy: "That mix can support a premium when the unit has real street visibility and destination pull, but weaker side streets or hidden rows may still deserve a lower rent line.",
+      meta: `${planningArea} context: compare the selected unit's street visibility and day-part traffic against the stronger nearby shophouse pockets.`
+    };
+  }
+
+  if (area.includes("marina bay") || area.includes("raffles") || property.includes("cbd")) {
+    return {
+      title: "Office, lunch, and visitor trade mix",
+      summary: "Nearby businesses likely depend on office-worker lunch demand, convenience spending, beauty services, and visitor flows tied to prime commercial nodes.",
+      tags: ["Quick-service lunch", "Coffee chains", "Beauty services", "Convenience retail", "Office spillover"],
+      supportTitle: "What this can support",
+      supportCopy: "This mix can make a lower asking rent look attractive, but prime areas also hide sharp micro-location differences, so floor position and visibility still matter a lot.",
+      meta: `${planningArea} context: check whether the selected row catches true office and visitor flow or sits outside the strongest commercial path.`
+    };
+  }
+
+  if (property.includes("hdb") || property.includes("heartland") || area.includes("bedok") || area.includes("yishun") || area.includes("serangoon") || area.includes("tampines") || area.includes("ang mo kio")) {
+    return {
+      title: "Daily-needs neighbourhood mix",
+      summary: "Nearby businesses likely revolve around clinics, bakeries, tuition, provision shops, coffee shops, supermarkets, and convenience-led daily traffic.",
+      tags: ["Clinics", "Tuition", "Bakeries", "Coffee shops", "Daily-needs retail"],
+      supportTitle: "What this can support",
+      supportCopy: "That mix usually supports steadier but less explosive rent than prime lifestyle clusters, so a cheap ask can be real value or just a weaker row with less passing trade.",
+      meta: `${planningArea} context: compare MRT spillover, market traffic, and corner visibility against nearby neighbourhood rows before accepting the rent story.`
+    };
+  }
+
+  return {
+    title: "Mixed local trade context",
+    summary: "Nearby businesses are likely a blend of convenience retail, small F&B, services, and local destination demand rather than one clean trade type.",
+    tags: ["Convenience retail", "Small F&B", "Services", "Passing trade", "Local catchment"],
+    supportTitle: "What this can support",
+    supportCopy: "Use the nearby trade mix to judge whether the quoted rent is supported by real demand drivers or whether the area name alone is doing too much work.",
+    meta: `${planningArea} context: compare the selected unit against the stronger and weaker micro-pockets nearby before deciding.`
+  };
+}
+
+function renderNearbyBusinesses(record) {
+  if (!el.nearbyBusinessTitle || !record) return;
+  const profile = nearbyBusinessProfile(record);
+  el.nearbyBusinessTitle.textContent = profile.title;
+  el.nearbyBusinessSummary.textContent = profile.summary;
+  el.nearbyBusinessSupportTitle.textContent = profile.supportTitle;
+  el.nearbyBusinessSupportCopy.textContent = profile.supportCopy;
+  el.nearbyBusinessMeta.textContent = profile.meta;
+  el.nearbyBusinessTags.replaceChildren();
+  profile.tags.forEach((tag) => {
+    const chip = document.createElement("span");
+    chip.textContent = tag;
+    el.nearbyBusinessTags.append(chip);
+  });
+}
+
 function verificationPrompt(record) {
   const confidence = String(record?.confidence || "").toLowerCase();
   if (record?.prototypeSource === "coverage-request" || confidence.includes("coverage")) {
@@ -1954,6 +2035,7 @@ function updateResult(record) {
       el.publicEvidenceList.append(item);
     });
   }
+  renderNearbyBusinesses(record);
   el.signalDrivers.replaceChildren();
   signalDrivers(record).forEach((driver) => {
     const item = document.createElement("li");

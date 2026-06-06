@@ -12599,6 +12599,58 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   line-height: 1.35;
 }
 
+.nearby-business-card {
+  display: grid;
+  gap: 12px;
+}
+
+.nearby-business-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nearby-business-tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  border: 1px solid rgba(53, 93, 124, 0.18);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: rgba(232, 242, 249, 0.8);
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.nearby-business-note {
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(24, 32, 27, 0.08);
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(255, 253, 249, 0.9);
+}
+
+.nearby-business-note strong {
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.nearby-business-note p,
+.nearby-business-summary,
+.nearby-business-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.nearby-business-meta {
+  font-weight: 750;
+}
+
 .member-unlock-strip {
   display: grid;
   grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1fr) auto;

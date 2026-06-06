@@ -9,7 +9,7 @@
       content="Check Singapore retail asking rent against benchmark signals, area context, and trust cues. RentIntel helps tenants, landlords, and operators review whether a rent looks fair."
     >
     <link rel="icon" href="./pulse-shared-transparent.png">
-    <link rel="stylesheet" href="./styles.css?v=20260606-undervalue">
+    <link rel="stylesheet" href="./styles.css?v=20260606-nearbybiz">
     <link rel="stylesheet" href="./source-refresh-card.css?v=20260525-source-map">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
@@ -399,6 +399,31 @@
               <span>Use the chart context when you want more benchmark detail, source structure, and historical context.</span>
             </div>
             <button class="secondary-button" id="togglePaid" type="button">View Chart Context</button>
+          </article>
+
+          <article class="result-card nearby-business-card" aria-label="Nearby businesses in the area">
+            <div class="card-label">
+              <span>Nearby businesses</span>
+              <strong id="nearbyBusinessTitle">Likely nearby trade mix</strong>
+            </div>
+            <p id="nearbyBusinessSummary">
+              Check the surrounding business mix before deciding whether the rent premium or discount makes commercial sense.
+            </p>
+            <div class="nearby-business-tags" id="nearbyBusinessTags">
+              <span>Cafes</span>
+              <span>Convenience retail</span>
+              <span>Clinics</span>
+              <span>Daily-needs services</span>
+            </div>
+            <div class="nearby-business-note">
+              <strong id="nearbyBusinessSupportTitle">Why it matters</strong>
+              <p id="nearbyBusinessSupportCopy">
+                The surrounding trade mix can explain whether the asking rent is supported by lunch traffic, tourism, daily-needs demand, or a weaker micro-location than the headline area suggests.
+              </p>
+            </div>
+            <p class="nearby-business-meta" id="nearbyBusinessMeta">
+              Area context updates as the selected rent search changes.
+            </p>
           </article>
         </div>
 
@@ -795,6 +820,6 @@
     <script src="./asking-feed-adapter.js?v=20260510-feedhardening"></script>
     <script src="./onemap-enrichment-adapter.js?v=20260512-onemap"></script>
     <script src="./source-trust.js?v=20260510-pulseguide"></script>
-    <script src="./app.js?v=20260606-undervalue"></script>
+    <script src="./app.js?v=20260606-nearbybiz"></script>
   </body>
 </html>
