@@ -180,6 +180,9 @@ const el = {
   decisionAngleThreeTitle: document.getElementById("decisionAngleThreeTitle"),
   decisionAngleThreeCopy: document.getElementById("decisionAngleThreeCopy"),
   decisionNoteOpenLink: document.getElementById("decisionNoteOpenLink"),
+  copyDecisionNoteButton: document.getElementById("copyDecisionNoteButton"),
+  downloadDecisionNoteButton: document.getElementById("downloadDecisionNoteButton"),
+  decisionNoteStatus: document.getElementById("decisionNoteStatus"),
   decisionNoteSaveLink: document.getElementById("decisionNoteSaveLink"),
   chartShell: document.getElementById("chartShell"),
   chartKicker: document.getElementById("chartKicker"),
@@ -1680,6 +1683,7 @@ function publicDecisionNote(record) {
   const trust = benchmarkTrustProfile(record);
   const qa = sourceQaProfile(record);
   const gapText = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
+  const absoluteGapText = `${Math.abs(Number(record.gap || 0))}%`;
   let lead = `RentIntel reads ${record.title} as ${String(record.decision || "").toLowerCase()} because the current asking rent sits ${record.gap > 0 ? `${gapText} above` : `${gapText.replace("-", "")}% below`} the current fair range.`;
   let body = `The public decision note should anchor on ${trust.title.toLowerCase()} evidence, then test whether permitted use, frontage, unit condition, or rare location advantages actually justify the premium.`;
   let next = `Before acting, verify the asking source freshness (${qa.freshnessLabel.toLowerCase()}), compare against the fair range of ${moneyRange(record.fairRange)}, and only accept the premium if the commercial reasons are unusually strong.`;
@@ -1689,7 +1693,7 @@ function publicDecisionNote(record) {
   } else if (record.gap >= 10) {
     body = `The premium may still be defensible, but the note should ask for clearer support on frontage, fit-out condition, nearby trade strength, and recent comparables before treating the asking rent as fair.`;
   } else if (record.gap <= -8) {
-    lead = `RentIntel reads ${record.title} as potentially under-value because the current asking rent sits ${gapText.replace("-", "")}% below the current fair range.`;
+    lead = `RentIntel reads ${record.title} as potentially under-value because the current asking rent sits ${absoluteGapText} below the current fair range.`;
     body = `That can be a genuine value opening, but the decision note should first check whether the surrounding trade mix fits the unit well or instead points to a weaker micro-location. It should then rule out weaker frontage, hidden lease constraints, fit-out burden, or poor row quality before calling it a bargain.`;
     next = `Use the preview to confirm source freshness, compare against the fair range of ${moneyRange(record.fairRange)}, and then check whether the discounted ask still fits the operating model.`;
   } else if (record.gap <= 0) {
@@ -1767,6 +1771,7 @@ function renderDecisionNotePreview(record) {
     el.decisionAngleThreeCopy.textContent = angles[2].copy;
   }
   if (el.decisionNoteOpenLink) el.decisionNoteOpenLink.href = toolbenchPreviewUrl(record);
+  setDecisionNoteStatus("Copy or download this public note if you want a quick shareable summary.");
 }
 
 function searchableSuggestions() {
@@ -2294,8 +2299,12 @@ function setCoverageExportStatus(message) {
 
 async function copyTextToClipboard(text) {
   if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text);
-    return;
+    try {
+      await navigator.clipboard.writeText(text);
+      return;
+    } catch (error) {
+      console.warn("Clipboard API write failed, falling back to textarea copy.", error);
+    }
   }
   const textarea = document.createElement("textarea");
   textarea.value = text;
@@ -2304,8 +2313,12 @@ async function copyTextToClipboard(text) {
   textarea.style.left = "-9999px";
   document.body.append(textarea);
   textarea.select();
-  document.execCommand("copy");
+  textarea.setSelectionRange(0, textarea.value.length);
+  const copied = document.execCommand("copy");
   textarea.remove();
+  if (!copied) {
+    throw new Error("Clipboard copy command failed.");
+  }
 }
 
 async function copyCoverageQueue() {
@@ -2321,6 +2334,56 @@ async function copyCoverageQueue() {
     console.warn("Coverage queue copy failed.", error);
     setCoverageExportStatus("Copy failed. Use Download Queue JSON instead.");
   }
+}
+
+function setDecisionNoteStatus(message) {
+  if (el.decisionNoteStatus) el.decisionNoteStatus.textContent = message;
+}
+
+function publicDecisionNoteText(record = selectedRecord) {
+  if (!record) return "";
+  const note = publicDecisionNote(record);
+  const verdict = publicVerdictProfile(record);
+  return [
+    `RentIntel public decision note: ${record.title}`,
+    `Verdict: ${verdict.label}`,
+    `Decision: ${decisionOutcomeLabel(record)}`,
+    `Fair range: ${moneyRange(record.fairRange)}`,
+    `Trust: ${benchmarkTrustProfile(record).title}`,
+    "",
+    note.lead,
+    note.body,
+    note.next
+  ].join("\n");
+}
+
+async function copyDecisionNote() {
+  if (!selectedRecord) {
+    setDecisionNoteStatus("Search an area first before copying a note.");
+    return;
+  }
+  try {
+    await copyTextToClipboard(publicDecisionNoteText(selectedRecord));
+    setDecisionNoteStatus(`Decision note copied for ${selectedRecord.title}.`);
+  } catch (error) {
+    console.warn("Decision note copy failed.", error);
+    setDecisionNoteStatus("Copy failed. Use Download Note instead.");
+  }
+}
+
+function downloadDecisionNote() {
+  if (!selectedRecord) {
+    setDecisionNoteStatus("Search an area first before downloading a note.");
+    return;
+  }
+  const blob = new Blob([publicDecisionNoteText(selectedRecord)], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${selectedRecord.id}-public-decision-note.txt`;
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  setDecisionNoteStatus(`Decision note downloaded for ${selectedRecord.title}.`);
 }
 
 function downloadCoverageQueue() {
@@ -3392,6 +3455,8 @@ async function init() {
   el.coverageRequestForm?.addEventListener("submit", saveCoverageRequest);
   el.copyCoverageQueueButton?.addEventListener("click", copyCoverageQueue);
   el.downloadCoverageQueueButton?.addEventListener("click", downloadCoverageQueue);
+  el.copyDecisionNoteButton?.addEventListener("click", copyDecisionNote);
+  el.downloadDecisionNoteButton?.addEventListener("click", downloadDecisionNote);
 
   el.togglePaid?.addEventListener("click", () => {
     el.chartShell?.scrollIntoView({ behavior: "smooth", block: "center" });

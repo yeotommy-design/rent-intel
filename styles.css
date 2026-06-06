@@ -13309,16 +13309,24 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   gap: 8px;
 }
 
-.decision-note-actions a {
+.decision-note-actions a,
+.decision-note-actions button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 42px;
   border-radius: 8px;
+  border: 0;
+  border-radius: 8px;
   padding: 0 14px;
   font-size: 14px;
   font-weight: 850;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.decision-note-actions button {
+  font-family: inherit;
 }
 
 .decision-note-actions a:first-child {
@@ -13326,10 +13334,19 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   color: #ffffff;
 }
 
+.decision-note-actions button,
 .decision-note-actions a:last-child {
   border: 1px solid rgba(25, 107, 85, 0.24);
   background: #fffdf9;
   color: var(--green);
+}
+
+.decision-note-status {
+  margin: -2px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 760;
+  line-height: 1.4;
 }
 
 .member-workspace {
