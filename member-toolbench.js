@@ -71,22 +71,22 @@ const toolbenchStatusMessages = {
     tone: "info",
     duration: toolbenchStatusDurations.filter,
     text: ({ title = "" } = {}) => title
-      ? `Returned quick picks to the current V1 record: ${title}.`
-      : "Returned quick picks to the current V1 record."
+      ? `Returned quick picks to the current area: ${title}.`
+      : "Returned quick picks to the current area."
   },
   focusWeakestRecord: {
     tone: "info",
     duration: toolbenchStatusDurations.filter,
     text: ({ title = "", note = "" } = {}) => title
-      ? `Focused the highest-attention V1 record: ${title}.${note ? ` ${note}` : ""}`
-      : "Focused the highest-attention V1 record."
+      ? `Focused the most urgent area: ${title}.${note ? ` ${note}` : ""}`
+      : "Focused the most urgent area."
   },
   focusStrongestRecord: {
     tone: "info",
     duration: toolbenchStatusDurations.filter,
     text: ({ title = "", note = "" } = {}) => title
-      ? `Focused the best-improving V1 record: ${title}.${note ? ` ${note}` : ""}`
-      : "Focused the best-improving V1 record."
+      ? `Focused the best-looking area: ${title}.${note ? ` ${note}` : ""}`
+      : "Focused the best-looking area."
   },
   followRecoveryTarget: {
     tone: "info",
@@ -161,7 +161,7 @@ const toolbenchStatusMessages = {
   backendRestoreUnavailable: {
     tone: "caution",
     duration: 0,
-    text: () => "Backend review-pass restore is not available in this workspace mode."
+    text: () => "Saved review restore is not available in this workspace mode."
   },
   backendRestoreMissing: {
     tone: "caution",
@@ -227,76 +227,76 @@ const toolbenchBackendPreviewCloseReasons = {
 };
 const toolbenchBackendPreviewMessages = {
   focusHint: {
-    restoreJump: "Focus restored to Restore and review.",
-    restore: "Focus restored to Restore backend scope.",
-    clear: "Focus restored to Clear local pass.",
-    badge: "Focus restored to the backend scope badge.",
+    restoreJump: "Focus restored to Resume saved review.",
+    restore: "Focus restored to Restore saved review.",
+    clear: "Focus restored to Clear this browser review.",
+    badge: "Focus restored to the saved review badge.",
     default: ""
   },
   badge: {
-    localActive: ({ scope = "" } = {}) => `Local review pass active${scope ? ` • ${scope}` : ""}`,
-    localOnly: () => "Local preview only • backend review restore is unavailable in this workspace mode.",
-    backendMissing: () => "No saved backend review scope yet.",
+    localActive: ({ scope = "" } = {}) => `This browser review is active${scope ? ` • ${scope}` : ""}`,
+    localOnly: () => "Saved review restore is not available in this browser-only mode.",
+    backendMissing: () => "No saved review progress yet.",
     backendAvailable: ({ resolvedLabel = "", scopeLabel = "", syncedLabel = "" } = {}) =>
-      `Backend pass available • ${resolvedLabel} • ${scopeLabel} • ${syncedLabel}`
+      `Saved review ready • ${resolvedLabel} • ${scopeLabel} • ${syncedLabel}`
   },
   resumeHint: {
-    localRestoreJump: () => "Local preview only: resume the last browser-session review item in this preview.",
-    localRestore: () => "Local preview only: reopen the saved browser-session review scope in this preview.",
-    localClear: () => "Local preview only: clear the browser-session review scope from this preview.",
+    localRestoreJump: () => "Browser-only mode: reopen the last area you were reviewing in this browser.",
+    localRestore: () => "Browser-only mode: reopen the saved review from this browser.",
+    localClear: () => "Browser-only mode: clear the review saved in this browser.",
     localDefault: ({ workspaceUrl = "" } = {}) =>
-      `Open the full workspace at ${workspaceUrl} for backend-backed review restore and sync.`,
-    backendRestoreJump: ({ label = "" } = {}) => `${label}: resume from the saved active review item.`,
-    backendRestore: () => "Restore backend scope: bring back the saved roster filters and review scope.",
-    backendClear: () => "Clear local pass: a browser-only review scope is still active here.",
+      `Open the full workspace at ${workspaceUrl} to restore saved progress across sessions.`,
+    backendRestoreJump: ({ label = "" } = {}) => `${label}: continue from the saved area you were last reviewing.`,
+    backendRestore: () => "Restore saved review: bring back your saved filters and progress.",
+    backendClear: () => "Clear this browser review: the current browser-only review is still active.",
     default: () => ""
   },
   panel: {
-    scope: ({ scope = "" } = {}) => `Scope: ${scope || "all"}`,
-    currentScope: ({ scope = "" } = {}) => `Current: ${scope || "all"}`,
-    compareMissing: () => "Comparison: no saved backend scope yet.",
-    compareMatch: () => "Comparison: matches current scope.",
-    compareDifferent: ({ differences = "" } = {}) => `Comparison: ${differences}.`,
-    activeItemMissing: () => "Active item: none",
+    scope: ({ scope = "" } = {}) => `Saved view: ${scope || "all areas"}`,
+    currentScope: ({ scope = "" } = {}) => `Current view: ${scope || "all areas"}`,
+    compareMissing: () => "Match: no saved review progress yet.",
+    compareMatch: () => "Match: same as your current view.",
+    compareDifferent: ({ differences = "" } = {}) => `Match: ${differences}.`,
+    activeItemMissing: () => "Current saved area: none",
     activeItem: ({ recordLabel = "", label = "" } = {}) =>
-      label ? `Active item: ${recordLabel} • ${label}` : `Active item: ${recordLabel}`,
-    itemStatusMissing: () => "Item status: no saved active review item.",
-    itemStatusUnmatched: () => "Item status: saved item could not be matched locally.",
-    itemStatusUntracked: () => "Item status: saved layer is no longer tracked in the current V1 model.",
-    itemStatusResolved: ({ label = "" } = {}) => `Item status: ${label} is already resolved in the current model.`,
-    itemStatusUnresolved: ({ label = "" } = {}) => `Item status: ${label} is still unresolved and ready to review.`
+      label ? `Current saved area: ${recordLabel} • ${label}` : `Current saved area: ${recordLabel}`,
+    itemStatusMissing: () => "Saved area status: no saved active area yet.",
+    itemStatusUnmatched: () => "Saved area status: the saved area could not be matched here.",
+    itemStatusUntracked: () => "Saved area status: this saved step is no longer tracked in the current model.",
+    itemStatusResolved: ({ label = "" } = {}) => `Saved area status: ${label} is already finished.`,
+    itemStatusUnresolved: ({ label = "" } = {}) => `Saved area status: ${label} still needs review.`
   },
   action: {
-    restoreJumpUnresolved: () => "Restore and review",
-    restoreJumpResolved: () => "Restore resolved item",
-    restoreJumpUnmatched: () => "Restore saved context",
-    restoreJumpDefault: () => "Restore and jump",
-    restoreScope: () => "Restore backend scope"
+    restoreJumpUnresolved: () => "Resume saved review",
+    restoreJumpResolved: () => "Open finished item",
+    restoreJumpUnmatched: () => "Restore saved view",
+    restoreJumpDefault: () => "Restore and open",
+    restoreScope: () => "Restore saved review"
   }
 };
 const toolbenchReviewPassMessages = {
   origin: {
-    backend: () => "Roster review scope restored from backend for this member session.",
-    session: () => "Roster review scope restored from this browser session.",
-    local: () => "Roster review scope is currently local only in this preview/workspace.",
-    healthBackend: () => "Review pass restored from backend for this member session.",
-    healthSession: () => "Review pass restored from this browser session.",
-    healthLocal: () => "Review pass is currently local only in this preview/workspace."
+    backend: () => "Saved review progress was restored for this member session.",
+    session: () => "Saved review progress was restored from this browser session.",
+    local: () => "This review is currently saved only in this browser.",
+    healthBackend: () => "Saved review progress was restored for this member session.",
+    healthSession: () => "Saved review progress was restored from this browser session.",
+    healthLocal: () => "This review is currently saved only in this browser."
   },
   audit: {
-    empty: () => "No review-pass restore or clear action recorded yet.",
-    restored: ({ sourceLabel = "", at = "" } = {}) => `Last pass action: restored from ${sourceLabel} on ${at}.`,
-    cleared: ({ sourceLabel = "", at = "" } = {}) => `Last pass action: cleared ${sourceLabel} pass on ${at}.`,
-    generic: ({ at = "" } = {}) => `Last pass action recorded on ${at}.`
+    empty: () => "No recent review restore or clear action yet.",
+    restored: ({ sourceLabel = "", at = "" } = {}) => `Last review action: restored from ${sourceLabel} on ${at}.`,
+    cleared: ({ sourceLabel = "", at = "" } = {}) => `Last review action: cleared ${sourceLabel} on ${at}.`,
+    generic: ({ at = "" } = {}) => `Last review action recorded on ${at}.`
   },
   sync: {
-    inactive: () => "Backend sync is not active in this workspace mode.",
-    saved: ({ at = "" } = {}) => `Last backend sync: ${at}.`,
-    pendingWithLast: ({ at = "" } = {}) => `Backend sync pending. Last successful sync: ${at}.`,
-    pending: () => "Backend sync pending for the current review pass.",
-    errorWithLast: ({ at = "" } = {}) => `Backend sync needs attention. Last successful sync: ${at}.`,
-    error: () => "Backend sync needs attention.",
-    none: () => "No backend review-pass sync has completed yet."
+    inactive: () => "Cross-session saving is not active in this workspace mode.",
+    saved: ({ at = "" } = {}) => `Last saved across sessions: ${at}.`,
+    pendingWithLast: ({ at = "" } = {}) => `Saving across sessions is pending. Last successful save: ${at}.`,
+    pending: () => "Saving across sessions is pending for this review.",
+    errorWithLast: ({ at = "" } = {}) => `Saving across sessions needs attention. Last successful save: ${at}.`,
+    error: () => "Saving across sessions needs attention.",
+    none: () => "No cross-session save has completed yet."
   },
   finish: {
     complete: ({ resolvedCount = 0, scope = "" } = {}) =>
@@ -308,24 +308,24 @@ const toolbenchReviewPassMessages = {
     labelSurroundingTrade: () => "Surrounding trade",
     labelSuitability: () => "Suitability",
     labelDecisionNote: () => "Decision note",
-    stateInternalReady: () => "internal-ready",
+    stateInternalReady: () => "ready",
     stateNeedsReview: () => "needs review",
-    stateWeakSample: () => "weak sample",
+    stateWeakSample: () => "still weak",
     summaryTitle: ({ passed = 0, total = 0, state = "" } = {}) =>
       `${passed}/${total} checks passed • ${state}`,
-    summaryCopyStrong: () => "This V1 context bundle is structurally complete enough for internal Workspace use.",
-    summaryCopyPartial: () => "This V1 context bundle is usable, but at least one decision layer still needs stronger structure.",
-    summaryCopyWeak: () => "This V1 context bundle is still too thin and should not be treated as reliable without more modeling.",
-    noFixNeeded: () => "No immediate structural fix needed. This record is ready for internal Workspace use.",
+    summaryCopyStrong: () => "This review record looks complete enough to use with confidence.",
+    summaryCopyPartial: () => "This review record is usable, but at least one decision layer still needs work.",
+    summaryCopyWeak: () => "This review record is still too thin and should not be treated as reliable yet.",
+    noFixNeeded: () => "No immediate fix is needed. This record is ready to use.",
     noFixNextAction: () => "Next: no structural fix needed.",
-    nextReviewItem: ({ count = 0 } = {}) => (count ? `Next review item (${count})` : "Next review item"),
+    nextReviewItem: ({ count = 0 } = {}) => (count ? `Next unfinished item (${count})` : "Next unfinished item"),
     startNewPass: ({ resolvedCount = 0 } = {}) =>
-      (resolvedCount > 0 ? `Start new pass (${resolvedCount} resolved)` : "Start new pass"),
-    resolvedThisPass: ({ resolvedCount = 0 } = {}) => `Resolved this pass: ${resolvedCount}.`,
-    showResolvedDetail: () => "View pass detail",
-    hideResolvedDetail: () => "Hide pass detail",
-    currentScopeComplete: () => "Current review scope complete.",
-    noHealthChecks: () => "No health checks available yet.",
+      (resolvedCount > 0 ? `Start a new review (${resolvedCount} finished)` : "Start a new review"),
+    resolvedThisPass: ({ resolvedCount = 0 } = {}) => `Finished in this review: ${resolvedCount}.`,
+    showResolvedDetail: () => "View review detail",
+    hideResolvedDetail: () => "Hide review detail",
+    currentScopeComplete: () => "Current review scope is complete.",
+    noHealthChecks: () => "No review checks are available yet.",
     passCheck: ({ label = "" } = {}) => `Pass • ${label}`,
     reviewCheck: ({ label = "" } = {}) => `Review • ${label}`,
     queueEmpty: ({ scope = "" } = {}) => `No incomplete review items in the current scope (${scope}).`,
@@ -341,21 +341,21 @@ const toolbenchReviewPassMessages = {
     actionGeneric: ({ label = "" } = {}) => `Review the ${String(label || "missing").toLowerCase()} layer next.`
   },
   roster: {
-    title: () => "V1 roster health",
+    title: () => "Area review queue",
     summary: ({ strong = 0, partial = 0, weak = 0 } = {}) =>
-      `${strong} strong, ${partial} partial, and ${weak} weak context records are currently modeled for internal Workspace use.`,
-    empty: () => "No modeled V1 context records are loaded yet.",
+      `${strong} areas look strong, ${partial} need some work, and ${weak} still need the most review.`,
+    empty: () => "No review areas are loaded yet.",
     currentStrong: ({ passed = 0, total = 0 } = {}) => `${passed}/${total}`,
     currentNeedsReview: ({ passed = 0, total = 0, nextAction = "" } = {}) => `${passed}/${total} • ${nextAction}`,
     currentDecisionReady: ({ passed = 0, total = 0, outcome = "" } = {}) =>
       outcome ? `${passed}/${total} • ${outcome}` : `${passed}/${total}`,
     currentDecisionReview: ({ passed = 0, total = 0, outcome = "" } = {}) =>
       outcome ? `${passed}/${total} • ${outcome}` : `${passed}/${total}`,
-    backendNoticePlaceholder: () => "Backend preview notice will appear here when the saved scope closes automatically.",
-    backendFocusPlaceholder: () => "Focus restored to the last backend-preview action.",
-    backendResolved: ({ count = 0 } = {}) => `Resolved: ${count}`,
-    backendSynced: ({ at = "" } = {}) => `Synced: ${at}.`,
-    backendSyncPending: () => "Synced: pending"
+    backendNoticePlaceholder: () => "A saved-review notice will appear here when your saved view changes.",
+    backendFocusPlaceholder: () => "Focus restored to the last saved-review action.",
+    backendResolved: ({ count = 0 } = {}) => `Finished: ${count}`,
+    backendSynced: ({ at = "" } = {}) => `Last save: ${at}.`,
+    backendSyncPending: () => "Last save: pending"
   },
   workspace: {
     quickPickEmpty: ({ scope = "" } = {}) => `No quick-pick records match ${scope} yet.`,
@@ -406,93 +406,93 @@ const toolbenchReviewPassMessages = {
     savedReportFallback: () => "Saved report",
     savedReportDetailFallback: () => "Saved",
     savedReportNoteFallback: () => "Note ready",
-    quickPickMeta: ({ summary = "" } = {}) => `V1 ${summary}`,
-    quickPickDecisionMeta: ({ outcome = "" } = {}) => outcome ? `Decision ${outcome}` : "Decision pending",
-    quickPickWorkMeta: ({ workType = "" } = {}) => workType ? `Work ${workType}` : "",
-    quickPickTrendMeta: ({ trend = "" } = {}) => trend ? `Trend ${trend}` : "",
+    quickPickMeta: ({ summary = "" } = {}) => `Review ${summary}`,
+    quickPickDecisionMeta: ({ outcome = "" } = {}) => outcome ? `Decision: ${outcome}` : "Review not finished",
+    quickPickWorkMeta: ({ workType = "" } = {}) => workType ? `Next step: ${workType}` : "",
+    quickPickTrendMeta: ({ trend = "" } = {}) => trend ? `Change: ${trend}` : "",
     quickPickCurrentBadge: () => "Current",
     quickPickSortBadgeImproving: () => "Improving",
     quickPickSortBadgeAttention: () => "Attention",
-    quickPickRoutedBadge: () => "Routed now",
+    quickPickRoutedBadge: () => "Start here",
     quickPickSortDefault: () => "Quick picks in default order.",
-    quickPickSortImproving: () => "Quick picks sorted by best improving decision state.",
-    quickPickSortAttention: () => "Quick picks sorted by records needing the most attention.",
+    quickPickSortImproving: () => "Areas are sorted by where the review is improving most.",
+    quickPickSortAttention: () => "Areas are sorted by what needs the most attention first.",
     quickPickQueueSummary: ({ count = 0, filter = "", sort = "" } = {}) =>
       `Showing ${count} record${count === 1 ? "" : "s"} for ${filter}${sort && sort !== "default" ? ` • sort: ${sort}` : ""}.`,
     quickPickQueueExplainerImproving: ({ closeout = 0, watch = 0 } = {}) =>
-      `Surfacing Work closeout lane (${closeout}) and Work watch lane (${watch}) records that are strengthening first.`,
+      `Showing areas that are closest to finished (${closeout}) and areas worth keeping an eye on (${watch}) first.`,
     quickPickQueueExplainerAttention: ({ blocker = 0, cleanup = 0 } = {}) =>
-      `Surfacing Work blocker pass (${blocker}) and Work review cleanup (${cleanup}) records that need attention first.`,
+      `Showing areas with missing key checks (${blocker}) and follow-up work (${cleanup}) first.`,
     quickPickQueueExplainerCurrent: ({ workType = "" } = {}) =>
-      `Surfacing the current record with its routed ${workType ? `Work ${workType}` : "Work focus"} first.`,
+      `Showing the current area first${workType ? ` with a next step of ${workType}` : ""}.`,
     quickPickQueueExplainerRoutedCap: ({ count = 0 } = {}) =>
-      `Routed now marks the lead ${count} surfaced record${count === 1 ? "" : "s"} for this queue pass.`,
+      `Start here marks the top ${count} area${count === 1 ? "" : "s"} for this review pass.`,
     quickPickQueueExplainerRoutedActive: () =>
-      "Routed lane active: the opened record came from the current routed work lane.",
+      "This suggested view is active: the area you opened came from the current priority group.",
     quickPickRoutedHint: ({ workType = "" } = {}) =>
-      `Routed now: this record is being surfaced as a lead example of ${workType ? `Work ${workType}` : "the current routed work"}.`,
+      `Start here: this area is the best example of what to review next${workType ? ` for ${workType}` : ""}.`,
     quickPickPrioritySummary: ({ label = "", reason = "" } = {}) =>
-      `Highest-priority lane: ${label}${reason ? ` • ${reason}` : ""}.`,
+      `Top priority: ${label}${reason ? ` • ${reason}` : ""}.`,
     quickPickPrioritySummaryChanged: ({ label = "", reason = "" } = {}) =>
-      `Router changed: ${label}${reason ? ` • ${reason}` : ""}.`,
+      `Priority changed: ${label}${reason ? ` • ${reason}` : ""}.`,
     quickPickPrioritySummaryStable: () => "stable",
     quickPickPrioritySummaryRecovering: () => "recovering",
     quickPickPrioritySummaryUnsettled: () => "unsettled",
     quickPickPrioritySummaryDecisive: () => "decisive",
     quickPickPrioritySummaryCloseCall: () => "close call",
-    quickPickPrioritySummaryRunnerUp: ({ label = "" } = {}) => `runner-up: ${label}`,
-    quickPickPrioritySummaryLastRouted: ({ label = "" } = {}) => `last routed: ${label}`,
-    quickPickPrioritySummaryStreak: ({ count = 0 } = {}) => `held ${count} turn${count === 1 ? "" : "s"}`,
-    quickPickPrioritySummaryWorkBlocker: () => "blocker pass",
-    quickPickPrioritySummaryWorkCleanup: () => "review cleanup",
-    quickPickPrioritySummaryWorkWatch: () => "watch lane",
-    quickPickPrioritySummaryWorkCloseout: () => "closeout lane",
-    quickPickPriorityRouteBadgeProvisional: () => "Route provisional",
-    quickPickPriorityRouteBadgeSteady: () => "Route steady",
-    quickPickPriorityRouteBadgeSettled: () => "Route settled",
-    quickPickPriorityRouteBadgeRecovering: () => "Route recovering",
+    quickPickPrioritySummaryRunnerUp: ({ label = "" } = {}) => `next closest: ${label}`,
+    quickPickPrioritySummaryLastRouted: ({ label = "" } = {}) => `last suggested: ${label}`,
+    quickPickPrioritySummaryStreak: ({ count = 0 } = {}) => `held for ${count} turn${count === 1 ? "" : "s"}`,
+    quickPickPrioritySummaryWorkBlocker: () => "missing key checks",
+    quickPickPrioritySummaryWorkCleanup: () => "follow-up needed",
+    quickPickPrioritySummaryWorkWatch: () => "worth watching",
+    quickPickPrioritySummaryWorkCloseout: () => "nearly done",
+    quickPickPriorityRouteBadgeProvisional: () => "Starting now",
+    quickPickPriorityRouteBadgeSteady: () => "Holding steady",
+    quickPickPriorityRouteBadgeSettled: () => "Stable choice",
+    quickPickPriorityRouteBadgeRecovering: () => "Back in focus",
     quickPickPriorityRouteBadgeHint: ({ state = "", label = "", count = 0, runnerUp = "", gap = "" } = {}) =>
-      `Highest-priority route for ${label || "this lane"} is ${state || "active"}${count > 0 ? ` after holding for ${count} turn${count === 1 ? "" : "s"}` : ""}${runnerUp ? `, with ${runnerUp} as the nearest runner-up` : ""}${gap ? ` on ${gap}` : ""}.`,
+      `The top suggestion for ${label || "this view"} is ${state || "active"}${count > 0 ? ` after holding for ${count} turn${count === 1 ? "" : "s"}` : ""}${runnerUp ? `, with ${runnerUp} as the next closest option` : ""}${gap ? ` on ${gap}` : ""}.`,
     quickPickPrioritySummaryHint: ({ label = "", runnerUp = "", reason = "", gap = "", state = "" } = {}) =>
-      `Highest-priority lane ${label}${state ? ` is ${state}` : ""}${runnerUp ? ` and narrowly ahead of ${runnerUp}` : ""}${gap ? ` with ${gap}` : ""}${reason ? ` because it is ${reason}` : ""}.`,
+      `The top priority view ${label}${state ? ` is ${state}` : ""}${runnerUp ? ` and only slightly ahead of ${runnerUp}` : ""}${gap ? ` with ${gap}` : ""}${reason ? ` because it is ${reason}` : ""}.`,
     quickPickQueueCoolingHint: ({ label = "", detail = "" } = {}) =>
-      label ? `Priority is currently being shaped by ${detail || `${label} cooling off after a recent lane action`}.` : "",
+      label ? `Priority is still being shaped by ${detail || `${label} settling down after a recent action`}.` : "",
     quickPickQueueRecoveryHint: ({ label = "" } = {}) =>
-      label ? `${label} has regained priority through recovery reactivation.` : "",
+      label ? `${label} moved back into focus after the latest review activity.` : "",
     quickPickQueueRecoveryTargetHint: ({ title = "" } = {}) =>
-      title ? `Recovery-targeted entry will likely open ${title}.` : "",
+      title ? `The suggested reopen area is ${title}.` : "",
     quickPickQueueMemory: ({ filter = "", sort = "", quality = "", tempered = "", reopenMemory = "", recoveryPreference = "", released = "" } = {}) =>
-      `Queue memory: restored ${sort !== "default" ? `${sort} mode` : "default mode"}${filter && filter !== "all modeled V1 quick picks" ? ` with ${filter}` : ""} for this session.${quality ? ` Restored lane signal: ${quality}${tempered ? ` • ${tempered}` : ""}.` : tempered ? ` Restored lane signal: ${tempered}.` : ""}${reopenMemory ? ` Restored reopen memory: ${reopenMemory}.` : ""}${recoveryPreference ? ` Recovered preference: ${recoveryPreference}.` : ""}${released ? ` ${released}.` : ""}`,
+      `This view remembers ${sort !== "default" ? `${sort} sorting` : "the default sorting"}${filter && filter !== "all review areas" ? ` with ${filter}` : ""} for this session.${quality ? ` Saved view quality: ${quality}${tempered ? ` • ${tempered}` : ""}.` : tempered ? ` Saved view quality: ${tempered}.` : ""}${reopenMemory ? ` Reopen history: ${reopenMemory}.` : ""}${recoveryPreference ? ` Learned preference: ${recoveryPreference}.` : ""}${released ? ` ${released}.` : ""}`,
     quickPickBookmarkMemory: ({ label = "", filter = "", sort = "", quality = "", tempered = "" } = {}) =>
-      `Saved ${label}: ${filter}${sort && sort !== "default" ? ` • sort: ${sort}` : ""}.${quality ? ` Lane quality: ${quality}${tempered ? ` • ${tempered}` : ""}.` : tempered ? ` Lane quality: ${tempered}.` : ""}`,
+      `Saved ${label}: ${filter}${sort && sort !== "default" ? ` • sort: ${sort}` : ""}.${quality ? ` View quality: ${quality}${tempered ? ` • ${tempered}` : ""}.` : tempered ? ` View quality: ${tempered}.` : ""}`,
     quickPickBookmarkPriorityHint: ({ label = "", quality = "", tempered = "", reopenMemory = "", recoveryPreference = "" } = {}) =>
-      `Priority restore hint: ${label}${quality ? ` • ${quality}` : ""}${tempered ? ` • ${tempered}` : ""}${reopenMemory ? ` • ${reopenMemory}` : ""}${recoveryPreference ? ` • ${recoveryPreference}` : ""}.`,
+      `Saved view hint: ${label}${quality ? ` • ${quality}` : ""}${tempered ? ` • ${tempered}` : ""}${reopenMemory ? ` • ${reopenMemory}` : ""}${recoveryPreference ? ` • ${recoveryPreference}` : ""}.`,
     quickPickBookmarkPlanningHint: ({ action = "", tempered = "", reactivated = false, strengthened = false, recoveryTargetTrend = "", recoveryTargetActionability = "" } = {}) =>
       action
-        ? `Suggested next: ${action}${tempered ? ` • ${tempered}` : ""}${reactivated ? " • reactivated by recovery" : ""}${strengthened ? " • strengthened by recovery-target clarity" : ""}${recoveryTargetTrend ? ` • ${recoveryTargetTrend}` : ""}${recoveryTargetActionability ? ` • ${recoveryTargetActionability}` : ""}.`
+        ? `Suggested next: ${action}${tempered ? ` • ${tempered}` : ""}${reactivated ? " • moved back into focus" : ""}${strengthened ? " • clearer next target" : ""}${recoveryTargetTrend ? ` • ${recoveryTargetTrend}` : ""}${recoveryTargetActionability ? ` • ${recoveryTargetActionability}` : ""}.`
         : "",
     quickPickBookmarkPlanningActionButton: ({ action = "" } = {}) => {
-      if (action === "refresh this lane") return "Refresh lane";
-      if (action === "close out this lane") return "Close out lane";
-      if (action === "deprioritize lane") return "Deprioritize lane";
-      if (action === "keep this lane active") return "Keep lane active";
-      return "Apply lane plan";
+      if (action === "refresh this lane") return "Refresh this view";
+      if (action === "close out this lane") return "Mark this view done";
+      if (action === "deprioritize lane") return "Lower this priority";
+      if (action === "keep this lane active") return "Keep this active";
+      return "Take suggested step";
     },
     quickPickBookmarkPlanningResult: ({ action = "", reason = "" } = {}) => {
       let label = "";
-      if (action === "refresh this lane") label = "lane refreshed";
-      else if (action === "close out this lane") label = "lane closed out";
-      else if (action === "deprioritize lane") label = "lane deprioritized";
-      else if (action === "keep this lane active") label = "lane kept active";
+      if (action === "refresh this lane") label = "view refreshed";
+      else if (action === "close out this lane") label = "view marked done";
+      else if (action === "deprioritize lane") label = "priority lowered";
+      else if (action === "keep this lane active") label = "view kept active";
       if (!label) return "";
       return `${label}${reason ? ` • ${reason}` : ""}`;
     },
     quickPickBookmarkPlanningHoldReason: ({ action = "", cooldown = "", stage = "" } = {}) => {
       const suffix = [cooldown, stage].filter(Boolean).join(" ");
       const suffixText = suffix ? ` ${suffix}` : "";
-      if (action === "refresh this lane") return `Holding steady after a recent lane refresh.${suffixText}`;
-      if (action === "close out this lane") return `Holding steady after a recent lane closeout.${suffixText}`;
-      if (action === "deprioritize lane") return `Holding steady after a recent lane deprioritization.${suffixText}`;
+      if (action === "refresh this lane") return `Holding steady after a recent refresh.${suffixText}`;
+      if (action === "close out this lane") return `Holding steady after marking this view done.${suffixText}`;
+      if (action === "deprioritize lane") return `Holding steady after lowering this priority.${suffixText}`;
       return "";
     },
     quickPickBookmarkPlanningReleased: () => "recent action window ended",
@@ -502,20 +502,20 @@ const toolbenchReviewPassMessages = {
       `productive reopen ${count}x`,
     quickPickBookmarkReopenMemoryPressure: ({ count = 0 } = {}) =>
       `pressure reopen ${count}x`,
-    quickPickBookmarkPriorityOpened: () => "priority reopened",
-    quickPickBookmarkUpdateHint: ({ label = "" } = {}) => `Current queue lens differs from ${label}.`,
+    quickPickBookmarkPriorityOpened: () => "reopened from priority",
+    quickPickBookmarkUpdateHint: ({ label = "" } = {}) => `Your current view is different from ${label}.`,
     quickPickBookmarkListLabel: ({ label = "", recent = false, count = null, delta = "", urgency = "", nextUp = "", state = "", priority = "", recency = "", momentum = "", recovering = false, resolved = false, degraded = false, opened = false } = {}) =>
       `${label}${typeof count === "number" ? ` • ${count} record${count === 1 ? "" : "s"}` : ""}${delta ? ` • ${delta}` : ""}${urgency ? ` • ${urgency}` : ""}${nextUp ? ` • next ${nextUp}` : ""}${state ? ` • ${state}` : ""}${priority ? ` • ${priority}` : ""}${recency ? ` • ${recency}` : ""}${momentum ? ` • ${momentum}` : ""}${recovering ? ` • ${toolbenchReviewPassMessages.workspace.quickPickPrioritySummaryRecovering()}` : ""}${resolved ? ` • ${toolbenchReviewPassMessages.workspace.quickPickBookmarkResolved()}` : ""}${degraded ? ` • ${toolbenchReviewPassMessages.workspace.quickPickBookmarkDegraded()}` : ""}${recent ? " • recent" : ""}${opened ? " • opened" : ""}`,
-    quickPickBookmarkWorking: () => "working lane",
-    quickPickBookmarkImproving: () => "improving lane",
-    quickPickBookmarkAttention: () => "attention lane",
+    quickPickBookmarkWorking: () => "current view",
+    quickPickBookmarkImproving: () => "improving view",
+    quickPickBookmarkAttention: () => "attention view",
     quickPickBookmarkUrgencyWeak: () => "mostly weak",
     quickPickBookmarkUrgencyMixed: () => "mixed",
     quickPickBookmarkUrgencyNearClear: () => "nearly cleared",
     quickPickBookmarkResolved: () => "resolved since save",
     quickPickBookmarkDegraded: () => "degraded since save",
     quickPickBookmarkPriorityNow: () => "review now",
-    quickPickBookmarkPriorityWatch: () => "watch",
+    quickPickBookmarkPriorityWatch: () => "watch soon",
     quickPickBookmarkPriorityLater: () => "later",
     quickPickBookmarkSavedJustNow: () => "saved just now",
     quickPickBookmarkSavedMinutesAgo: ({ count = 0 } = {}) => `saved ${count}m ago`,
@@ -523,19 +523,19 @@ const toolbenchReviewPassMessages = {
     quickPickBookmarkSavedDaysAgo: ({ count = 0 } = {}) => `saved ${count}d ago`,
     quickPickBookmarkStateCurrent: () => "current",
     quickPickBookmarkStateStale: () => "stale",
-    rosterFilterAll: () => "All modeled V1 quick picks shown.",
-    rosterFilterStrong: () => "Showing strong V1 quick picks.",
-    rosterFilterPartial: () => "Showing partial V1 quick picks.",
-    rosterFilterWeak: () => "Showing weak V1 quick picks.",
+    rosterFilterAll: () => "Showing all saved review areas.",
+    rosterFilterStrong: () => "Showing the strongest review areas.",
+    rosterFilterPartial: () => "Showing review areas that still need some work.",
+    rosterFilterWeak: () => "Showing review areas that need the most work.",
     rosterFilterCurrent: ({ title = "" } = {}) =>
-      title ? `Showing the current V1 record only: ${title}.` : "No current V1 record is active yet.",
+      title ? `Showing only the current area: ${title}.` : "No current area is active yet.",
     rosterFilterScoped: ({ scope = "", label = "" } = {}) =>
       label ? `${String(scope || "").replace(/\.$/, "")} Filtered to ${label}.` : scope,
     layerFilterApplied: ({ label = "", title = "" } = {}) =>
       title
-        ? `Filtered quick picks to records that still need review for ${label}. Loaded ${title}.`
-        : `Filtered quick picks to records that still need review for ${label}.`,
-    layerFilterCleared: () => "Cleared layer filter. Showing the current V1 roster selection again.",
+        ? `Filtered the list to areas that still need work for ${label}. Opened ${title}.`
+        : `Filtered the list to areas that still need work for ${label}.`,
+    layerFilterCleared: () => "Cleared the detail filter. Showing the current area queue again.",
     savedReportTargetMeta: ({ asking = "", targetMonthly = "" } = {}) => `${asking} asking | ${targetMonthly} target monthly`,
     savedReportGapMeta: ({ asking = "", gap = "" } = {}) => `${asking} asking | ${gap} gap`,
     savedReportDetail: ({ trust = "", noteStatus = "", savedAt = "" } = {}) => `${trust} | ${noteStatus} | ${savedAt}`,
@@ -972,22 +972,22 @@ const toolbenchReviewPassMessages = {
     warningNotBelowBenchmarkConflict: () => "Not-below-benchmark status conflicts with an asking psf that is currently below the benchmark range."
   },
   breakdown: {
-    title: () => "Needs review by layer",
-    empty: () => "No weak or partial layers tracked yet."
+    title: () => "What still needs work",
+    empty: () => "No unfinished review steps are being tracked yet."
   },
   v1Context: {
-    noLinkedTitle: () => "No linked V1 record yet",
-    noLinkedCopy: () => "Search a linked sample area to score structural completeness for this context bundle.",
-    noLinkedAction: () => "Link a V1 context record first so Workspace can score it.",
-    noLinkedNextAction: () => "Next: link a V1 context record first.",
-    pendingSummary: ({ title = "" } = {}) => `${title}: V1 context sample not linked yet`,
+    noLinkedTitle: () => "No linked review record yet",
+    noLinkedCopy: () => "Search a linked sample area to score whether this review record is complete enough to use.",
+    noLinkedAction: () => "Link a review record first so Workspace can score it.",
+    noLinkedNextAction: () => "Next: link a review record first.",
+    pendingSummary: ({ title = "" } = {}) => `${title}: review sample not linked yet`,
     noInternalSample: () => "No internal sample",
     noInternalSampleCopy: () => "This area does not yet have a linked V1 context sample record.",
     pendingTitle: () => "Pending",
     valueGapPending: () => "Below-benchmark and value-gap logic will appear here once this area is modeled.",
     surroundingPending: () => "Nearby operator mix and trade pattern will appear here once loaded.",
     fitPending: () => "Use-case fit scores are not available for this area yet.",
-    decisionNotePending: () => "No V1 decision note yet",
+    decisionNotePending: () => "No decision note yet",
     decisionNotePendingCopy: () => "Use Serangoon HDB retail, Bedok HDB retail, or Tiong Bahru shophouse to preview the internal decision layer.",
     watchoutsMissing: () => "No V1 watchouts loaded for this area yet.",
     operatorSummaryPendingTitle: () => "No operator summary",
@@ -998,7 +998,7 @@ const toolbenchReviewPassMessages = {
     fitMissing: () => "No strong-fit use case is linked yet.",
     cautionPendingTitle: () => "No caution read",
     cautionPending: () => "Weak-fit and approval watchouts are not loaded yet.",
-    linkedStatusMissing: () => "No linked V1 record yet for this area.",
+    linkedStatusMissing: () => "No linked review record yet for this area.",
     watchoutsLinkedMissing: () => "No watchouts linked for this area yet.",
     notableOperatorsMissingTitle: () => "No notable operators",
     notableOperatorsMissing: () => "No notable nearby operators were attached to this sample.",
@@ -1014,9 +1014,9 @@ const toolbenchReviewPassMessages = {
     tradePatternMissing: () => "Surrounding-business context has not been summarized yet.",
     fitRationaleMissing: () => "Use-case fit logic has not been summarized for this area yet.",
     negotiationAngleMissing: () => "Negotiation angle will appear here once the sample is modeled.",
-    editorUnavailable: () => "No linked V1 record yet for this area.",
-    editorReadOnlyLocked: () => "V1 writes are disabled in file preview. Open http://127.0.0.1:4173/members/toolbench/ to edit and save.",
-    editorReady: () => "Internal V1 editor is ready. Saving updates the Workspace-only context layer."
+    editorUnavailable: () => "No linked review record yet for this area.",
+    editorReadOnlyLocked: () => "Editing is disabled in file preview. Open http://127.0.0.1:4173/members/toolbench/ to edit and save.",
+    editorReady: () => "The internal editor is ready. Saving updates the Workspace-only review layer."
   }
 };
 let toolbenchSession = null;
@@ -5671,11 +5671,11 @@ function v1RosterLayerBreakdown(summaries = []) {
 
 function quickPickFilterDescription(filter = toolbenchQuickPickFilter, layerFilter = toolbenchQuickPickLayerFilter) {
   const stateLabels = {
-    all: "all modeled V1 quick picks",
-    strong: "strong V1 quick picks",
-    partial: "partial V1 quick picks",
-    weak: "weak V1 quick picks",
-    current: toolbenchRecord ? `the current V1 record (${toolbenchRecord.title})` : "the current V1 record"
+    all: "all review areas",
+    strong: "the strongest review areas",
+    partial: "review areas that still need some work",
+    weak: "review areas that need the most work",
+    current: toolbenchRecord ? `the current area (${toolbenchRecord.title})` : "the current area"
   };
   const base = stateLabels[filter] || stateLabels.all;
   if (!layerFilter) return base;
@@ -5897,22 +5897,22 @@ function routedReviewOutcomeForRecord(record = null) {
 }
 
 function summarizeRoutedReviewOutcome(status = "") {
-  if (status === "cleared") return "recent routed clears";
-  if (status === "tightened") return "recent routed tightening";
-  if (status === "next-active") return "next routed warning active";
-  if (status === "tempered-cleared") return "recent tempered routed clears";
-  if (status === "tempered-tightened") return "recent tempered routed tightening";
-  if (status === "tempered-next-active") return "tempered routed warning active";
+  if (status === "cleared") return "recently checked";
+  if (status === "tightened") return "recently improved";
+  if (status === "next-active") return "needs another check";
+  if (status === "tempered-cleared") return "recently checked with light caution";
+  if (status === "tempered-tightened") return "recently improved with light caution";
+  if (status === "tempered-next-active") return "needs another check with light caution";
   return "";
 }
 
 function quickPickRecordMomentumMeta(status = "") {
-  if (status === "cleared") return "Recent clear";
-  if (status === "tightened") return "Recent tighten";
-  if (status === "next-active") return "Next warning active";
-  if (status === "tempered-cleared") return "Tempered clear";
-  if (status === "tempered-tightened") return "Tempered tighten";
-  if (status === "tempered-next-active") return "Tempered warning active";
+  if (status === "cleared") return "Recently checked";
+  if (status === "tightened") return "Recently improved";
+  if (status === "next-active") return "Needs another check";
+  if (status === "tempered-cleared") return "Checked with caution";
+  if (status === "tempered-tightened") return "Improved with caution";
+  if (status === "tempered-next-active") return "Needs caution";
   return "";
 }
 
@@ -5942,9 +5942,9 @@ function laneMomentumHasTempered(momentum = null) {
 
 function quickPickBookmarkTemperedSignal(momentum = null) {
   if (!laneMomentumHasTempered(momentum)) return "";
-  if (Number(momentum?.temperedNextActive || 0) > 0) return "tempered routed pressure";
+  if (Number(momentum?.temperedNextActive || 0) > 0) return "extra caution";
   if (Number(momentum?.temperedCleared || 0) > 0 || Number(momentum?.temperedTightened || 0) > 0) {
-    return "tempered routed progress";
+    return "careful progress";
   }
   return "";
 }
@@ -5952,11 +5952,11 @@ function quickPickBookmarkTemperedSignal(momentum = null) {
 function quickPickBookmarkPlanningTemperedReason(action = "", momentum = null) {
   const tempered = quickPickBookmarkTemperedSignal(momentum);
   if (!tempered) return "";
-  if (action === "refresh this lane" && tempered === "tempered routed pressure") {
-    return "triggered by tempered routed pressure";
+  if (action === "refresh this lane" && tempered === "extra caution") {
+    return "triggered by extra caution";
   }
-  if (action === "close out this lane" && tempered === "tempered routed progress") {
-    return "triggered by tempered routed progress";
+  if (action === "close out this lane" && tempered === "careful progress") {
+    return "triggered by careful progress";
   }
   return `guided by ${tempered}`;
 }
@@ -7684,7 +7684,7 @@ function renderV1Roster() {
   toolbenchEl.v1RosterOpenPriorityBookmark.textContent =
     topRankedBookmark
       ? `Open ${quickPickBookmarkLabel(topRankedBookmark.key)}${topPlanningRecovering ? ` • ${toolbenchReviewPassMessages.workspace.quickPickPrioritySummaryRecovering()}` : ""}`
-      : "Open highest-priority lane";
+      : "Open top priority";
   if (topRankedBookmark && (topRestorePriorityQuality || topRestorePriorityTempered || topRestorePriorityReopenMemory || topRestorePriorityPlanningHint || topRecoveryChoicePreference)) {
     const openPriorityHint = `Open ${quickPickBookmarkLabel(topRankedBookmark.key)}${topRestorePriorityQuality ? ` • ${topRestorePriorityQuality}` : ""}${topRestorePriorityTempered ? ` • ${topRestorePriorityTempered}` : ""}${topPlanningRecovering ? ` • ${toolbenchReviewPassMessages.workspace.quickPickPrioritySummaryRecovering()}` : ""}${topRestorePriorityReopenMemory ? ` • ${topRestorePriorityReopenMemory}` : ""}${topRestorePriorityPlanningHint ? ` • ${topRestorePriorityPlanningHint}` : ""}${topRecoveryTargetSelectionReason ? ` • ${topRecoveryTargetSelectionReason}` : ""}${topRecoveryChoicePreference ? ` • ${topRecoveryChoicePreference}` : ""}.`;
     toolbenchEl.v1RosterOpenPriorityBookmark.title = openPriorityHint;
@@ -7711,7 +7711,7 @@ function renderV1Roster() {
     action: topRankedBookmark?.planningAction || ""
   }) + (topPlanningRecovering ? ` • ${toolbenchReviewPassMessages.workspace.quickPickPrioritySummaryRecovering()}` : "");
   if (topRankedBookmark?.planningAction) {
-    const planHint = `Apply lane plan for ${quickPickBookmarkLabel(topRankedBookmark.key)} • ${toolbenchReviewPassMessages.workspace.quickPickBookmarkPlanningHint({
+    const planHint = `Take the suggested step for ${quickPickBookmarkLabel(topRankedBookmark.key)} • ${toolbenchReviewPassMessages.workspace.quickPickBookmarkPlanningHint({
       action: topRankedBookmark.planningAction,
       tempered: topRestorePriorityTempered,
       reactivated: topPlanningReactivated,
@@ -7801,7 +7801,7 @@ function renderV1Roster() {
   toolbenchEl.v1RosterRefreshBookmark.dataset.active = !bookmarkMatchesCurrent && hasQueueBookmark && hasQueueMemory ? "true" : "false";
   toolbenchEl.v1RosterRefreshBookmark.textContent = hasQueueBookmark
     ? `Refresh ${quickPickBookmarkLabel(lastBookmarkKey)}`
-    : "Refresh stale lane";
+      : "Refresh saved view";
   const refreshRecoveryTarget =
     !bookmarkMatchesCurrent && hasQueueMemory && hasQueueBookmark
       ? refreshTargetPreviewForLens(lastBookmarkKey, currentQuickPickLensState())
@@ -7856,10 +7856,10 @@ function renderV1Roster() {
   toolbenchEl.v1RosterFollowRecoveryTarget.dataset.recovering = topPlanningRecovering ? "true" : "false";
   toolbenchEl.v1RosterFollowRecoveryTarget.textContent =
     activeFollowRecoveryTarget?.record?.title
-      ? `Follow ${activeFollowRecoveryTarget.record.title}`
-      : "Follow recovery target";
+      ? `Continue ${activeFollowRecoveryTarget.record.title}`
+      : "Continue suggested area";
   if (activeFollowRecoveryTarget?.record?.title) {
-    const followRecoveryHint = `Follow recovery target for ${activeFollowRecoveryTargetLabel} • ${activeFollowRecoveryTarget.record.title}${activeFollowRecoveryTargetActionability ? ` • ${activeFollowRecoveryTargetActionability}` : ""}${activeFollowRecoveryTargetReason ? ` • ${activeFollowRecoveryTargetReason}` : ""}${activeFollowRecoveryTargetPreference ? ` • ${activeFollowRecoveryTargetPreference}` : ""}.`;
+    const followRecoveryHint = `Continue the suggested area for ${activeFollowRecoveryTargetLabel} • ${activeFollowRecoveryTarget.record.title}${activeFollowRecoveryTargetActionability ? ` • ${activeFollowRecoveryTargetActionability}` : ""}${activeFollowRecoveryTargetReason ? ` • ${activeFollowRecoveryTargetReason}` : ""}${activeFollowRecoveryTargetPreference ? ` • ${activeFollowRecoveryTargetPreference}` : ""}.`;
     toolbenchEl.v1RosterFollowRecoveryTarget.title = followRecoveryHint;
     toolbenchEl.v1RosterFollowRecoveryTarget.setAttribute("aria-label", followRecoveryHint);
   } else {
@@ -7875,10 +7875,10 @@ function renderV1Roster() {
     currentStrongestRecord?.id && toolbenchRecord?.id === currentStrongestRecord.id ? "true" : "false";
   toolbenchEl.v1RosterFocusStrongest.dataset.cooling = focusCoolingHint ? "true" : "false";
   const strongestRecoveryTarget = recoveryReactivatedFocusTarget("improving");
-  toolbenchEl.v1RosterFocusStrongest.textContent = `Focus strongest${
+  toolbenchEl.v1RosterFocusStrongest.textContent = `Show best-looking${
     topPlanningRecovering ? ` • ${toolbenchReviewPassMessages.workspace.quickPickPrioritySummaryRecovering()}` : ""
   }`;
-  const strongestHintBase = `Focus the best-improving V1 record.${currentStrongestRecord?.title ? ` Current strongest: ${currentStrongestRecord.title}.` : ""}${strongestRecoveryTarget ? ` Current recovery focus: ${recoveryFocusedTargetHint(strongestRecoveryTarget)}.` : ""}`;
+  const strongestHintBase = `Show the area that currently looks most improved.${currentStrongestRecord?.title ? ` Best-looking now: ${currentStrongestRecord.title}.` : ""}${strongestRecoveryTarget ? ` Suggested follow-up: ${recoveryFocusedTargetHint(strongestRecoveryTarget)}.` : ""}`;
   if (focusCoolingHint || strongestRecoveryTarget) {
     const strongestHint = `${strongestHintBase}${focusCoolingHint ? ` ${focusCoolingHint}` : ""}`;
     toolbenchEl.v1RosterFocusStrongest.title = strongestHint;
@@ -7893,10 +7893,10 @@ function renderV1Roster() {
     currentWeakestRecord?.id && toolbenchRecord?.id === currentWeakestRecord.id ? "true" : "false";
   toolbenchEl.v1RosterFocusWeakest.dataset.cooling = focusCoolingHint ? "true" : "false";
   const weakestRecoveryTarget = recoveryReactivatedFocusTarget("attention");
-  toolbenchEl.v1RosterFocusWeakest.textContent = `Focus weakest${
+  toolbenchEl.v1RosterFocusWeakest.textContent = `Show most urgent${
     topPlanningRecovering ? ` • ${toolbenchReviewPassMessages.workspace.quickPickPrioritySummaryRecovering()}` : ""
   }`;
-  const weakestHintBase = `Focus the highest-attention V1 record.${currentWeakestRecord?.title ? ` Current weakest: ${currentWeakestRecord.title}.` : ""}${weakestRecoveryTarget ? ` Current recovery focus: ${recoveryFocusedTargetHint(weakestRecoveryTarget)}.` : ""}`;
+  const weakestHintBase = `Show the area that needs attention most.${currentWeakestRecord?.title ? ` Most urgent now: ${currentWeakestRecord.title}.` : ""}${weakestRecoveryTarget ? ` Suggested follow-up: ${recoveryFocusedTargetHint(weakestRecoveryTarget)}.` : ""}`;
   if (focusCoolingHint || weakestRecoveryTarget) {
     const weakestHint = `${weakestHintBase}${focusCoolingHint ? ` ${focusCoolingHint}` : ""}`;
     toolbenchEl.v1RosterFocusWeakest.title = weakestHint;
@@ -8173,7 +8173,7 @@ function renderV1Roster() {
     if (queueActivityEntries.length) {
       const label = document.createElement("span");
       label.className = "workspace-v1-roster-sort-memory-activity-label";
-      label.textContent = "Recent lane actions:";
+      label.textContent = "Recent shortcuts:";
       toolbenchEl.v1RosterSortMemoryActivity.append(label);
       renderQuickPickLaneActivityButtons(toolbenchEl.v1RosterSortMemoryActivity, queueActivityEntries, { clear: false });
     }
@@ -13058,13 +13058,13 @@ function renderQuickPicks() {
         ? ` ${routedLane.planningHoldReason}`
         : "";
       const routedRecoveryTargetHint = showRecoveryTarget && recoveryTargetActionability
-        ? ` Recovery target state: ${recoveryTargetActionability}.`
+        ? ` Best next area: ${recoveryTargetActionability}.`
         : "";
       const routedRecoveryAlternativeHint =
         recoveryAlternativeState === "holding"
-          ? " Holding alternative: this record is the next strongest recovery target behind the lead target."
+          ? " Backup option: this area is the next strongest follow-up behind the main suggestion."
           : recoveryAlternativeState === "fading"
-            ? " Fading alternative: this record is still in the routed lane, but it ranks behind the lead recovery target."
+            ? " Weaker backup option: this area is still worth a look, but it is behind the main suggestion."
             : "";
       const routedResultHint =
         toolbenchQuickPickRoutedResult.active && toolbenchQuickPickRoutedResult.recordId === record.id
@@ -13137,18 +13137,18 @@ function renderQuickPicks() {
         recoveryTargetMeta.className = "quick-pick-recovery-target-meta";
         recoveryTargetMeta.textContent =
           recoveryTargetActionability === "holding recovery target"
-            ? "Recovery target • holding"
+            ? "Best next area • steady"
             : recoveryTargetActionability
-              ? "Recovery target • fading"
-              : "Recovery target";
+              ? "Best next area • fading"
+              : "Best next area";
         button.append(recoveryTargetMeta);
       } else if (showRecoveryAlternative) {
         const recoveryAlternativeMeta = document.createElement("small");
         recoveryAlternativeMeta.className = "quick-pick-recovery-alternative-meta";
         recoveryAlternativeMeta.textContent =
           recoveryAlternativeState === "holding"
-            ? "Holding alternative"
-            : "Fading alternative";
+            ? "Backup option"
+            : "Weaker backup";
         button.append(recoveryAlternativeMeta);
       }
     }

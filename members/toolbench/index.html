@@ -9,7 +9,7 @@
       content="RentIntel Workspace for rent psf trend charts, saved reports, watchlist actions, and negotiation note export."
     >
     <link rel="icon" href="../../pulse-shared-transparent.png">
-    <link rel="stylesheet" href="../../styles.css?v=20260603-filehandoff">
+    <link rel="stylesheet" href="../../styles.css?v=20260605-queuecleanup">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
     <script src="../../api/context/mock-context-api.js?v=20260524-contextapi" defer></script>
@@ -65,32 +65,32 @@
             <button type="submit">Search</button>
           </div>
           <div class="quick-picks" id="memberToolbenchPicks" aria-label="Workspace benchmark quick picks"></div>
-          <div class="workspace-v1-roster" id="workspaceV1Roster" aria-label="V1 context roster health">
+          <div class="workspace-v1-roster" id="workspaceV1Roster" aria-label="Area review queue">
             <div class="workspace-v1-roster-copy">
-              <strong id="workspaceV1RosterTitle">V1 roster health</strong>
-              <p id="workspaceV1RosterCopy">The internal context roster will summarize how many modeled areas are strong, partial, or weak.</p>
-              <p class="workspace-v1-roster-origin" id="workspaceV1RosterOrigin">Roster review scope is currently local only in this preview/workspace.</p>
-              <p class="workspace-v1-pass-audit" id="workspaceV1RosterAudit">No review-pass restore or clear action recorded yet.</p>
-              <p class="workspace-v1-pass-sync" id="workspaceV1RosterSync">Backend sync is not active in this workspace mode.</p>
-              <p class="workspace-v1-pass-notice" id="workspaceV1RosterBackendNotice">Backend preview notice will appear here when the saved scope closes automatically.</p>
-              <button class="workspace-v1-backend-badge" id="workspaceV1RosterBackend" type="button" hidden>No saved backend review scope yet.</button>
+              <strong id="workspaceV1RosterTitle">Area review queue</strong>
+              <p id="workspaceV1RosterCopy">This queue shows which areas look strong, which still need work, and where to continue next.</p>
+              <p class="workspace-v1-roster-origin" id="workspaceV1RosterOrigin">This review is currently saved only in this browser.</p>
+              <p class="workspace-v1-pass-audit" id="workspaceV1RosterAudit">No recent review restore or clear action yet.</p>
+              <p class="workspace-v1-pass-sync" id="workspaceV1RosterSync">Cross-session saving is not active in this workspace mode.</p>
+              <p class="workspace-v1-pass-notice" id="workspaceV1RosterBackendNotice">A saved-review notice will appear here when your saved view changes.</p>
+              <button class="workspace-v1-backend-badge" id="workspaceV1RosterBackend" type="button" hidden>No saved review progress yet.</button>
               <div class="workspace-v1-backend-preview" id="workspaceV1RosterBackendPreview" hidden>
-                <strong>Saved backend review scope</strong>
-                <p id="workspaceV1RosterBackendScope">Scope: all</p>
-                <p id="workspaceV1RosterCurrentScope">Current: all</p>
-                <p id="workspaceV1RosterBackendCompare">Comparison: matches current scope.</p>
-                <p id="workspaceV1RosterBackendItem">Active item: none</p>
-                <p id="workspaceV1RosterBackendItemStatus">Item status: unknown</p>
-                <p class="workspace-v1-backend-focus-hint" id="workspaceV1RosterBackendFocusHint" hidden>Focus restored to the last backend-preview action.</p>
-                <p id="workspaceV1RosterBackendResolved">Resolved: 0</p>
-                <p id="workspaceV1RosterBackendUpdated">Synced: pending</p>
+                <strong>Saved review progress</strong>
+                <p id="workspaceV1RosterBackendScope">Saved view: all areas</p>
+                <p id="workspaceV1RosterCurrentScope">Current view: all areas</p>
+                <p id="workspaceV1RosterBackendCompare">Match: same as your current view.</p>
+                <p id="workspaceV1RosterBackendItem">Current saved area: none</p>
+                <p id="workspaceV1RosterBackendItemStatus">Saved area status: unknown</p>
+                <p class="workspace-v1-backend-focus-hint" id="workspaceV1RosterBackendFocusHint" hidden>Focus restored to the last saved-review action.</p>
+                <p id="workspaceV1RosterBackendResolved">Finished: 0</p>
+                <p id="workspaceV1RosterBackendUpdated">Last save: pending</p>
                 <div class="workspace-v1-roster-actions">
-                  <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1RosterRestoreJump" type="button" hidden>Restore and jump</button>
+                  <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1RosterRestoreJump" type="button" hidden>Resume saved review</button>
                 </div>
               </div>
               <div class="workspace-v1-roster-actions">
-                <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1RosterRestore" type="button" hidden>Restore backend scope</button>
-                <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1RosterClear" type="button" hidden>Clear local pass</button>
+                <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1RosterRestore" type="button" hidden>Restore saved review</button>
+                <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1RosterClear" type="button" hidden>Clear this browser review</button>
               </div>
             </div>
             <dl class="workspace-v1-roster-metrics">
@@ -115,49 +115,49 @@
                 <dd id="workspaceV1RosterCurrent">-</dd>
               </div>
             </dl>
-            <p class="workspace-v1-roster-current-trend" id="workspaceV1RosterCurrentTrend" hidden>Current record trajectory will appear here after the decision state changes.</p>
+            <p class="workspace-v1-roster-current-trend" id="workspaceV1RosterCurrentTrend" hidden>Recent movement for the current area will appear here.</p>
             <div class="workspace-v1-roster-sort" id="workspaceV1RosterSort" aria-label="Quick-pick sort mode">
               <button type="button" data-sort="default">Default</button>
               <button type="button" data-sort="improving">Best improving</button>
               <button type="button" data-sort="attention">Needs attention</button>
-              <button type="button" id="workspaceV1RosterFocusStrongest">Focus strongest</button>
-              <button type="button" id="workspaceV1RosterFocusWeakest">Focus weakest</button>
-              <button type="button" id="workspaceV1RosterReturnCurrent">Return to current</button>
-              <button type="button" id="workspaceV1RosterBookmarkLens">Bookmark lane</button>
-              <button type="button" id="workspaceV1RosterOpenBookmark">Open bookmark</button>
-              <button type="button" id="workspaceV1RosterOpenPriorityBookmark">Open highest-priority lane</button>
-              <button type="button" id="workspaceV1RosterApplyPlanningAction">Apply lane plan</button>
-              <button type="button" id="workspaceV1RosterFollowRecoveryTarget">Follow recovery target</button>
-              <span class="workspace-v1-roster-route-badge" id="workspaceV1RosterRouteBadge" hidden>Route state will appear here.</span>
-              <button type="button" id="workspaceV1RosterRefreshBookmark">Refresh stale lane</button>
-              <button type="button" id="workspaceV1RosterResetLens">Reset queue lens</button>
+              <button type="button" id="workspaceV1RosterFocusStrongest">Show best-looking</button>
+              <button type="button" id="workspaceV1RosterFocusWeakest">Show most urgent</button>
+              <button type="button" id="workspaceV1RosterReturnCurrent">Back to current area</button>
+              <button type="button" id="workspaceV1RosterBookmarkLens">Save this view</button>
+              <button type="button" id="workspaceV1RosterOpenBookmark">Open saved view</button>
+              <button type="button" id="workspaceV1RosterOpenPriorityBookmark">Open top priority</button>
+              <button type="button" id="workspaceV1RosterApplyPlanningAction">Take suggested step</button>
+              <button type="button" id="workspaceV1RosterFollowRecoveryTarget">Continue suggested area</button>
+              <span class="workspace-v1-roster-route-badge" id="workspaceV1RosterRouteBadge" hidden>Priority state will appear here.</span>
+              <button type="button" id="workspaceV1RosterRefreshBookmark">Refresh saved view</button>
+              <button type="button" id="workspaceV1RosterResetLens">Reset view</button>
             </div>
             <p class="workspace-v1-roster-sort-summary" id="workspaceV1RosterSortSummary">Queue summary will appear here.</p>
-            <p class="workspace-v1-roster-sort-explainer" id="workspaceV1RosterSortExplainer" hidden>Queue work explanation will appear here.</p>
-            <p class="workspace-v1-roster-sort-summary" id="workspaceV1RosterPrioritySummary" hidden>Highest-priority lane will appear here.</p>
+            <p class="workspace-v1-roster-sort-explainer" id="workspaceV1RosterSortExplainer" hidden>Review explanation will appear here.</p>
+            <p class="workspace-v1-roster-sort-summary" id="workspaceV1RosterPrioritySummary" hidden>Top priority will appear here.</p>
             <div class="workspace-v1-roster-route-link-wrap" id="workspaceV1RosterRouteLinkWrap" hidden>
-              <p class="workspace-v1-roster-route-link" id="workspaceV1RosterRouteLinkHint" hidden>Highest-priority summary and route state are linked.</p>
-              <button type="button" class="workspace-v1-roster-route-link-reset" id="workspaceV1RosterRouteLinkReset" hidden>Reset route tips</button>
+              <p class="workspace-v1-roster-route-link" id="workspaceV1RosterRouteLinkHint" hidden>Top-priority summary and priority state are linked.</p>
+              <button type="button" class="workspace-v1-roster-route-link-reset" id="workspaceV1RosterRouteLinkReset" hidden>Reset priority tips</button>
             </div>
             <div class="workspace-v1-roster-sort-memory" id="workspaceV1RosterSortMemoryWrap" hidden>
               <div class="workspace-v1-roster-sort-memory-copy">
-                <p id="workspaceV1RosterSortMemory">Queue memory will appear here when a session queue lens is active.</p>
-                <div class="workspace-v1-roster-sort-memory-activity" id="workspaceV1RosterSortMemoryActivity" hidden>Recent lane actions will appear here.</div>
+                <p id="workspaceV1RosterSortMemory">This saved view will appear here when one is active in your session.</p>
+                <div class="workspace-v1-roster-sort-memory-activity" id="workspaceV1RosterSortMemoryActivity" hidden>Recent shortcut activity will appear here.</div>
               </div>
               <button type="button" id="workspaceV1RosterDismissMemory">Hide</button>
             </div>
             <div class="workspace-v1-roster-recent-actions" id="workspaceV1RosterRecentActions" hidden>
-              <span class="workspace-v1-roster-recent-actions-label">Recent lane replay:</span>
+              <span class="workspace-v1-roster-recent-actions-label">Recent shortcuts:</span>
               <div class="workspace-v1-roster-recent-actions-list" id="workspaceV1RosterRecentActionsList"></div>
               <button type="button" class="workspace-v1-roster-recent-actions-undo" id="workspaceV1RosterRecentActionsUndo" hidden>Undo</button>
               <button type="button" class="workspace-v1-roster-recent-actions-clear" id="workspaceV1RosterRecentActionsClear">Clear</button>
             </div>
-            <p class="workspace-v1-roster-sort-bookmark" id="workspaceV1RosterSortBookmark" hidden>Saved lane will appear here when a queue bookmark is active.</p>
+            <p class="workspace-v1-roster-sort-bookmark" id="workspaceV1RosterSortBookmark" hidden>Saved view details will appear here when one is active.</p>
             <div class="workspace-v1-roster-sort-bookmark-list" id="workspaceV1RosterSortBookmarkList" hidden></div>
             <div class="workspace-v1-roster-breakdown">
-              <strong id="workspaceV1RosterBreakdownTitle">Needs review by layer</strong>
+              <strong id="workspaceV1RosterBreakdownTitle">What still needs work</strong>
               <div class="workspace-v1-roster-breakdown-list" id="workspaceV1RosterBreakdownList" aria-live="polite">
-                <span>No weak or partial layers tracked yet.</span>
+                <span>No unfinished review steps are being tracked yet.</span>
               </div>
             </div>
           </div>
@@ -199,7 +199,7 @@
               <p id="toolbenchRenderDiagnosticsVerdictCopy">No comparison verdict recorded yet.</p>
             </div>
             <p class="workspace-render-diagnostics-demo" id="toolbenchRecoveryTargetDemoNote">
-              Recovery demo seeds a saved attention lane with pressure reopen memory and a learned lead recovery target so follow-target controls can be tested locally.
+              Recovery demo sets up a saved attention view and a suggested next area so the continue controls can be tested locally.
             </p>
             <div class="workspace-render-diagnostics-actions">
               <button type="button" id="toolbenchCopyRenderDiagnostics">Copy diagnostics</button>
@@ -499,23 +499,23 @@
           </div>
           <div class="workspace-v1-health" id="workspaceV1Health">
             <div class="card-label">
-              <span>Record Health</span>
-              <strong id="workspaceV1HealthTitle">No linked V1 record yet</strong>
+              <span>Review Health</span>
+              <strong id="workspaceV1HealthTitle">No linked review record yet</strong>
             </div>
-            <p id="workspaceV1HealthCopy">Search a linked sample area to see whether this context bundle is structurally complete enough for internal use.</p>
+            <p id="workspaceV1HealthCopy">Search a linked sample area to see whether this review record is complete enough to use with confidence.</p>
             <div class="workspace-v1-health-actions">
-              <button class="workspace-v1-health-action" id="workspaceV1HealthAction" type="button">Next: link a V1 record to see the most useful fix path.</button>
-              <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1HealthNextRecord" type="button">Next incomplete record</button>
-              <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1HealthResetPass" type="button">Start new pass</button>
+              <button class="workspace-v1-health-action" id="workspaceV1HealthAction" type="button">Next: link a review record to see the most useful fix path.</button>
+              <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1HealthNextRecord" type="button">Next unfinished record</button>
+              <button class="workspace-v1-health-action workspace-v1-health-action-secondary" id="workspaceV1HealthResetPass" type="button">Start a new review</button>
             </div>
             <p class="workspace-v1-health-queue" id="workspaceV1HealthQueue">Review queue will appear once incomplete records are loaded.</p>
-            <p class="workspace-v1-health-origin" id="workspaceV1HealthOrigin">Review pass is currently local to this browser session.</p>
-            <p class="workspace-v1-pass-audit" id="workspaceV1HealthAudit">No review-pass restore or clear action recorded yet.</p>
-            <p class="workspace-v1-pass-sync" id="workspaceV1HealthSync">Backend sync is not active in this workspace mode.</p>
-            <p class="workspace-v1-health-progress" id="workspaceV1HealthProgress">Resolved this pass: 0.</p>
-            <p class="workspace-v1-health-finish" id="workspaceV1HealthFinish" hidden>Current review scope complete.</p>
+            <p class="workspace-v1-health-origin" id="workspaceV1HealthOrigin">This review is currently saved only in this browser.</p>
+            <p class="workspace-v1-pass-audit" id="workspaceV1HealthAudit">No recent review restore or clear action yet.</p>
+            <p class="workspace-v1-pass-sync" id="workspaceV1HealthSync">Cross-session saving is not active in this workspace mode.</p>
+            <p class="workspace-v1-health-progress" id="workspaceV1HealthProgress">Finished in this review: 0.</p>
+            <p class="workspace-v1-health-finish" id="workspaceV1HealthFinish" hidden>Current review scope is complete.</p>
             <ul id="workspaceV1HealthList">
-              <li>No health checks available yet.</li>
+              <li>No review checks are available yet.</li>
             </ul>
           </div>
           <form class="workspace-v1-editor" id="workspaceV1Editor" aria-label="V1 internal context editor">
@@ -1094,6 +1094,6 @@
 <script src="../../onemap-enrichment-adapter.js?v=20260512-onemap"></script>
 <script src="../../source-trust.js?v=20260510-next5i"></script>
 <script src="../../auth-client.js?v=20260510-authcutover"></script>
-<script src="../../member-toolbench.js?v=20260603-filehandoff"></script>
+<script src="../../member-toolbench.js?v=20260605-queuecleanup"></script>
 </body>
 </html>

@@ -1,0 +1,10 @@
+.git
+.DS_Store
+.vercel
+node_modules
+backend
+data/*.db
+data/rentintel-sample-data-*.js
+data/rentintel-sample-data-*.json
+data/sources
+api
