@@ -522,17 +522,19 @@ function decisionActionProfile(record) {
   }
 
   if (gap >= 18) {
+    const nearby = nearbyBusinessProfile(record);
     return {
       label: "Push back with evidence",
-      copy: `Use the fair range as the anchor and ask the landlord to prove anything above ${money(fairHigh)} with frontage, use, or fit-out evidence.`,
+      copy: `${nearby.supportCopy} Then check whether the micro-location still holds up: ${nearby.watchCopy.charAt(0).toLowerCase()}${nearby.watchCopy.slice(1)} Use the fair range as the anchor and ask the landlord to prove anything above ${money(fairHigh)} with frontage, use, or fit-out evidence.`,
       mobile: `Likely high. Push back unless the premium above ${money(fairHigh)} is clearly supported.`
     };
   }
 
   if (gap >= 8) {
+    const nearby = nearbyBusinessProfile(record);
     return {
       label: "Ask for proof",
-      copy: `The rent may still work, but ask for clearer support before accepting anything above ${money(fairHigh)}.`,
+      copy: `${nearby.supportCopy} Ask for clearer proof that this exact row deserves anything above ${money(fairHigh)}.`,
       mobile: `Needs validation. Ask for proof before accepting the premium.`
     };
   }
@@ -1632,9 +1634,9 @@ function publicDecisionNote(record) {
   let next = `Before acting, verify the asking source freshness (${qa.freshnessLabel.toLowerCase()}), compare against the fair range of ${moneyRange(record.fairRange)}, and only accept the premium if the commercial reasons are unusually strong.`;
 
   if (record.gap >= 20) {
-    body = `The gap is wide enough that the note should push for a meaningful counter based on benchmark evidence, comparable area pressure, and any missing proof behind the landlord's premium.`;
+    body = `The gap is wide enough that the note should push for a meaningful counter based on benchmark evidence, comparable area pressure, and whether the surrounding trade mix truly supports this exact row. If the micro-location looks weaker than the headline area, the premium should not be accepted at face value.`;
   } else if (record.gap >= 10) {
-    body = `The premium may still be defensible, but the note should ask for clearer support on frontage, fit-out condition, and recent comparables before treating the asking rent as fair.`;
+    body = `The premium may still be defensible, but the note should ask for clearer support on frontage, fit-out condition, nearby trade strength, and recent comparables before treating the asking rent as fair.`;
   } else if (record.gap <= -8) {
     lead = `RentIntel reads ${record.title} as potentially under-value because the current asking rent sits ${gapText.replace("-", "")}% below the current fair range.`;
     body = `That can be a genuine value opening, but the decision note should first check whether the surrounding trade mix fits the unit well or instead points to a weaker micro-location. It should then rule out weaker frontage, hidden lease constraints, fit-out burden, or poor row quality before calling it a bargain.`;
