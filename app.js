@@ -17,6 +17,7 @@ let askingFeedState = null;
 let dailyTickerFrame = null;
 let dailyTickerLastTs = null;
 let dailyTickerPos = 0;
+let publicCompareRecordIds = [];
 
 const memberSessionKey = "rentintelMemberSession";
 const savedReportsKey = "rentintelSavedReports";
@@ -188,6 +189,10 @@ const el = {
   decisionNoteStatus: document.getElementById("decisionNoteStatus"),
   publicRecentChecksSummary: document.getElementById("publicRecentChecksSummary"),
   publicRecentChecksList: document.getElementById("publicRecentChecksList"),
+  publicComparePanel: document.getElementById("publicComparePanel"),
+  publicCompareSummary: document.getElementById("publicCompareSummary"),
+  publicCompareGrid: document.getElementById("publicCompareGrid"),
+  publicCompareNote: document.getElementById("publicCompareNote"),
   decisionNoteSaveLink: document.getElementById("decisionNoteSaveLink"),
   chartShell: document.getElementById("chartShell"),
   chartKicker: document.getElementById("chartKicker"),
@@ -2354,6 +2359,67 @@ function writePublicRecentChecks(checks) {
   writeStoredJson(publicRecentChecksKey, checks.slice(0, 6));
 }
 
+function getPublicCompareRecords() {
+  return publicCompareRecordIds
+    .map((recordId) => rentRecords.find((entry) => entry.id === recordId))
+    .filter(Boolean);
+}
+
+function compareOutcomeCopy(records) {
+  if (records.length < 2) {
+    return "Pick two saved checks to compare asking gap, fair range, and verdict before deciding which area looks stronger.";
+  }
+  const [left, right] = records;
+  const strongerValue = left.gap < right.gap ? left : right.gap < left.gap ? right : null;
+  const moreExpensive = left.gap > right.gap ? left : right.gap > left.gap ? right : null;
+  if (strongerValue && strongerValue.gap <= 0 && moreExpensive && moreExpensive.gap >= 10) {
+    return `${strongerValue.title} currently looks more defensible on price, while ${moreExpensive.title} needs stronger proof to justify the premium.`;
+  }
+  if (left.gap === right.gap) {
+    return "These two areas are showing similar price pressure right now, so nearby trade mix and row quality should decide the stronger option.";
+  }
+  return `${strongerValue ? strongerValue.title : left.title} currently looks easier to defend on price, but nearby trade mix and micro-location should still decide the better choice.`;
+}
+
+function renderPublicComparePanel() {
+  if (!el.publicComparePanel || !el.publicCompareSummary || !el.publicCompareGrid || !el.publicCompareNote) return;
+  const records = getPublicCompareRecords();
+  el.publicComparePanel.hidden = records.length === 0;
+  el.publicCompareGrid.replaceChildren();
+  if (!records.length) return;
+  el.publicCompareSummary.textContent = records.length < 2
+    ? "Select one more saved check"
+    : `${records[0].title} vs ${records[1].title}`;
+  records.forEach((record) => {
+    const card = document.createElement("article");
+    card.className = "public-compare-item";
+
+    const title = document.createElement("strong");
+    title.textContent = record.title;
+
+    const verdict = document.createElement("span");
+    verdict.textContent = publicVerdictProfile(record).label;
+
+    const meta = document.createElement("p");
+    meta.textContent = `${money(record.asking)} asking • fair range ${moneyRange(record.fairRange)} • ${record.gap > 0 ? "+" : ""}${record.gap}%`;
+
+    card.append(title, verdict, meta);
+    el.publicCompareGrid.append(card);
+  });
+  el.publicCompareNote.textContent = compareOutcomeCopy(records);
+}
+
+function togglePublicCompare(recordId) {
+  if (!recordId) return;
+  if (publicCompareRecordIds.includes(recordId)) {
+    publicCompareRecordIds = publicCompareRecordIds.filter((id) => id !== recordId);
+  } else {
+    publicCompareRecordIds = [...publicCompareRecordIds.slice(-1), recordId];
+  }
+  renderPublicRecentChecks();
+  renderPublicComparePanel();
+}
+
 function savePublicResult() {
   if (!selectedRecord) {
     setDecisionNoteStatus("Search an area first before saving a public result.");
@@ -2386,28 +2452,43 @@ function renderPublicRecentChecks() {
     const empty = document.createElement("p");
     empty.textContent = "Save a public result to keep a short history in this browser.";
     el.publicRecentChecksList.append(empty);
+    renderPublicComparePanel();
     return;
   }
   checks.forEach((check) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "public-recent-check-item";
+    const item = document.createElement("article");
+    item.className = "public-recent-check-item";
+    if (publicCompareRecordIds.includes(check.recordId)) item.dataset.selected = "true";
 
+    const openButton = document.createElement("button");
+    openButton.type = "button";
+    openButton.className = "public-recent-check-open";
     const title = document.createElement("strong");
     title.textContent = check.title;
     const meta = document.createElement("span");
     meta.textContent = `${check.verdict} • ${money(check.asking)} asking • ${check.gap > 0 ? "+" : ""}${check.gap}%`;
+    openButton.append(title, meta);
 
-    button.append(title, meta);
-    button.addEventListener("click", () => {
+    openButton.addEventListener("click", () => {
       const record = rentRecords.find((entry) => entry.id === check.recordId);
       if (!record) return;
       el.input.value = record.title;
       updateResult(record);
       document.getElementById("search").scrollIntoView({ behavior: "smooth", block: "start" });
     });
-    el.publicRecentChecksList.append(button);
+
+    const compareButton = document.createElement("button");
+    compareButton.type = "button";
+    compareButton.className = "public-recent-check-compare";
+    compareButton.textContent = publicCompareRecordIds.includes(check.recordId) ? "Selected" : "Compare";
+    compareButton.addEventListener("click", () => {
+      togglePublicCompare(check.recordId);
+    });
+
+    item.append(openButton, compareButton);
+    el.publicRecentChecksList.append(item);
   });
+  renderPublicComparePanel();
 }
 
 function publicDecisionNoteText(record = selectedRecord) {
