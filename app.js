@@ -20,6 +20,7 @@ let dailyTickerPos = 0;
 
 const memberSessionKey = "rentintelMemberSession";
 const savedReportsKey = "rentintelSavedReports";
+const publicRecentChecksKey = "rentintelPublicRecentChecks";
 const backendSavedReportsKey = "rentintelBackendSavedReports";
 const joinedMembersKey = "rentintelJoinedMembers";
 const pendingMemberIntentKey = "rentintelPendingMemberIntent";
@@ -180,10 +181,13 @@ const el = {
   decisionAngleThreeTitle: document.getElementById("decisionAngleThreeTitle"),
   decisionAngleThreeCopy: document.getElementById("decisionAngleThreeCopy"),
   decisionNoteOpenLink: document.getElementById("decisionNoteOpenLink"),
+  savePublicResultButton: document.getElementById("savePublicResultButton"),
   shareDecisionSummaryButton: document.getElementById("shareDecisionSummaryButton"),
   copyDecisionNoteButton: document.getElementById("copyDecisionNoteButton"),
   downloadDecisionNoteButton: document.getElementById("downloadDecisionNoteButton"),
   decisionNoteStatus: document.getElementById("decisionNoteStatus"),
+  publicRecentChecksSummary: document.getElementById("publicRecentChecksSummary"),
+  publicRecentChecksList: document.getElementById("publicRecentChecksList"),
   decisionNoteSaveLink: document.getElementById("decisionNoteSaveLink"),
   chartShell: document.getElementById("chartShell"),
   chartKicker: document.getElementById("chartKicker"),
@@ -2181,6 +2185,7 @@ function updateResult(record) {
   renderPulseGuide(record);
   renderHeroBrief(record);
   renderDecisionNotePreview(record);
+  renderPublicRecentChecks();
   el.chartTitle.textContent = `${record.title}: historical rent psf`;
   updateCurrentMemberReport();
   updatePublicInterestPanel();
@@ -2339,6 +2344,70 @@ async function copyCoverageQueue() {
 
 function setDecisionNoteStatus(message) {
   if (el.decisionNoteStatus) el.decisionNoteStatus.textContent = message;
+}
+
+function getPublicRecentChecks() {
+  return loadStoredJson(publicRecentChecksKey, []);
+}
+
+function writePublicRecentChecks(checks) {
+  writeStoredJson(publicRecentChecksKey, checks.slice(0, 6));
+}
+
+function savePublicResult() {
+  if (!selectedRecord) {
+    setDecisionNoteStatus("Search an area first before saving a public result.");
+    return;
+  }
+  const verdict = publicVerdictProfile(selectedRecord);
+  const checks = getPublicRecentChecks().filter((item) => item.recordId !== selectedRecord.id);
+  checks.unshift({
+    recordId: selectedRecord.id,
+    title: selectedRecord.title,
+    verdict: verdict.label,
+    asking: selectedRecord.asking,
+    fairRange: selectedRecord.fairRange,
+    gap: selectedRecord.gap,
+    savedAt: new Date().toISOString()
+  });
+  writePublicRecentChecks(checks);
+  renderPublicRecentChecks();
+  setDecisionNoteStatus(`${selectedRecord.title} saved in this browser.`);
+}
+
+function renderPublicRecentChecks() {
+  if (!el.publicRecentChecksSummary || !el.publicRecentChecksList) return;
+  const checks = getPublicRecentChecks();
+  el.publicRecentChecksSummary.textContent = checks.length
+    ? `${checks.length} saved in this browser`
+    : "No saved public checks yet";
+  el.publicRecentChecksList.replaceChildren();
+  if (!checks.length) {
+    const empty = document.createElement("p");
+    empty.textContent = "Save a public result to keep a short history in this browser.";
+    el.publicRecentChecksList.append(empty);
+    return;
+  }
+  checks.forEach((check) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "public-recent-check-item";
+
+    const title = document.createElement("strong");
+    title.textContent = check.title;
+    const meta = document.createElement("span");
+    meta.textContent = `${check.verdict} • ${money(check.asking)} asking • ${check.gap > 0 ? "+" : ""}${check.gap}%`;
+
+    button.append(title, meta);
+    button.addEventListener("click", () => {
+      const record = rentRecords.find((entry) => entry.id === check.recordId);
+      if (!record) return;
+      el.input.value = record.title;
+      updateResult(record);
+      document.getElementById("search").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    el.publicRecentChecksList.append(button);
+  });
 }
 
 function publicDecisionNoteText(record = selectedRecord) {
@@ -3496,6 +3565,7 @@ async function init() {
   el.coverageRequestForm?.addEventListener("submit", saveCoverageRequest);
   el.copyCoverageQueueButton?.addEventListener("click", copyCoverageQueue);
   el.downloadCoverageQueueButton?.addEventListener("click", downloadCoverageQueue);
+  el.savePublicResultButton?.addEventListener("click", savePublicResult);
   el.shareDecisionSummaryButton?.addEventListener("click", shareDecisionSummary);
   el.copyDecisionNoteButton?.addEventListener("click", copyDecisionNote);
   el.downloadDecisionNoteButton?.addEventListener("click", downloadDecisionNote);
@@ -3521,6 +3591,7 @@ async function init() {
   updateResult(selectedRecord);
   renderSearchSuggestions();
   renderPublicCoverageQueue();
+  renderPublicRecentChecks();
   renderCoverageHighlights();
   updateMemberState();
 }

@@ -13349,6 +13349,54 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   line-height: 1.4;
 }
 
+.public-recent-checks-card {
+  margin-top: 12px;
+}
+
+.public-recent-checks-list {
+  display: grid;
+  gap: 8px;
+}
+
+.public-recent-checks-list > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.public-recent-check-item {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  border: 1px solid rgba(25, 107, 85, 0.16);
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(255, 253, 249, 0.9);
+  text-align: left;
+  cursor: pointer;
+}
+
+.public-recent-check-item strong {
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.public-recent-check-item span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 760;
+  line-height: 1.35;
+}
+
+.public-recent-check-item:hover,
+.public-recent-check-item:focus-visible {
+  border-color: rgba(25, 107, 85, 0.3);
+  background: rgba(234, 245, 239, 0.52);
+  outline: none;
+}
+
 .member-workspace {
   padding: 4px 0 20px;
 }

@@ -9,7 +9,7 @@
       content="Check Singapore retail asking rent against benchmark signals, area context, and trust cues. RentIntel helps tenants, landlords, and operators review whether a rent looks fair."
     >
     <link rel="icon" href="./pulse-shared-transparent.png">
-    <link rel="stylesheet" href="./styles.css?v=20260606-sharesummary">
+    <link rel="stylesheet" href="./styles.css?v=20260606-recentchecks">
     <link rel="stylesheet" href="./source-refresh-card.css?v=20260525-source-map">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
@@ -491,11 +491,21 @@
             </div>
             <div class="decision-note-actions">
               <a id="decisionNoteOpenLink" href="#market-context">View Chart Context</a>
+              <button type="button" id="savePublicResultButton">Save Result</button>
               <button type="button" id="shareDecisionSummaryButton">Share Summary</button>
               <button type="button" id="copyDecisionNoteButton">Copy Note</button>
               <button type="button" id="downloadDecisionNoteButton">Download Note</button>
             </div>
             <p class="decision-note-status" id="decisionNoteStatus" aria-live="polite">Copy or download this public note if you want a quick shareable summary.</p>
+          </article>
+          <article class="decision-note-card public-recent-checks-card" aria-label="Recent public rent checks">
+            <div class="card-label">
+              <span>Recent checks</span>
+              <strong id="publicRecentChecksSummary">No saved public checks yet</strong>
+            </div>
+            <div class="public-recent-checks-list" id="publicRecentChecksList">
+              <p>Save a public result to keep a short history in this browser.</p>
+            </div>
           </article>
         </section>
       </section>
@@ -840,6 +850,6 @@
     <script src="./asking-feed-adapter.js?v=20260510-feedhardening"></script>
     <script src="./onemap-enrichment-adapter.js?v=20260512-onemap"></script>
     <script src="./source-trust.js?v=20260510-pulseguide"></script>
-    <script src="./app.js?v=20260606-sharesummary"></script>
+    <script src="./app.js?v=20260606-recentchecks"></script>
   </body>
 </html>
