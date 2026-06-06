@@ -180,6 +180,7 @@ const el = {
   decisionAngleThreeTitle: document.getElementById("decisionAngleThreeTitle"),
   decisionAngleThreeCopy: document.getElementById("decisionAngleThreeCopy"),
   decisionNoteOpenLink: document.getElementById("decisionNoteOpenLink"),
+  shareDecisionSummaryButton: document.getElementById("shareDecisionSummaryButton"),
   copyDecisionNoteButton: document.getElementById("copyDecisionNoteButton"),
   downloadDecisionNoteButton: document.getElementById("downloadDecisionNoteButton"),
   decisionNoteStatus: document.getElementById("decisionNoteStatus"),
@@ -2357,6 +2358,46 @@ function publicDecisionNoteText(record = selectedRecord) {
   ].join("\n");
 }
 
+function publicShareSummaryText(record = selectedRecord) {
+  if (!record) return "";
+  const verdict = publicVerdictProfile(record);
+  const action = decisionActionProfile(record);
+  return `${record.title}: ${verdict.label}. Fair range ${moneyRange(record.fairRange)}. Current asking ${money(record.asking)} (${record.gap > 0 ? "+" : ""}${record.gap}%). ${action.label}: ${action.mobile}`;
+}
+
+async function shareDecisionSummary() {
+  if (!selectedRecord) {
+    setDecisionNoteStatus("Search an area first before sharing a summary.");
+    return;
+  }
+  const summary = publicShareSummaryText(selectedRecord);
+  const sharePayload = {
+    title: `RentIntel summary: ${selectedRecord.title}`,
+    text: summary,
+    url: window.location.href
+  };
+  if (navigator.share) {
+    try {
+      await navigator.share(sharePayload);
+      setDecisionNoteStatus(`Shared summary for ${selectedRecord.title}.`);
+      return;
+    } catch (error) {
+      if (error?.name === "AbortError") {
+        setDecisionNoteStatus("Share cancelled.");
+        return;
+      }
+      console.warn("Native share failed, falling back to clipboard copy.", error);
+    }
+  }
+  try {
+    await copyTextToClipboard(summary);
+    setDecisionNoteStatus(`Summary copied for ${selectedRecord.title}.`);
+  } catch (error) {
+    console.warn("Summary share fallback failed.", error);
+    setDecisionNoteStatus("Share failed. Try Copy Note instead.");
+  }
+}
+
 async function copyDecisionNote() {
   if (!selectedRecord) {
     setDecisionNoteStatus("Search an area first before copying a note.");
@@ -3455,6 +3496,7 @@ async function init() {
   el.coverageRequestForm?.addEventListener("submit", saveCoverageRequest);
   el.copyCoverageQueueButton?.addEventListener("click", copyCoverageQueue);
   el.downloadCoverageQueueButton?.addEventListener("click", downloadCoverageQueue);
+  el.shareDecisionSummaryButton?.addEventListener("click", shareDecisionSummary);
   el.copyDecisionNoteButton?.addEventListener("click", copyDecisionNote);
   el.downloadDecisionNoteButton?.addEventListener("click", downloadDecisionNote);
 
