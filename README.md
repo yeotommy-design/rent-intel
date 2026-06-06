@@ -225,6 +225,12 @@ Publishing flow:
   - rebuilds the archive, article pages, homepage note copy, robots, and sitemap
   - fails if any generated Market Notes file is older than `data/market-notes.json`
   - verifies that the live archive, live latest article, and live sitemap all include the newest note
+- Run `npm run release:market-notes` when you want the weekly note to go all the way to production deploy
+  - rebuilds Market Notes
+  - checks generated freshness
+  - stages only the Market Notes release files
+  - commits with `Publish YYYY-MM-DD Market Note`
+  - pushes `main` so Vercel can deploy
 - Submit the sitemap with `npm run submit:sitemap`
 
 Runtime guard:

@@ -11,6 +11,7 @@
     "build:market-notes": "node ./scripts/build-market-notes.mjs",
     "check:market-notes": "node ./scripts/check-market-notes-generated.mjs",
     "publish:market-notes": "npm run build:market-notes && npm run check:market-notes && npm run verify:market-notes",
+    "release:market-notes": "node ./scripts/release-market-notes.mjs",
     "submit:sitemap": "node ./scripts/submit-sitemap-search-console.mjs",
     "verify:market-notes": "node ./scripts/verify-market-notes-live.mjs"
   }
