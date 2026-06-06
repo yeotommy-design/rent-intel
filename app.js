@@ -189,6 +189,8 @@ const el = {
   decisionNoteStatus: document.getElementById("decisionNoteStatus"),
   publicRecentChecksSummary: document.getElementById("publicRecentChecksSummary"),
   publicRecentChecksList: document.getElementById("publicRecentChecksList"),
+  importPublicRecentChecksButton: document.getElementById("importPublicRecentChecksButton"),
+  publicRecentChecksImportInput: document.getElementById("publicRecentChecksImportInput"),
   copyPublicRecentChecksButton: document.getElementById("copyPublicRecentChecksButton"),
   downloadPublicRecentChecksButton: document.getElementById("downloadPublicRecentChecksButton"),
   clearPublicRecentChecksButton: document.getElementById("clearPublicRecentChecksButton"),
@@ -2439,6 +2441,53 @@ function downloadPublicRecentChecks() {
   setDecisionNoteStatus(`${payload.total} public checks downloaded.`);
 }
 
+function openPublicRecentChecksImport() {
+  el.publicRecentChecksImportInput?.click();
+}
+
+async function importPublicRecentChecks(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const imported = Array.isArray(parsed?.checks) ? parsed.checks : [];
+    if (!imported.length) {
+      setDecisionNoteStatus("No public checks found in that file.");
+      return;
+    }
+    const merged = new Map();
+    getPublicRecentChecks().forEach((item) => {
+      merged.set(item.recordId, item);
+    });
+    imported.forEach((item) => {
+      if (!item?.recordId || !item?.title) return;
+      merged.set(item.recordId, {
+        recordId: item.recordId,
+        title: item.title,
+        verdict: item.verdict || "",
+        asking: Number(item.asking || 0),
+        fairRange: item.fairRange || null,
+        gap: Number(item.gap || 0),
+        pinned: Boolean(item.pinned),
+        note: String(item.note || "").trim().slice(0, 140),
+        savedAt: item.savedAt || new Date().toISOString()
+      });
+    });
+    writePublicRecentChecks([...merged.values()]);
+    renderPublicRecentChecks();
+    renderPublicComparePanel();
+    setDecisionNoteStatus(`${imported.length} public checks imported.`);
+  } catch (error) {
+    console.warn("Public recent checks import failed.", error);
+    setDecisionNoteStatus("Import failed. Use a RentIntel public checks JSON export.");
+  } finally {
+    if (el.publicRecentChecksImportInput) {
+      el.publicRecentChecksImportInput.value = "";
+    }
+  }
+}
+
 function togglePinnedPublicRecentCheck(recordId) {
   const checks = getPublicRecentChecks().map((item) => ({
     ...item,
@@ -3814,6 +3863,8 @@ async function init() {
   el.copyCoverageQueueButton?.addEventListener("click", copyCoverageQueue);
   el.downloadCoverageQueueButton?.addEventListener("click", downloadCoverageQueue);
   el.savePublicResultButton?.addEventListener("click", savePublicResult);
+  el.importPublicRecentChecksButton?.addEventListener("click", openPublicRecentChecksImport);
+  el.publicRecentChecksImportInput?.addEventListener("change", importPublicRecentChecks);
   el.copyPublicRecentChecksButton?.addEventListener("click", copyPublicRecentChecks);
   el.downloadPublicRecentChecksButton?.addEventListener("click", downloadPublicRecentChecks);
   el.clearPublicRecentChecksButton?.addEventListener("click", clearPublicRecentChecks);
