@@ -462,10 +462,11 @@ function signalDrivers(record) {
 
 function actionChecklist(record) {
   if (record?.gap <= -8) {
+    const nearby = nearbyBusinessProfile(record);
     return [
       "Check frontage quality, visibility, and unit condition before assuming the rent is a bargain.",
       "Confirm lease term, reinstatement, service charge, GST, and any hidden restrictions.",
-      "Compare nearby options to see whether the discount is real or a warning sign."
+      "Use the nearby trade mix check to decide whether the unit fits local demand well or just sits in a weaker micro-location."
     ];
   }
   const property = String(record?.propertyType || "").toLowerCase();
@@ -512,9 +513,10 @@ function decisionActionProfile(record) {
   const fairHigh = record?.fairRange?.high || record?.official || 0;
 
   if (gap <= -8) {
+    const nearby = nearbyBusinessProfile(record);
     return {
       label: "Check why it's cheaper",
-      copy: `Start with nearby businesses, frontage, lease terms, and hidden costs. If those still look solid, the ask below ${money(fairLow)} may be real value.`,
+      copy: `${nearby.fitCopy} But ${nearby.watchCopy.charAt(0).toLowerCase()}${nearby.watchCopy.slice(1)} If those checks still hold up, the ask below ${money(fairLow)} may be real value.`,
       mobile: `Possible under-value. Check why it is cheaper before treating it as a bargain.`
     };
   }
@@ -1635,7 +1637,7 @@ function publicDecisionNote(record) {
     body = `The premium may still be defensible, but the note should ask for clearer support on frontage, fit-out condition, and recent comparables before treating the asking rent as fair.`;
   } else if (record.gap <= -8) {
     lead = `RentIntel reads ${record.title} as potentially under-value because the current asking rent sits ${gapText.replace("-", "")}% below the current fair range.`;
-    body = `That can be a genuine value opening, but the decision note should first rule out weaker frontage, hidden lease constraints, fit-out burden, or poor micro-location before calling it a bargain.`;
+    body = `That can be a genuine value opening, but the decision note should first check whether the surrounding trade mix fits the unit well or instead points to a weaker micro-location. It should then rule out weaker frontage, hidden lease constraints, fit-out burden, or poor row quality before calling it a bargain.`;
     next = `Use the preview to confirm source freshness, compare against the fair range of ${moneyRange(record.fairRange)}, and then check whether the discounted ask still fits the operating model.`;
   } else if (record.gap <= 0) {
     lead = `RentIntel reads ${record.title} as relatively defensible because the current asking rent sits within or below the current fair range.`;
