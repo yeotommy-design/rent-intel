@@ -9,7 +9,7 @@
       content="Check Singapore retail asking rent against benchmark signals, area context, and trust cues. RentIntel helps tenants, landlords, and operators review whether a rent looks fair."
     >
     <link rel="icon" href="./pulse-shared-transparent.png">
-    <link rel="stylesheet" href="./styles.css?v=20260606-hierarchy">
+    <link rel="stylesheet" href="./styles.css?v=20260606-nearbycontext">
     <link rel="stylesheet" href="./source-refresh-card.css?v=20260525-source-map">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
@@ -421,6 +421,18 @@
                 The surrounding trade mix can explain whether the asking rent is supported by lunch traffic, tourism, daily-needs demand, or a weaker micro-location than the headline area suggests.
               </p>
             </div>
+            <div class="nearby-business-grid" aria-label="Nearby business decision guide">
+              <article class="nearby-business-detail nearby-business-detail-positive">
+                <span>Usually supports</span>
+                <strong id="nearbyBusinessFitTitle">Steady local demand</strong>
+                <p id="nearbyBusinessFitCopy">Use this to judge whether the unit fits daily-needs, destination, or office-worker demand.</p>
+              </article>
+              <article class="nearby-business-detail nearby-business-detail-watch">
+                <span>Watch for</span>
+                <strong id="nearbyBusinessWatchTitle">Weak micro-location</strong>
+                <p id="nearbyBusinessWatchCopy">A good headline area can still hide weaker rows, poor frontage, or softer passing trade.</p>
+              </article>
+            </div>
             <p class="nearby-business-meta" id="nearbyBusinessMeta">
               Area context updates as the selected rent search changes.
             </p>
@@ -820,6 +832,6 @@
     <script src="./asking-feed-adapter.js?v=20260510-feedhardening"></script>
     <script src="./onemap-enrichment-adapter.js?v=20260512-onemap"></script>
     <script src="./source-trust.js?v=20260510-pulseguide"></script>
-    <script src="./app.js?v=20260606-decisionguide"></script>
+    <script src="./app.js?v=20260606-nearbycontext"></script>
   </body>
 </html>

@@ -70,6 +70,10 @@ const el = {
   nearbyBusinessTags: document.getElementById("nearbyBusinessTags"),
   nearbyBusinessSupportTitle: document.getElementById("nearbyBusinessSupportTitle"),
   nearbyBusinessSupportCopy: document.getElementById("nearbyBusinessSupportCopy"),
+  nearbyBusinessFitTitle: document.getElementById("nearbyBusinessFitTitle"),
+  nearbyBusinessFitCopy: document.getElementById("nearbyBusinessFitCopy"),
+  nearbyBusinessWatchTitle: document.getElementById("nearbyBusinessWatchTitle"),
+  nearbyBusinessWatchCopy: document.getElementById("nearbyBusinessWatchCopy"),
   nearbyBusinessMeta: document.getElementById("nearbyBusinessMeta"),
   signalDrivers: document.getElementById("signalDrivers"),
   heroBriefPanel: document.getElementById("heroBriefPanel"),
@@ -1510,6 +1514,10 @@ function nearbyBusinessProfile(record) {
       tags: ["Fashion brands", "Beauty & wellness", "Cafes", "Desserts", "Tourist spend"],
       supportTitle: "What this can support",
       supportCopy: "A stronger mall and destination mix can support premium rent, but floor position, frontage, and the exact traffic path still decide whether the quoted line is justified.",
+      fitTitle: "Best fit",
+      fitCopy: "This kind of row usually works best for brands that benefit from browsing traffic, destination visits, gifting spend, and stronger visual merchandising.",
+      watchTitle: "Watch for",
+      watchCopy: "Mall areas can look stronger than they really are if the unit sits off the main path, above the key traffic floor, or outside the strongest anchor flow.",
       meta: `${planningArea} context: use nearby mall anchors and footfall flow to judge whether the unit sits in the stronger or weaker part of the area.`
     };
   }
@@ -1521,6 +1529,10 @@ function nearbyBusinessProfile(record) {
       tags: ["Cafes & restaurants", "Bars", "Boutique retail", "Fitness studios", "Tourist traffic"],
       supportTitle: "What this can support",
       supportCopy: "That mix can support a premium when the unit has real street visibility and destination pull, but weaker side streets or hidden rows may still deserve a lower rent line.",
+      fitTitle: "Best fit",
+      fitCopy: "This kind of pocket usually suits brands that need street presence, destination pull, late-day trade, or a lifestyle identity that people will travel for.",
+      watchTitle: "Watch for",
+      watchCopy: "Shophouse premiums break down quickly when the row loses visibility, night traffic, or destination pull, especially on quieter side streets.",
       meta: `${planningArea} context: compare the selected unit's street visibility and day-part traffic against the stronger nearby shophouse pockets.`
     };
   }
@@ -1532,6 +1544,10 @@ function nearbyBusinessProfile(record) {
       tags: ["Quick-service lunch", "Coffee chains", "Beauty services", "Convenience retail", "Office spillover"],
       supportTitle: "What this can support",
       supportCopy: "This mix can make a lower asking rent look attractive, but prime areas also hide sharp micro-location differences, so floor position and visibility still matter a lot.",
+      fitTitle: "Best fit",
+      fitCopy: "This type of area usually works best for lunch trade, grab-and-go services, convenience offers, or businesses that benefit from office-worker repeat demand.",
+      watchTitle: "Watch for",
+      watchCopy: "Office and visitor areas can drop off fast outside lunch peaks or key commuter paths, so a cheaper unit may simply be outside the strongest daily flow.",
       meta: `${planningArea} context: check whether the selected row catches true office and visitor flow or sits outside the strongest commercial path.`
     };
   }
@@ -1543,6 +1559,10 @@ function nearbyBusinessProfile(record) {
       tags: ["Clinics", "Tuition", "Bakeries", "Coffee shops", "Daily-needs retail"],
       supportTitle: "What this can support",
       supportCopy: "That mix usually supports steadier but less explosive rent than prime lifestyle clusters, so a cheap ask can be real value or just a weaker row with less passing trade.",
+      fitTitle: "Best fit",
+      fitCopy: "This kind of row usually works best for practical, repeat-visit businesses that depend on nearby households rather than destination demand or tourist traffic.",
+      watchTitle: "Watch for",
+      watchCopy: "A low rent can still be a weak sign if the unit misses the market path, MRT spillover, coffee-shop cluster, or the busier side of the neighbourhood centre.",
       meta: `${planningArea} context: compare MRT spillover, market traffic, and corner visibility against nearby neighbourhood rows before accepting the rent story.`
     };
   }
@@ -1553,6 +1573,10 @@ function nearbyBusinessProfile(record) {
     tags: ["Convenience retail", "Small F&B", "Services", "Passing trade", "Local catchment"],
     supportTitle: "What this can support",
     supportCopy: "Use the nearby trade mix to judge whether the quoted rent is supported by real demand drivers or whether the area name alone is doing too much work.",
+    fitTitle: "Best fit",
+    fitCopy: "Mixed local rows usually work best for flexible businesses that can live off both practical repeat demand and lighter destination traffic.",
+    watchTitle: "Watch for",
+    watchCopy: "When the area mix is blended, the exact row matters more. A small shift in frontage, parking, foot traffic, or adjacency can change the rent story quickly.",
     meta: `${planningArea} context: compare the selected unit against the stronger and weaker micro-pockets nearby before deciding.`
   };
 }
@@ -1564,6 +1588,10 @@ function renderNearbyBusinesses(record) {
   el.nearbyBusinessSummary.textContent = profile.summary;
   el.nearbyBusinessSupportTitle.textContent = profile.supportTitle;
   el.nearbyBusinessSupportCopy.textContent = profile.supportCopy;
+  el.nearbyBusinessFitTitle.textContent = profile.fitTitle;
+  el.nearbyBusinessFitCopy.textContent = profile.fitCopy;
+  el.nearbyBusinessWatchTitle.textContent = profile.watchTitle;
+  el.nearbyBusinessWatchCopy.textContent = profile.watchCopy;
   el.nearbyBusinessMeta.textContent = profile.meta;
   el.nearbyBusinessTags.replaceChildren();
   profile.tags.forEach((tag) => {
