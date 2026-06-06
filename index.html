@@ -9,7 +9,7 @@
       content="Check Singapore retail asking rent against benchmark signals, area context, and trust cues. RentIntel helps tenants, landlords, and operators review whether a rent looks fair."
     >
     <link rel="icon" href="./pulse-shared-transparent.png">
-    <link rel="stylesheet" href="./styles.css?v=20260606-nearbybiz">
+    <link rel="stylesheet" href="./styles.css?v=20260606-hierarchy">
     <link rel="stylesheet" href="./source-refresh-card.css?v=20260525-source-map">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
@@ -321,9 +321,9 @@
             </dl>
           </article>
 
-          <article class="result-card action-card">
+          <article class="result-card action-card action-card-primary">
             <div class="card-label">
-              <span>Best next move</span>
+              <span>Do this first</span>
               <strong id="actionLabel">Push back with evidence</strong>
             </div>
             <p class="action-copy" id="actionCopy">
@@ -344,10 +344,10 @@
             </ul>
           </article>
 
-          <article class="result-card" id="premium">
+          <article class="result-card context-card" id="premium">
             <div class="card-label">
-              <span>Source context</span>
-              <strong>Benchmark and asking source view</strong>
+              <span>Check source and freshness</span>
+              <strong>Why this answer is trustworthy</strong>
             </div>
             <p id="sourceSummary">
               Official benchmark: URA-linked retail rent trend. Asking estimate: recent shophouse listing signals.
@@ -401,9 +401,9 @@
             <button class="secondary-button" id="togglePaid" type="button">View Chart Context</button>
           </article>
 
-          <article class="result-card nearby-business-card" aria-label="Nearby businesses in the area">
+          <article class="result-card context-card nearby-business-card" aria-label="Nearby businesses in the area">
             <div class="card-label">
-              <span>Nearby businesses</span>
+              <span>Check the surroundings</span>
               <strong id="nearbyBusinessTitle">Likely nearby trade mix</strong>
             </div>
             <p id="nearbyBusinessSummary">
