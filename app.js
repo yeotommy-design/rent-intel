@@ -18,6 +18,7 @@ let dailyTickerFrame = null;
 let dailyTickerLastTs = null;
 let dailyTickerPos = 0;
 let publicCompareRecordIds = [];
+let comparableReturnRecordId = "";
 
 const memberSessionKey = "rentintelMemberSession";
 const savedReportsKey = "rentintelSavedReports";
@@ -117,6 +118,7 @@ const el = {
   searchResultLabel: document.getElementById("searchResultLabel"),
   searchResultCopy: document.getElementById("searchResultCopy"),
   searchResultContext: document.getElementById("searchResultContext"),
+  searchResultReturn: document.getElementById("searchResultReturn"),
   publicTrustGuide: document.getElementById("publicTrustGuide"),
   publicTrustGuideSummary: document.getElementById("publicTrustGuideSummary"),
   dailyInsight: document.getElementById("dailyInsight"),
@@ -2116,6 +2118,7 @@ function renderNoMatchAlternatives(eligibility) {
 function updateResult(record, options = {}) {
   el.noMatch.hidden = true;
   el.noMatch.dataset.coverageStatus = "";
+  const previousRecord = options.previousRecord || null;
   selectedRecord = record;
   const confidence = confidenceProfile(record);
   const action = decisionActionProfile(record);
@@ -2124,6 +2127,12 @@ function updateResult(record, options = {}) {
     const contextCopy = String(options.searchContext || "").trim();
     el.searchResultContext.hidden = !contextCopy;
     el.searchResultContext.textContent = contextCopy;
+  }
+  if (el.searchResultReturn) {
+    const returnRecord = previousRecord && previousRecord.id !== record.id ? previousRecord : null;
+    comparableReturnRecordId = returnRecord?.id || "";
+    el.searchResultReturn.hidden = !returnRecord;
+    el.searchResultReturn.textContent = returnRecord ? `Return to ${returnRecord.area || returnRecord.title}` : "";
   }
   el.resultTitle.textContent = record.title;
   el.confidenceBadge.textContent = record.confidence;
@@ -2908,6 +2917,17 @@ function renderPublicCoverageQueue() {
   });
 }
 
+function handleSearchResultReturn() {
+  if (!comparableReturnRecordId) return;
+  const record = rentRecords.find((entry) => entry.id === comparableReturnRecordId);
+  if (!record) return;
+  el.input.value = record.title;
+  comparableReturnRecordId = "";
+  updateResult(record);
+  renderSearchSuggestions();
+  document.getElementById("search")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function showNoMatch(query) {
   pendingCoverageQuery = query;
   const existing = findCoverageRequest(query);
@@ -3685,6 +3705,7 @@ function renderPressurePanel() {
       const previous = selectedRecord;
       el.input.value = record.title;
       updateResult(record, {
+        previousRecord: previous,
         searchContext: comparableTransitionCopy(record, previous)
       });
       renderSearchSuggestions();
@@ -3997,6 +4018,7 @@ async function init() {
   el.shareDecisionSummaryButton?.addEventListener("click", shareDecisionSummary);
   el.copyDecisionNoteButton?.addEventListener("click", copyDecisionNote);
   el.downloadDecisionNoteButton?.addEventListener("click", downloadDecisionNote);
+  el.searchResultReturn?.addEventListener("click", handleSearchResultReturn);
 
   el.togglePaid?.addEventListener("click", () => {
     el.chartShell?.scrollIntoView({ behavior: "smooth", block: "center" });

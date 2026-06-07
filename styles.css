@@ -12351,6 +12351,32 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   line-height: 1.4;
 }
 
+.search-result-meta {
+  display: grid;
+  gap: 6px;
+}
+
+.search-result-return {
+  justify-self: start;
+  min-height: 34px;
+  border: 1px solid rgba(53, 93, 124, 0.18);
+  border-radius: 999px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #355d7c;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.search-result-return:hover,
+.search-result-return:focus-visible {
+  border-color: rgba(25, 107, 85, 0.24);
+  color: var(--green);
+  outline: none;
+}
+
 .search-result-state[data-state="comparable"] {
   border-color: rgba(180, 117, 34, 0.32);
   background: linear-gradient(135deg, #fff4d1, #fffdf9);
