@@ -10368,11 +10368,22 @@ a {
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 0.94fr) minmax(390px, 1.06fr);
-  gap: 24px;
+  gap: 22px 26px;
   align-items: start;
   width: min(1180px, calc(100% - 40px));
   margin: 0 auto;
   padding: 32px 0 26px;
+}
+
+.hero-intro {
+  grid-column: 1 / -1;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 6px 18px 8px;
+  text-align: center;
 }
 
 .eyebrow,
@@ -10394,25 +10405,29 @@ p {
 }
 
 h1 {
-  max-width: 700px;
+  max-width: 760px;
   font-size: 48px;
   line-height: 1;
   letter-spacing: 0;
 }
 
 .hero-lede {
-  max-width: 620px;
-  margin-top: 14px;
+  max-width: 680px;
   color: var(--muted);
   font-size: 17px;
   line-height: 1.45;
+}
+
+.hero-copy {
+  display: grid;
+  align-content: start;
+  gap: 16px;
 }
 
 .search-panel {
   display: grid;
   gap: 12px;
   max-width: 720px;
-  margin-top: 20px;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 16px;
@@ -10865,12 +10880,11 @@ h1 {
   display: grid;
   align-content: start;
   gap: 16px;
-  margin-top: 276px;
 }
 
 .hero-copy > .hero-brief-panel {
   max-width: 720px;
-  margin-top: 16px;
+  margin-top: 0;
 }
 
 .hero-answer-card {
@@ -13913,47 +13927,29 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   }
 
   .hero {
-    display: flex;
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: 18px;
     width: min(100%, calc(100% - 24px));
   }
 
+  .hero-intro {
+    justify-items: start;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+  }
+
   .hero-copy,
   .hero-rail {
-    display: contents;
-  }
-
-  .hero-copy > .eyebrow {
-    order: 1;
-  }
-
-  .hero-copy > h1 {
-    order: 2;
-  }
-
-  .hero-copy > .hero-lede {
-    order: 3;
-  }
-
-  .hero-brief-panel {
-    order: 4;
+    gap: 14px;
   }
 
   .rent-pressure-panel {
-    order: 5;
     margin-top: 0;
   }
 
-  .search-panel {
-    order: 6;
-  }
-
-  .hero-copy > .public-scope-strip {
-    order: 7;
-  }
-
-  .hero-copy h1 {
+  .hero h1 {
     font-size: clamp(40px, 9vw, 56px);
     line-height: 0.98;
   }
@@ -15443,26 +15439,12 @@ button.workspace-v1-context-why-clause[data-active="true"] {
     padding-top: 24px;
   }
 
-  .hero-copy {
-    order: 1;
-  }
-
   .hero-lede {
     font-size: 16px;
   }
 
   .search-panel {
-    position: sticky;
-    top: 10px;
-    z-index: 5;
-  }
-
-  .hero-brief-panel {
-    order: 4;
-  }
-
-  .rent-pressure-panel {
-    order: 5;
+    position: static;
   }
 
   .related-intel a {
