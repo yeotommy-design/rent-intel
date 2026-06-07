@@ -176,6 +176,8 @@ const accountEl = {
   reportPackAskingMetric: document.getElementById("reportPackAskingMetric"),
   reportPackAskingCopy: document.getElementById("reportPackAskingCopy"),
   openReportToolbenchButton: document.getElementById("openReportToolbenchButton"),
+  reportPublicBridgePanel: document.getElementById("reportPublicBridgePanel"),
+  reportPublicBridgeCopy: document.getElementById("reportPublicBridgeCopy"),
   watchReportAreaButton: document.getElementById("watchReportAreaButton"),
   deleteReportButton: document.getElementById("deleteReportButton"),
   reportDetailStatus: document.getElementById("reportDetailStatus"),
@@ -4398,6 +4400,16 @@ function renderPublicChecksIntent() {
       : "../toolbench/";
   }
   accountEl.savePublicChecksButton.disabled = !sessionHasFreeTools(currentSession) || Boolean(intent.savedAt);
+  if (accountEl.savePublicChecksButton) {
+    accountEl.savePublicChecksButton.onclick = async () => {
+      await savePublicChecksAsReports();
+    };
+  }
+  if (accountEl.clearPublicChecksButton) {
+    accountEl.clearPublicChecksButton.onclick = () => {
+      clearPublicChecksIntent();
+    };
+  }
   accountEl.publicChecksIntentStatus.textContent = intent.savedAt
     ? `Saved to member reports on ${formatShortDate(intent.savedAt)}. Open the latest one in Workspace or continue from your saved report list below.`
     : sessionHasFreeTools(currentSession)
@@ -4542,9 +4554,6 @@ async function savePublicChecksAsReports() {
   }
 
   const latestImportedReport = importedReports[0] || null;
-  if (latestImportedReport) {
-    selectedReport = latestImportedReport;
-  }
 
   writeStoredJson(pendingPublicChecksKey, {
     ...intent,
@@ -4554,7 +4563,11 @@ async function savePublicChecksAsReports() {
   });
   renderSavedReports();
   if (latestImportedReport) {
-    renderReportDetail(latestImportedReport);
+    const enrichedImportedReport = savedReportsForCurrentMember().find(
+      (report) => report.recordId === latestImportedReport.recordId
+    ) || latestImportedReport;
+    selectedReport = enrichedImportedReport;
+    renderReportDetail(enrichedImportedReport);
   }
   renderPublicChecksIntent();
   renderMemberCommandCenter();
@@ -4717,6 +4730,10 @@ function renderReportDetail(report) {
     accountEl.reportPackBenchmarkCopy.textContent = "The benchmark basis will appear after you save a report from search or workspace.";
     accountEl.reportPackAskingMetric.textContent = "-";
     accountEl.reportPackAskingCopy.textContent = "The asking-rent source status will appear after you save a report.";
+    if (accountEl.reportPublicBridgePanel) accountEl.reportPublicBridgePanel.hidden = true;
+    if (accountEl.reportPublicBridgeCopy) {
+      accountEl.reportPublicBridgeCopy.textContent = "Imported public-check notes will appear here after you move a saved public result into Saved Tools.";
+    }
     accountEl.openReportToolbenchButton.href = workspaceHref({ requireAuth: true });
     accountEl.watchReportAreaButton.disabled = true;
     accountEl.deleteReportButton.disabled = true;
@@ -4755,6 +4772,19 @@ function renderReportDetail(report) {
   accountEl.reportPackBenchmarkCopy.textContent = evidencePack.benchmarkCopy;
   accountEl.reportPackAskingMetric.textContent = evidencePack.asking;
   accountEl.reportPackAskingCopy.textContent = evidencePack.askingCopy;
+  const publicBridge = report?.saveMetadata?.publicBridge || null;
+  if (accountEl.reportPublicBridgePanel && accountEl.reportPublicBridgeCopy) {
+    if (publicBridge?.note || publicBridge?.pinned) {
+      const parts = [];
+      if (publicBridge.note) parts.push(`Public note: ${publicBridge.note}`);
+      if (publicBridge.pinned) parts.push("This area was pinned in public recent checks before import.");
+      accountEl.reportPublicBridgePanel.hidden = false;
+      accountEl.reportPublicBridgeCopy.textContent = parts.join(" ");
+    } else {
+      accountEl.reportPublicBridgePanel.hidden = true;
+      accountEl.reportPublicBridgeCopy.textContent = "Imported public-check notes will appear here after you move a saved public result into Saved Tools.";
+    }
+  }
   accountEl.openReportToolbenchButton.href = workspaceHref({
     report: report.reportId || record.id,
     requireAuth: true
@@ -4765,7 +4795,7 @@ function renderReportDetail(report) {
   accountEl.downloadReportTxtButton.disabled = false;
   accountEl.downloadReportJsonButton.disabled = false;
   accountEl.reportDetailStatus.textContent = report?.savedAt
-    ? `Saved ${new Date(report.savedAt).toLocaleString("en-SG", { dateStyle: "medium", timeStyle: "short" })}. ${report.saveMetadata?.benchmarkTrust || record.confidence}. ${report.saveMetadata?.noteStatus || "Note ready"}.`
+    ? `Saved ${new Date(report.savedAt).toLocaleString("en-SG", { dateStyle: "medium", timeStyle: "short" })}. ${report.saveMetadata?.benchmarkTrust || record.confidence}. ${report.saveMetadata?.noteStatus || "Note ready"}.${publicBridge?.note || publicBridge?.pinned ? " Public check context preserved." : ""}`
     : "";
   renderNegotiationNote(report);
   renderBackendHandoff();
@@ -9463,14 +9493,6 @@ async function initAccount() {
 
   accountEl.clearPublicIntentButton.addEventListener("click", () => {
     clearPublicIntent();
-  });
-
-  accountEl.savePublicChecksButton?.addEventListener("click", async () => {
-    await savePublicChecksAsReports();
-  });
-
-  accountEl.clearPublicChecksButton?.addEventListener("click", () => {
-    clearPublicChecksIntent();
   });
 
   accountEl.askingSourceForm.addEventListener("submit", async (event) => {
