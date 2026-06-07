@@ -10887,6 +10887,29 @@ h1 {
   margin-top: 0;
 }
 
+@media (max-width: 1180px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    width: min(100%, calc(100% - 28px));
+  }
+
+  .hero-intro {
+    justify-items: start;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+  }
+
+  .hero-copy,
+  .hero-rail,
+  .search-panel,
+  .hero-copy > .hero-brief-panel {
+    max-width: none;
+  }
+}
+
 .hero-answer-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
