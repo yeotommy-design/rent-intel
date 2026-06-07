@@ -77,6 +77,7 @@ const accountEl = {
   publicChecksIntentMovedMetric: document.getElementById("publicChecksIntentMovedMetric"),
   publicChecksIntentList: document.getElementById("publicChecksIntentList"),
   openPublicChecksWorkspace: document.getElementById("openPublicChecksWorkspace"),
+  openImportedPublicChecksWorkspace: document.getElementById("openImportedPublicChecksWorkspace"),
   savePublicChecksButton: document.getElementById("savePublicChecksButton"),
   clearPublicChecksButton: document.getElementById("clearPublicChecksButton"),
   publicChecksIntentStatus: document.getElementById("publicChecksIntentStatus"),
@@ -4388,9 +4389,17 @@ function renderPublicChecksIntent() {
   accountEl.publicChecksIntentNotesMetric.textContent = noteCount ? String(noteCount) : "0";
   accountEl.publicChecksIntentMovedMetric.textContent = latest ? formatShortDate(latest) : "Just now";
   accountEl.openPublicChecksWorkspace.href = "../../index.html#search";
+  const latestRecordId = intent?.savedAt ? (intent?.latestRecordId || "") : "";
+  if (accountEl.openImportedPublicChecksWorkspace) {
+    const importedRecord = latestRecordId ? rentRecordList().find((entry) => entry.id === latestRecordId) : null;
+    accountEl.openImportedPublicChecksWorkspace.hidden = !(intent?.savedAt && importedRecord);
+    accountEl.openImportedPublicChecksWorkspace.href = importedRecord
+      ? workspaceHref({ rent: importedRecord.id, requireAuth: true })
+      : "../toolbench/";
+  }
   accountEl.savePublicChecksButton.disabled = !sessionHasFreeTools(currentSession) || Boolean(intent.savedAt);
   accountEl.publicChecksIntentStatus.textContent = intent.savedAt
-    ? `Saved to member reports on ${formatShortDate(intent.savedAt)}.`
+    ? `Saved to member reports on ${formatShortDate(intent.savedAt)}. Open the latest one in Workspace or continue from your saved report list below.`
     : sessionHasFreeTools(currentSession)
       ? "Save these checks as reports to keep them in Saved Tools."
       : "Open the free saved tools session to save these checks as reports.";
@@ -4517,28 +4526,43 @@ async function savePublicChecksAsReports() {
 
   let saved = 0;
   let skipped = 0;
+  const importedReports = [];
   for (const check of checks) {
     const record = rentRecordList().find((entry) => entry.id === check.recordId);
     if (!record) {
       skipped += 1;
       continue;
     }
-    await saveRecordAsReport(record);
+    const savedReport = await saveRecordAsReport(record);
     enrichSavedReportFromPublicCheck(check.recordId, check);
+    if (savedReport) {
+      importedReports.push(savedReport);
+    }
     saved += 1;
+  }
+
+  const latestImportedReport = importedReports[0] || null;
+  if (latestImportedReport) {
+    selectedReport = latestImportedReport;
   }
 
   writeStoredJson(pendingPublicChecksKey, {
     ...intent,
     savedAt: new Date().toISOString(),
-    savedCount: saved
+    savedCount: saved,
+    latestRecordId: latestImportedReport?.recordId || ""
   });
   renderSavedReports();
+  if (latestImportedReport) {
+    renderReportDetail(latestImportedReport);
+  }
   renderPublicChecksIntent();
   renderMemberCommandCenter();
   accountEl.publicChecksIntentStatus.textContent = skipped
     ? `${saved} public checks saved as reports. ${skipped} could not be matched locally.`
-    : `${saved} public checks saved as reports.`;
+    : latestImportedReport
+      ? `${saved} public checks saved as reports. ${latestImportedReport.title} is ready below and can open in Workspace.`
+      : `${saved} public checks saved as reports.`;
   recordActivity("Public checks imported", `${saved} recent public ${saved === 1 ? "check" : "checks"} saved as reports`);
 }
 
@@ -6323,6 +6347,7 @@ async function saveRecordAsReport(record) {
   renderMemberCommandCenter();
   renderBackendHandoff();
   recordActivity("Report saved", `${record.title} synced to ${backendReport.backendStatus === "api-synced" ? "backend" : "mock backend"}`);
+  return backendReport;
 }
 
 async function removeSelectedReport() {
