@@ -10868,12 +10868,9 @@ h1 {
   margin-top: 276px;
 }
 
-.rent-pressure-panel {
-  order: 1;
-}
-
-.hero-brief-panel {
-  order: 2;
+.hero-copy > .hero-brief-panel {
+  max-width: 720px;
+  margin-top: 16px;
 }
 
 .hero-answer-card {
