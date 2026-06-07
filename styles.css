@@ -12342,6 +12342,15 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   line-height: 1.4;
 }
 
+.search-result-state small {
+  display: block;
+  margin-top: 6px;
+  color: #355d7c;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
 .search-result-state[data-state="comparable"] {
   border-color: rgba(180, 117, 34, 0.32);
   background: linear-gradient(135deg, #fff4d1, #fffdf9);

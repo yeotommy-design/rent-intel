@@ -116,6 +116,7 @@ const el = {
   searchResultType: document.getElementById("searchResultType"),
   searchResultLabel: document.getElementById("searchResultLabel"),
   searchResultCopy: document.getElementById("searchResultCopy"),
+  searchResultContext: document.getElementById("searchResultContext"),
   publicTrustGuide: document.getElementById("publicTrustGuide"),
   publicTrustGuideSummary: document.getElementById("publicTrustGuideSummary"),
   dailyInsight: document.getElementById("dailyInsight"),
@@ -2112,13 +2113,18 @@ function renderNoMatchAlternatives(eligibility) {
   });
 }
 
-function updateResult(record) {
+function updateResult(record, options = {}) {
   el.noMatch.hidden = true;
   el.noMatch.dataset.coverageStatus = "";
   selectedRecord = record;
   const confidence = confidenceProfile(record);
   const action = decisionActionProfile(record);
   renderSearchResultState(searchResultProfile(record));
+  if (el.searchResultContext) {
+    const contextCopy = String(options.searchContext || "").trim();
+    el.searchResultContext.hidden = !contextCopy;
+    el.searchResultContext.textContent = contextCopy;
+  }
   el.resultTitle.textContent = record.title;
   el.confidenceBadge.textContent = record.confidence;
   if (el.confidenceStrip) {
@@ -3595,6 +3601,24 @@ function pressureBoardTakeaway(rows, reference) {
   return "Nearby checks are close, so focus on frontage, anchor pull, and source freshness rather than the area name alone.";
 }
 
+function comparableTransitionCopy(record, reference) {
+  if (!record || !reference || record.id === reference.id) return "";
+  const direction = record.gap > reference.gap + 3
+    ? "hotter"
+    : record.gap < reference.gap - 3
+      ? "calmer"
+      : "similar";
+  const tag = comparableAreaTag(record).toLowerCase();
+  const fromArea = reference.area || reference.title;
+  if (direction === "hotter") {
+    return `Now comparing into ${record.area}: a hotter ${tag} cross-check than ${fromArea}.`;
+  }
+  if (direction === "calmer") {
+    return `Now comparing into ${record.area}: a calmer ${tag} cross-check than ${fromArea}.`;
+  }
+  return `Now comparing into ${record.area}: a similar-pressure ${tag} cross-check from nearby context.`;
+}
+
 function renderPressurePanel() {
   if (!selectedRecord || !el.pressureList) return;
   const rows = pressurePanelRows();
@@ -3658,9 +3682,13 @@ function renderPressurePanel() {
 
     row.append(copy, bar, metric);
     row.addEventListener("click", () => {
+      const previous = selectedRecord;
       el.input.value = record.title;
-      updateResult(record);
+      updateResult(record, {
+        searchContext: comparableTransitionCopy(record, previous)
+      });
       renderSearchSuggestions();
+      document.getElementById("search")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
     el.pressureList.append(row);
   });
