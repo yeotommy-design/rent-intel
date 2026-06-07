@@ -219,6 +219,7 @@ const el = {
   pressureAskingMarker: document.getElementById("pressureAskingMarker"),
   pressureBoardSummary: document.getElementById("pressureBoardSummary"),
   pressureList: document.getElementById("pressureList"),
+  pressureBoardTakeaway: document.getElementById("pressureBoardTakeaway"),
   dataFreshness: document.getElementById("dataFreshness")
 };
 
@@ -3542,8 +3543,61 @@ function pressurePanelRows() {
     .slice(0, 5);
 }
 
+function comparableAreaTag(record) {
+  const property = String(record?.propertyType || "").toLowerCase();
+  const title = String(record?.title || "").toLowerCase();
+  const area = String(record?.area || "").toLowerCase();
+  if (property.includes("hdb")) return "HDB retail";
+  if (property.includes("shophouse") || title.includes("shophouse")) return "Shophouse";
+  if (property.includes("shopping centre") || property.includes("mall") || title.includes("mall")) return "Mall retail";
+  if (/(cbd|raffles|city hall|tanjong pagar)/.test(area)) return "CBD";
+  if (/(marine|bedok point|novena|bugis|jalan besar|bukit merah|queenstown|outram)/.test(area)) return "City fringe";
+  if (/(punggol|sengkang)/.test(area)) return "New town";
+  return "Neighbourhood retail";
+}
+
+function comparableAreaWhy(record, reference) {
+  if (!reference) return "Useful nearby price check.";
+  if (record.id === reference.id) {
+    return "This is the current area you are checking.";
+  }
+  const gapDiff = record.gap - reference.gap;
+  const sameTag = comparableAreaTag(record) === comparableAreaTag(reference);
+  if (Math.abs(gapDiff) <= 3) {
+    return sameTag ? "Very close pressure for a similar area type." : "Very close pressure, but from a different area type.";
+  }
+  if (gapDiff > 0) {
+    return sameTag ? "Running hotter than this search for a similar area type." : "A hotter cross-check from a different area type.";
+  }
+  return sameTag ? "Calmer than this search for a similar area type." : "A calmer cross-check from a different area type.";
+}
+
+function pressureBoardTakeaway(rows, reference) {
+  if (!reference || !rows.length) return "Use nearby areas to check whether the asking premium still looks defensible.";
+  const hotter = rows.filter((record) => record.id !== reference.id && record.gap > reference.gap + 3);
+  const calmer = rows.filter((record) => record.id !== reference.id && record.gap < reference.gap - 3);
+  const mixedTypes = rows.filter((record) => record.id !== reference.id).some((record) => comparableAreaTag(record) !== comparableAreaTag(reference));
+  if (hotter.length && calmer.length) {
+    return mixedTypes
+      ? "Nearby pressure is mixed, so use both similar and different area types to test whether this exact row deserves the premium."
+      : "Nearby pressure is mixed, so the exact row quality matters more than the headline area alone.";
+  }
+  if (hotter.length) {
+    return mixedTypes
+      ? "Several nearby checks are running hotter, so this asking rent may be defendable if the micro-location quality is real."
+      : "Several similar areas are running hotter, so the premium may be supportable if this exact row is strong.";
+  }
+  if (calmer.length) {
+    return mixedTypes
+      ? "Several nearby checks are calmer, so ask why this unit should outrun both similar and alternative area types."
+      : "Several similar areas are calmer, so this unit needs stronger proof before the premium is accepted.";
+  }
+  return "Nearby checks are close, so focus on frontage, anchor pull, and source freshness rather than the area name alone.";
+}
+
 function renderPressurePanel() {
   if (!selectedRecord || !el.pressureList) return;
+  const rows = pressurePanelRows();
   const status = pressureStatus(selectedRecord);
   const fairLow = selectedRecord.fairRange?.low || selectedRecord.official * 0.95;
   const fairHigh = selectedRecord.fairRange?.high || selectedRecord.official * 1.15;
@@ -3564,11 +3618,14 @@ function renderPressurePanel() {
   el.pressureGauge.style.setProperty("--fair-width", `${fairWidth}%`);
   el.pressureGauge.style.setProperty("--benchmark-pos", `${benchmarkPos}%`);
   el.pressureGauge.style.setProperty("--asking-pos", `${askingPos}%`);
-  el.pressureBoardSummary.textContent = `${pressurePanelRows().length} areas compared`;
+  el.pressureBoardSummary.textContent = `${rows.length} areas compared`;
+  if (el.pressureBoardTakeaway) {
+    el.pressureBoardTakeaway.textContent = pressureBoardTakeaway(rows, selectedRecord);
+  }
   el.pressureList.replaceChildren();
 
-  const maxGap = Math.max(...pressurePanelRows().map((record) => Math.abs(record.gap)), 1);
-  pressurePanelRows().forEach((record) => {
+  const maxGap = Math.max(...rows.map((record) => Math.abs(record.gap)), 1);
+  rows.forEach((record) => {
     const rowStatus = pressureStatus(record);
     const row = document.createElement("button");
     row.type = "button";
@@ -3576,12 +3633,22 @@ function renderPressurePanel() {
     row.dataset.status = rowStatus.key;
     row.dataset.active = record.id === selectedRecord.id ? "true" : "false";
 
-    const copy = document.createElement("span");
+    const copy = document.createElement("div");
+    copy.className = "pressure-row-copy";
     const title = document.createElement("strong");
     title.textContent = record.id === selectedRecord.id ? `${record.area} selected` : record.area;
     const detail = document.createElement("small");
     detail.textContent = record.propertyType;
-    copy.append(title, detail);
+    const meta = document.createElement("div");
+    meta.className = "pressure-row-meta";
+    const tag = document.createElement("em");
+    tag.className = "pressure-row-tag";
+    tag.textContent = comparableAreaTag(record);
+    const why = document.createElement("p");
+    why.className = "pressure-row-why";
+    why.textContent = comparableAreaWhy(record, selectedRecord);
+    meta.append(tag, why);
+    copy.append(title, detail, meta);
 
     const bar = document.createElement("i");
     bar.style.setProperty("--pressure-width", `${Math.max(6, (Math.abs(record.gap) / maxGap) * 100)}%`);
