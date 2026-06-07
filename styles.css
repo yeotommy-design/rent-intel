@@ -10868,6 +10868,14 @@ h1 {
   margin-top: 276px;
 }
 
+.rent-pressure-panel {
+  order: 1;
+}
+
+.hero-brief-panel {
+  order: 2;
+}
+
 .hero-answer-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto;
