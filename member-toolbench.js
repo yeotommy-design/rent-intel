@@ -173,6 +173,12 @@ const toolbenchStatusMessages = {
     duration: toolbenchStatusDurations.restore,
     text: ({ title = "" } = {}) => `${title} saved decision pack restored.`
   },
+  publicBridgeRestored: {
+    tone: "success",
+    duration: toolbenchStatusDurations.restore,
+    text: ({ title = "", verdict = "", note = "" } = {}) =>
+      `${title || "Saved report"} reopened from Saved Tools${verdict ? ` • ${verdict}` : ""}${note ? ` • ${note}` : ""}.`
+  },
   recordLoaded: {
     tone: "info",
     duration: toolbenchStatusDurations.reviewStep,
@@ -1120,6 +1126,9 @@ const toolbenchEl = {
   accessCopy: document.getElementById("toolbenchAccessCopy"),
   renderMode: document.getElementById("toolbenchRenderMode"),
   workspaceHandoffNotice: document.getElementById("toolbenchWorkspaceHandoffNotice"),
+  publicBridgePanel: document.getElementById("toolbenchPublicBridgePanel"),
+  publicBridgeTitle: document.getElementById("toolbenchPublicBridgeTitle"),
+  publicBridgeCopy: document.getElementById("toolbenchPublicBridgeCopy"),
   workspaceHandoffActions: document.getElementById("toolbenchWorkspaceHandoffActions"),
   openFullWorkspace: document.getElementById("toolbenchOpenFullWorkspace"),
   workspaceHandoffTarget: document.getElementById("toolbenchWorkspaceHandoffTarget"),
@@ -11971,6 +11980,7 @@ function renderSaveState(report = savedReportForRecord(toolbenchRecord?.id)) {
       ? toolbenchReviewPassMessages.workspace.noteLabelReady()
       : toolbenchReviewPassMessages.workspace.noteLabelDraft()
   );
+  renderToolbenchPublicBridge(report);
 }
 
 function findRecord(query) {
@@ -12065,8 +12075,18 @@ function currentMemberReports() {
   });
 }
 
-function savedReportForRecord(recordId) {
-  return currentMemberReports().find((report) => report.recordId === recordId) || null;
+function normalizeSavedReportMatch(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function savedReportForRecord(recordOrId) {
+  const recordId = typeof recordOrId === "string" ? recordOrId : recordOrId?.id;
+  const recordTitle = typeof recordOrId === "string" ? "" : recordOrId?.title;
+  const normalizedTitle = normalizeSavedReportMatch(recordTitle);
+  return currentMemberReports().find((report) =>
+    report.recordId === recordId ||
+    (normalizedTitle && normalizeSavedReportMatch(report.title) === normalizedTitle)
+  ) || null;
 }
 
 function savedReportByIdOrRecord(value) {
@@ -12082,6 +12102,43 @@ function initialSavedReport() {
   const params = new URLSearchParams(window.location.search);
   const requested = params.get("report");
   return requested ? savedReportByIdOrRecord(requested) : null;
+}
+
+function toolbenchRecordForSavedReport(report) {
+  if (!report) return null;
+  return toolbenchRecords.find((record) => record.id === report.recordId) ||
+    findRecord(report.recordId) ||
+    findRecord(report.title) ||
+    null;
+}
+
+function publicBridgeForReport(report) {
+  const bridge = report?.saveMetadata?.publicBridge;
+  if (!bridge || (!bridge.note && !bridge.pinned && !bridge.verdict)) return null;
+  return bridge;
+}
+
+function renderToolbenchPublicBridge(report = savedReportForRecord(toolbenchRecord?.id)) {
+  if (!toolbenchEl.publicBridgePanel || !toolbenchEl.publicBridgeTitle || !toolbenchEl.publicBridgeCopy) return;
+  const bridge = publicBridgeForReport(report);
+  if (!bridge) {
+    toolbenchEl.publicBridgePanel.hidden = true;
+    toolbenchEl.publicBridgeTitle.textContent = "Continuing from public check";
+    toolbenchEl.publicBridgeCopy.textContent = "Saved public-check context will appear here when you open Workspace from Saved Tools.";
+    return;
+  }
+
+  const detail = [];
+  if (bridge.verdict) detail.push(`Public verdict: ${bridge.verdict}.`);
+  detail.push(`Workspace reopened ${report?.title || toolbenchRecord?.title || "this area"} from Saved Tools so you can continue without starting over.`);
+  if (bridge.note) detail.push(`Public note: ${bridge.note}.`);
+  if (bridge.pinned) detail.push("This area was pinned in public recent checks before import.");
+  if (Number.isFinite(bridge.gap)) {
+    detail.push(`Public gap at save: ${bridge.gap > 0 ? "+" : ""}${bridge.gap}%.`);
+  }
+  toolbenchEl.publicBridgePanel.hidden = false;
+  toolbenchEl.publicBridgeTitle.textContent = "Continuing from public check";
+  toolbenchEl.publicBridgeCopy.textContent = detail.join(" ");
 }
 
 function watchlistRecords() {
@@ -13308,7 +13365,7 @@ function renderSavedReports() {
     });
     button.append(title, meta, detail);
     button.addEventListener("click", () => {
-      const record = toolbenchRecords.find((item) => item.id === report.recordId);
+      const record = toolbenchRecordForSavedReport(report);
       if (record) {
         clearQuickPickBookmarkOpenedState({ render: false });
         dismissBackendPreviewNotice();
@@ -13514,7 +13571,7 @@ async function initToolbench() {
   renderV1Roster();
   const savedReport = initialSavedReport();
   const startingRecord = savedReport
-    ? toolbenchRecords.find((record) => record.id === savedReport.recordId)
+    ? toolbenchRecordForSavedReport(savedReport)
     : initialRecord();
   renderRecord(startingRecord);
   const openedFromPreview = window.location.protocol !== "file:" && queryParam("from") === "preview";
@@ -13546,7 +13603,22 @@ async function initToolbench() {
     );
   }
   toolbenchQueueLensRestoredOnInit = false;
-  if (savedReport) restoreSavedReport(savedReport, { announce: true });
+  if (savedReport) {
+    restoreSavedReport(savedReport, { announce: true });
+    const publicBridge = publicBridgeForReport(savedReport);
+    if (publicBridge) {
+      const bridgeNote = publicBridge.note
+        ? "public note restored"
+        : publicBridge.pinned
+          ? "pinned public check restored"
+          : "saved public context restored";
+      setNamedSearchStatus("publicBridgeRestored", {
+        title: savedReport.title,
+        verdict: publicBridge.verdict || "",
+        note: bridgeNote
+      });
+    }
+  }
   renderSavedReports();
   renderWatchlist();
 

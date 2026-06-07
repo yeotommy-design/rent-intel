@@ -4392,11 +4392,16 @@ function renderPublicChecksIntent() {
   accountEl.publicChecksIntentMovedMetric.textContent = latest ? formatShortDate(latest) : "Just now";
   accountEl.openPublicChecksWorkspace.href = "../../index.html#search";
   const latestRecordId = intent?.savedAt ? (intent?.latestRecordId || "") : "";
+  const latestReportId = intent?.savedAt ? (intent?.latestReportId || "") : "";
   if (accountEl.openImportedPublicChecksWorkspace) {
     const importedRecord = latestRecordId ? rentRecordList().find((entry) => entry.id === latestRecordId) : null;
     accountEl.openImportedPublicChecksWorkspace.hidden = !(intent?.savedAt && importedRecord);
     accountEl.openImportedPublicChecksWorkspace.href = importedRecord
-      ? workspaceHref({ rent: importedRecord.id, requireAuth: true })
+      ? workspaceHref({
+          rent: importedRecord.id,
+          report: latestReportId || importedRecord.id,
+          requireAuth: true
+        })
       : "../toolbench/";
   }
   accountEl.savePublicChecksButton.disabled = !sessionHasFreeTools(currentSession) || Boolean(intent.savedAt);
@@ -4509,6 +4514,9 @@ function enrichSavedReportFromPublicCheck(recordId, bridge) {
       saveMetadata: {
         ...(report.saveMetadata || {}),
         publicBridge: {
+          title: bridge.title || report.title || "",
+          verdict: bridge.verdict || "",
+          gap: Number.isFinite(Number(bridge.gap)) ? Number(bridge.gap) : null,
           note: bridge.note || "",
           pinned: Boolean(bridge.pinned),
           importedAt: new Date().toISOString(),
@@ -4559,7 +4567,8 @@ async function savePublicChecksAsReports() {
     ...intent,
     savedAt: new Date().toISOString(),
     savedCount: saved,
-    latestRecordId: latestImportedReport?.recordId || ""
+    latestRecordId: latestImportedReport?.recordId || "",
+    latestReportId: latestImportedReport?.reportId || ""
   });
   renderSavedReports();
   if (latestImportedReport) {
