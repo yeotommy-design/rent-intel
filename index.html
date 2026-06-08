@@ -9,7 +9,7 @@
       content="Check Singapore retail asking rent against benchmark signals, area context, and trust cues. RentIntel helps tenants, landlords, and operators review whether a rent looks fair."
     >
     <link rel="icon" href="./pulse-shared-transparent.png">
-    <link rel="stylesheet" href="./styles.css?v=20260607-comparereturn">
+    <link rel="stylesheet" href="./styles.css?v=20260608-pressurepin">
     <link rel="stylesheet" href="./source-refresh-card.css?v=20260525-source-map">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
@@ -149,6 +149,7 @@
               <div class="pressure-board-title">
                 <span>Comparable areas</span>
                 <strong id="pressureBoardSummary">Ranked by asking premium</strong>
+                <button type="button" id="clearPressurePin" class="pressure-board-clear" hidden>Clear pinned comparable</button>
               </div>
               <div class="pressure-list" id="pressureList"></div>
               <p class="pressure-board-takeaway" id="pressureBoardTakeaway"></p>
@@ -869,7 +870,7 @@
 
     <script src="./data/rentintel-sample-data.js?v=20260606-undervalue"></script>
     <script src="./data/sources/asking-rent-feed.js?v=20260525-asking-pilot-refresh"></script>
-    <script src="./data/sources/source-status.js?v=20260525-source-status-map"></script>
+    <script src="./data/sources/source-status.js?v=20260608-source-status-labels"></script>
     <script src="./data/sources/onemap-enrichment.js?v=20260512-onemap"></script>
     <script src="./asking-feed-adapter.js?v=20260510-feedhardening"></script>
     <script src="./onemap-enrichment-adapter.js?v=20260512-onemap"></script>
