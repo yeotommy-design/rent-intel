@@ -50,6 +50,50 @@ button {
   cursor: pointer;
 }
 
+:where(button, [role="button"], [tabindex="0"]) {
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    color 140ms ease,
+    transform 140ms ease;
+}
+
+:where(button, [role="button"], [tabindex="0"]):not(:disabled):not([aria-disabled="true"]):not([data-disabled="true"]):hover,
+:where(button, [role="button"], [tabindex="0"]):not(:disabled):not([aria-disabled="true"]):not([data-disabled="true"]):focus-visible {
+  border-color: rgba(25, 107, 85, 0.34);
+  background-color: rgba(24, 104, 83, 0.04);
+  box-shadow: 0 6px 16px rgba(24, 32, 27, 0.09);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+:where(.public-recent-check-item, .public-recent-check-open, .public-recent-check-compare, .public-recent-check-pin, .public-recent-check-note-button, .public-recent-check-remove, .public-recent-checks-export, .public-recent-checks-clear, .public-compare-item, .rent-mover-row, .coverage-highlight-item, .saved-report-item):not(:disabled):not([aria-disabled="true"]):not([data-disabled="true"]):hover,
+:where(.public-recent-check-item, .public-recent-check-open, .public-recent-check-compare, .public-recent-check-pin, .public-recent-check-note-button, .public-recent-check-remove, .public-recent-checks-export, .public-recent-checks-clear, .public-compare-item, .rent-mover-row, .coverage-highlight-item, .saved-report-item):not(:disabled):not([aria-disabled="true"]):not([data-disabled="true"]):focus-visible {
+  border-color: rgba(25, 107, 85, 0.34);
+  background-color: rgba(24, 104, 83, 0.04);
+  box-shadow: 0 6px 16px rgba(24, 32, 27, 0.09);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+:where(.members-login-button, .rentintel-path-links a, .search-row button, .secondary-button, .decision-note-actions a, .decision-note-actions button, .workspace-links-grid a, .public-coverage-item):not(:disabled):not([aria-disabled="true"]):not([data-disabled="true"]) {
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    color 140ms ease,
+    transform 140ms ease,
+    filter 140ms ease;
+}
+
+:where(.members-login-button, .rentintel-path-links a, .search-row button, .secondary-button, .decision-note-actions a, .decision-note-actions button, .workspace-links-grid a, .public-coverage-item):not(:disabled):not([aria-disabled="true"]):not([data-disabled="true"]):hover,
+:where(.members-login-button, .rentintel-path-links a, .search-row button, .secondary-button, .decision-note-actions a, .decision-note-actions button, .workspace-links-grid a, .public-coverage-item):not(:disabled):not([aria-disabled="true"]):not([data-disabled="true"]):focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(17, 26, 21, 0.12);
+  outline: none;
+}
+
 a {
   color: inherit;
 }
@@ -137,6 +181,13 @@ a {
 
 .members-login-button span {
   line-height: 1.15;
+}
+
+.members-login-button:hover,
+.members-login-button:focus-visible {
+  border-color: rgba(248, 207, 117, 0.52);
+  background: rgba(248, 207, 117, 0.16);
+  color: #fff3c5;
 }
 
 .members-login-button[data-access="waitlist"] {
@@ -10476,6 +10527,14 @@ h1 {
   font-weight: 850;
 }
 
+.search-row button:hover,
+.search-row button:focus-visible,
+.secondary-button:hover,
+.secondary-button:focus-visible {
+  background: #145542;
+  color: #ffffff;
+}
+
 .quick-picks {
   display: flex;
   flex-wrap: wrap;
@@ -11032,6 +11091,16 @@ h1 {
   filter: drop-shadow(0 6px 10px rgba(17, 26, 21, 0.18));
 }
 
+.pulse-callout:hover,
+.pulse-callout:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(20, 30, 24, 0.14);
+}
+
+.pulse-callout:hover::before {
+  opacity: 0.96;
+}
+
 .pulse-callout > div {
   position: absolute;
   top: calc(100% + 10px);
@@ -11282,6 +11351,20 @@ h1 {
   border-color: rgba(25, 107, 85, 0.3);
   background: var(--green-2);
   color: var(--green);
+}
+
+.rentintel-path-links a:hover,
+.rentintel-path-links a:focus-visible {
+  border-color: rgba(25, 107, 85, 0.32);
+  background: #edf7f2;
+  color: var(--green);
+}
+
+.rentintel-path-links a[aria-current="page"]:hover,
+.rentintel-path-links a[aria-current="page"]:focus-visible {
+  border-color: rgba(25, 107, 85, 0.42);
+  background: #dff0e7;
+  color: #145542;
 }
 
 .hero-brief-panel {
@@ -12250,6 +12333,13 @@ button.workspace-v1-context-why-clause[data-active="true"] {
 
 .public-coverage-item:hover {
   border-color: var(--blue);
+}
+
+.public-coverage-item:focus-visible {
+  border-color: var(--blue);
+  background: #edf7f2;
+  color: var(--ink);
+  outline: none;
 }
 
 .public-coverage-item strong {
@@ -13512,11 +13602,26 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   color: #ffffff;
 }
 
+.decision-note-actions a:first-child:hover,
+.decision-note-actions a:first-child:focus-visible {
+  background: #243127;
+  color: #ffffff;
+}
+
 .decision-note-actions button,
 .decision-note-actions a:last-child {
   border: 1px solid rgba(25, 107, 85, 0.24);
   background: #fffdf9;
   color: var(--green);
+}
+
+.decision-note-actions button:hover,
+.decision-note-actions button:focus-visible,
+.decision-note-actions a:last-child:hover,
+.decision-note-actions a:last-child:focus-visible {
+  border-color: rgba(25, 107, 85, 0.36);
+  background: #edf7f2;
+  color: #145542;
 }
 
 .decision-note-status {
@@ -14596,6 +14701,12 @@ button.workspace-v1-context-why-clause[data-active="true"] {
   font-size: 14px;
   font-weight: 850;
   text-decoration: none;
+}
+
+.workspace-links-grid a:hover,
+.workspace-links-grid a:focus-visible {
+  background: #145542;
+  color: #ffffff;
 }
 
 .monetisation-layer-section {
