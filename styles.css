@@ -10527,11 +10527,19 @@ h1 {
   font-weight: 850;
 }
 
-.search-row button:hover,
-.search-row button:focus-visible,
+.search-row > button,
+.secondary-button {
+  border: 1px solid var(--green);
+  background-color: var(--green);
+  color: #ffffff;
+}
+
+.search-row > button:hover,
+.search-row > button:focus-visible,
 .secondary-button:hover,
 .secondary-button:focus-visible {
-  background: #145542;
+  border-color: #145542;
+  background-color: #145542;
   color: #ffffff;
 }
 
