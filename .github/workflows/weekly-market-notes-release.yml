@@ -34,15 +34,11 @@ jobs:
         id: check
         run: |
           node ./scripts/weekly-market-notes-check.mjs > /tmp/market-notes-status.json
-          node -e "
-            const fs = require('fs');
-            const status = JSON.parse(fs.readFileSync('/tmp/market-notes-status.json', 'utf8'));
-            console.log(`is_healthy=${status.isPipelineHealthy}`);
-            console.log(`needs_action=${status.needsAction}`);
-            console.log(`overdue=${status.overdue}`);
-          "
-          echo "IS_HEALTHY=$(node -e \"const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); process.stdout.write(status.isPipelineHealthy ? 'true' : 'false');\")" >> $GITHUB_OUTPUT
-          echo "OVERDUE=$(node -e \"const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); process.stdout.write(status.overdue ? 'true' : 'false');\")" >> $GITHUB_OUTPUT
+          cat /tmp/market-notes-status.json
+          IS_HEALTHY=$(node -e "const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); process.stdout.write(status.isPipelineHealthy ? 'true' : 'false');")
+          OVERDUE=$(node -e "const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); process.stdout.write(status.overdue ? 'true' : 'false');")
+          echo "IS_HEALTHY=$IS_HEALTHY" >> $GITHUB_OUTPUT
+          echo "OVERDUE=$OVERDUE" >> $GITHUB_OUTPUT
 
       - name: Configure git identity
         if: ${{ steps.check.outputs.IS_HEALTHY == 'true' && (github.event_name != 'workflow_dispatch' || github.event.inputs.run_release == 'true') }}
@@ -123,4 +119,18 @@ jobs:
             });
 
             const existing = issues.find((issue) => issue.title === title);
-            if
+            if (existing) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body
+              });
+            }
