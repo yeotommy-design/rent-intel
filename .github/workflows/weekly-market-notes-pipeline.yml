@@ -1,0 +1,65 @@
+name: RentIntel Market Notes Pipeline
+
+on:
+  schedule:
+    # Monday 09:00 Singapore Time = Monday 01:00 UTC (UTC-only in GitHub Actions)
+    - cron: "0 1 * * 1"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Run the check and create/update the Monday watch issue"
+        required: false
+        default: "true"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  weekly-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run weekly Market Notes stability check
+        id: check
+        run: |
+          node ./scripts/weekly-market-notes-check.mjs > /tmp/market-notes-status.json
+          cat /tmp/market-notes-status.json
+
+      - name: Open/refresh Monday warning issue
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const fsStatus = fs.readFileSync("/tmp/market-notes-status.json", "utf8");
+            const status = JSON.parse(fsStatus);
+            const title = "RentIntel Market Notes pipeline needs attention";
+            const reasons = Array.isArray(status.failureReasons) && status.failureReasons.length
+              ? status.failureReasons.map((item) => `- ${item}`).join("\n")
+              : "- Weekly Market Notes check failed";
+            const body = `## Weekly pipeline check failed\n\n` +
+              `Latest slug: \`${status.latestSlug}\`\n` +
+              `Title: ${status.latestTitle}\n` +
+              `Published at: ${status.publishedAt} (${status.publishedAtGapDays} days ago)\n` +
+              `Overdue: ${status.overdue ? "Yes" : "No"}\n` +
+              `Stale files: ${status.staleFileCount}\n` +
+              `Archive contains latest: ${status.archiveHasLatest}\n` +
+              `Sitemap contains latest: ${status.sitemapHasLatest}\n\n` +
+              `### Why this failed\n${reasons}\n\n` +
+              `Please run:\n` +
+              `- npm run publish:market-notes\n` +
+              `- npm run release:market-notes\n` +
+              `- npm run submit:sitemap`;
+
+            const { data: existing } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open"
+            });
+
+            const match = existing.find((issue) =>
