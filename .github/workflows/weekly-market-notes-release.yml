@@ -31,7 +31,7 @@ jobs:
           node-version: 20
           package-manager-cache: false
 
-      -       - name: Check latest Market Notes status
+      - name: Check latest Market Notes status
         id: check
         run: |
           node ./scripts/weekly-market-notes-check.mjs > /tmp/market-notes-status.json
