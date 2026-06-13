@@ -35,9 +35,13 @@ jobs:
         id: check
         run: |
           node ./scripts/weekly-market-notes-check.mjs > /tmp/market-notes-status.json
-          node -e "const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); console.log(JSON.stringify(status, null, 2));"
-          echo "IS_HEALTHY=$(node -e \"const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); process.stdout.write(status.isPipelineHealthy ? 'true' : 'false');\")" >> $GITHUB_OUTPUT
-          echo "OVERDUE=$(node -e \"const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); process.stdout.write(status.overdue ? 'true' : 'false');\")" >> $GITHUB_OUTPUT
+          node <<'EOF'
+          const fs = require('fs');
+          const status = JSON.parse(fs.readFileSync('/tmp/market-notes-status.json', 'utf8'));
+          console.log(JSON.stringify(status, null, 2));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `IS_HEALTHY=${status.isPipelineHealthy ? 'true' : 'false'}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `OVERDUE=${status.overdue ? 'true' : 'false'}\n`);
+          EOF
 
       - name: Configure git identity
         if: ${{ steps.check.outputs.IS_HEALTHY == 'true' && (github.event_name != 'workflow_dispatch' || github.event.inputs.run_release == 'true') }}
