@@ -21,24 +21,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
+          package-manager-cache: false
 
       - name: Check latest Market Notes status
         id: check
         run: |
           node ./scripts/weekly-market-notes-check.mjs > /tmp/market-notes-status.json
           cat /tmp/market-notes-status.json
-          IS_HEALTHY=$(node -e "const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); process.stdout.write(status.isPipelineHealthy ? 'true' : 'false');")
-          OVERDUE=$(node -e "const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); process.stdout.write(status.overdue ? 'true' : 'false');")
-          echo "IS_HEALTHY=$IS_HEALTHY" >> $GITHUB_OUTPUT
-          echo "OVERDUE=$OVERDUE" >> $GITHUB_OUTPUT
+          echo "IS_HEALTHY=$(node -e \"const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); process.stdout.write(status.isPipelineHealthy ? 'true' : 'false');\")" >> $GITHUB_OUTPUT
+          echo "OVERDUE=$(node -e \"const fs=require('fs'); const status=JSON.parse(fs.readFileSync('/tmp/market-notes-status.json','utf8')); process.stdout.write(status.overdue ? 'true' : 'false');\")" >> $GITHUB_OUTPUT
 
       - name: Configure git identity
         if: ${{ steps.check.outputs.IS_HEALTHY == 'true' && (github.event_name != 'workflow_dispatch' || github.event.inputs.run_release == 'true') }}
@@ -53,10 +52,10 @@ jobs:
       - name: Submit sitemap after release
         if: false
         run: npm run submit:sitemap
-        
+
       - name: Open/refresh release failure issue
         if: failure() && steps.check.outputs.IS_HEALTHY == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const title = "RentIntel Market Notes release failed";
@@ -91,7 +90,7 @@ jobs:
 
       - name: Open/refresh overdue article issue
         if: failure() && steps.check.outputs.OVERDUE == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require("fs");
@@ -105,7 +104,7 @@ jobs:
               `Title: ${status.latestTitle}\n` +
               `Published at: ${status.publishedAt} (${status.publishedAtGapDays} days ago)\n\n` +
               `### Why this needs attention\n${reasons}\n\n` +
-              `This means the weekly renderer may still be working, but a fresh Monday article was not added in time.\n\n` +
+              `This means the weekly renderer may still be working, but a fresh Monday article was not added to \`data/market-notes.json\` in time.\n\n` +
               `Suggested next steps:\n` +
               `- add the new Monday article into data/market-notes.json\n` +
               `- run npm run publish:market-notes\n` +
