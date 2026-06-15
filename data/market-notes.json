@@ -7,6 +7,33 @@
   },
   "notes": [
     {
+      "slug": "serangoon-hdb-rows-quotes-still-need-proof-after-a-12-gap",
+      "title": "Serangoon HDB rows quotes still need proof after a 12% gap",
+      "publishedAt": "2026-06-15",
+      "description": "This week's RentIntel note on serangoon hdb rows, why the current asking line still needs proof against the benchmark, and the comparison habit that matters next.",
+      "summary": "Serangoon HDB rows are still quoting around 12% above the fair range, which means unit-specific proof matters more than a quick acceptance.",
+      "lede": "Market Notes is the short weekly RentIntel release for people who want one fast read, not a long blog post. This week's note is about serangoon heartland hdb rows still clearing the benchmark too easily, and why the next move should be proof mode instead of quick acceptance.",
+      "storyParagraphs": [
+        "Serangoon heartland HDB rows are currently asking around $12.2 psf pm against a fair-range high of $10.9 psf pm, which leaves the quote roughly 12% above the calmer benchmark. That does not make the quote automatically wrong. It means the burden should stay on proof. Frontage, approvals, visibility, and operator fit should explain the gap rather than the area story replacing the gap altogether.",
+        "Tampines HDB rows works as a useful nearby comparison because its current asking line sits closer to $10.4 psf pm while still giving the same operator a live fallback. The current pilot feed is still a manual layer with the latest capture on 2026-05-25, so faster search should shorten the shortlist stage, not remove the need to pressure-test one live fallback cluster before accepting the premium.",
+        "The decision cue this week is simple: when a heartland quote is still clearing the benchmark by around 12%, shift from area-level confidence into proof mode. That means lease terms, frontage, operator fit, and one calmer nearby comparison before the asking line becomes the new mental anchor."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Treat Serangoon HDB rows as a prompt to inspect the exact unit, not as proof that every nearby option repriced upward with it."
+        },
+        {
+          "label": "Coverage update",
+          "text": "Use direct-search coverage to compare Serangoon HDB rows against Tampines HDB rows before the premium becomes the default anchor."
+        },
+        {
+          "label": "Decision cue",
+          "text": "If the premium only works while unit details stay fuzzy, the quote still needs proof before it becomes the working benchmark. Latest pilot capture: 2026-05-25."
+        }
+      ]
+    },
+    {
       "slug": "food-approved-premiums-still-need-proof-not-corner-stories",
       "title": "Food-approved premiums still need proof, not just a busy-corner story",
       "publishedAt": "2026-06-08",
