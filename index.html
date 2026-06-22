@@ -10,7 +10,7 @@
     >
     <link rel="canonical" href="https://www.rent-intel.com/">
     <link rel="icon" href="./pulse-shared-transparent.png">
-    <link rel="stylesheet" href="./styles.css?v=20260609-buttonguard">
+    <link rel="stylesheet" href="./styles.css?v=20260609-quickfocus5">
     <link rel="stylesheet" href="./source-refresh-card.css?v=20260525-source-map">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
@@ -150,8 +150,10 @@
               <div class="pressure-board-title">
                 <span>Comparable areas</span>
                 <strong id="pressureBoardSummary">Ranked by asking premium</strong>
-                <button type="button" id="clearPressurePin" class="pressure-board-clear" hidden>Clear pinned comparable</button>
+                <button type="button" id="clearPressurePin" class="pressure-board-clear" hidden>Clear quick focus</button>
               </div>
+              <p id="pressurePinnedCopy" class="under-value-pinned-copy" hidden></p>
+              <p id="pressurePinnedHint" class="quick-focus-hint" hidden></p>
               <div class="pressure-list" id="pressureList"></div>
               <p class="pressure-board-takeaway" id="pressureBoardTakeaway"></p>
             </div>
@@ -565,6 +567,9 @@
               <span>Under-Value Watch</span>
               <strong id="underValueSummary">Scanning for below-range areas</strong>
             </div>
+            <button type="button" id="clearUnderValuePin" class="under-value-clear-button" hidden>Clear quick focus</button>
+            <p id="underValuePinnedCopy" class="under-value-pinned-copy" hidden></p>
+            <p id="underValuePinnedHint" class="quick-focus-hint" hidden></p>
             <div class="rent-movers-list" id="underValueList">
               <p>Loading below-range signals...</p>
             </div>
@@ -596,18 +601,18 @@
             </article>
             <article class="market-note-card">
               <span>Area watch</span>
-              <strong>Serangoon HDB rows quotes still need proof after a 12% gap.</strong>
-              <p>Treat Serangoon HDB rows as a prompt to inspect the exact unit, not as proof that every nearby option repriced upward with it.</p>
+              <strong>Two HDB rows keep heartland premiums honest.</strong>
+              <p>Treat Serangoon and Tampines HDB rows as a paired comparison before accepting either quote as the new heartland anchor.</p>
             </article>
             <article class="market-note-card">
               <span>Coverage update</span>
-              <strong>Use direct-search coverage to compare Serangoon HDB rows against Tampines HDB rows before the premium becomes the default anchor.</strong>
-              <p>Use direct-search coverage to compare Serangoon HDB rows against Tampines HDB rows before the premium becomes the default anchor.</p>
+              <strong>Use direct-search coverage to keep both HDB rows visible while the team checks frontage, approvals, and handover details.</strong>
+              <p>Use direct-search coverage to keep both HDB rows visible while the team checks frontage, approvals, and handover details.</p>
             </article>
             <article class="market-note-card">
               <span>Decision cue</span>
-              <strong>If the premium only works while unit details stay fuzzy, the quote still needs proof before it becomes the working benchmark. Latest pilot capture: 2026-05-25.</strong>
-              <p>If the premium only works while unit details stay fuzzy, the quote still needs proof before it becomes the working benchmark. Latest pilot capture: 2026-05-25.</p>
+              <strong>If one premium only works when the other HDB fallback disappears, keep negotiating from the benchmark instead of the story. Latest pilot capture: 2026-05-25.</strong>
+              <p>If one premium only works when the other HDB fallback disappears, keep negotiating from the benchmark instead of the story. Latest pilot capture: 2026-05-25.</p>
             </article>
           </div>
         </div>
