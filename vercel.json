@@ -30,6 +30,12 @@
       ]
     }
   ],
+  "rewrites": [
+    {
+      "source": "/market-notes",
+      "destination": "/market-notes.html"
+    }
+  ],
   "builds": [
     {
       "src": "**/*",
