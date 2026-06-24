@@ -1,0 +1,40 @@
+name: RentIntel Weekly Source Sync
+
+on:
+  schedule:
+    # Monday 09:00 Singapore Time = Monday 01:00 UTC
+    - cron: "0 1 * * 1"
+  workflow_dispatch:
+    inputs:
+      source-name:
+        description: "Source name for scheduled sync"
+        required: false
+        default: "asking-rent"
+      force:
+        description: "Set true to force a sync even if it is not due yet"
+        required: false
+        default: "true"
+
+jobs:
+  source-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call RentIntel source-sync cron endpoint
+        env:
+          RENTINTEL_CRON_TOKEN: ${{ secrets.RENTINTEL_CRON_TOKEN }}
+          RENTINTEL_SOURCE_SYNC_CRON_TOKEN: ${{ secrets.RENTINTEL_SOURCE_SYNC_CRON_TOKEN }}
+        run: |
+          SOURCE_NAME="${{ github.event_name == 'workflow_dispatch' && github.event.inputs.source-name || 'asking-rent' }}"
+          FORCE="${{ github.event_name == 'workflow_dispatch' && github.event.inputs.force || 'true' }}"
+          CRON_TOKEN="${RENTINTEL_SOURCE_SYNC_CRON_TOKEN:-${RENTINTEL_CRON_TOKEN}}"
+          if [ -z "$CRON_TOKEN" ]; then
+            echo "::error::Set RENTINTEL_CRON_TOKEN or RENTINTEL_SOURCE_SYNC_CRON_TOKEN in repository secrets."
+            exit 1
+          fi
+          curl -fsSL -X POST "https://www.rent-intel.com/api/admin/source-sync/cron" \
+            -H "x-rentintel-cron-token: ${CRON_TOKEN}" \
+            -H "content-type: application/json" \
+            -d "{\"sourceName\":\"${SOURCE_NAME}\",\"force\":${FORCE}}" \
+            -o /tmp/source-sync-response.json
+          echo "Response:"
+          cat /tmp/source-sync-response.json
