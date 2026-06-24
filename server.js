@@ -32,6 +32,7 @@ const EMAIL_FROM = String(process.env.RENTINTEL_EMAIL_FROM || "alerts@rent-intel
 const SMTP_URL = String(process.env.RENTINTEL_SMTP_URL || "").trim();
 const SMTP_USER = String(process.env.RENTINTEL_SMTP_USER || "").trim();
 const SMTP_PASS = String(process.env.RENTINTEL_SMTP_PASS || "").trim();
+const SOURCE_SYNC_CRON_TOKEN = String(process.env.RENTINTEL_CRON_TOKEN || process.env.RENTINTEL_SOURCE_SYNC_CRON_TOKEN || "").trim();
 const execFileAsync = promisify(execFile);
 let contextSeedSyncPromise = null;
 let ensureSqliteDbPromise = null;
@@ -62,6 +63,91 @@ function createCode() {
 
 function randomToken(bytes = 24) {
   return crypto.randomBytes(bytes).toString("hex");
+}
+
+function getCronRequestToken(request) {
+  const headerToken = request.headers?.["x-rentintel-cron-token"];
+  if (headerToken) return String(headerToken).trim();
+  const authHeader = request.headers?.authorization || request.headers?.Authorization;
+  if (typeof authHeader === "string" && authHeader.startsWith("Bearer ")) {
+    return authHeader.slice(7).trim();
+  }
+  return "";
+}
+
+function isCronSyncAuthorized(request) {
+  if (!SOURCE_SYNC_CRON_TOKEN) return false;
+  return getCronRequestToken(request) === SOURCE_SYNC_CRON_TOKEN;
+}
+
+function isCronForceMode(value = false) {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    return normalized === "true" || normalized === "1" || normalized === "force";
+  }
+  return false;
+}
+
+function sourceSyncAutomationNowDue(syncSchedule, now = new Date()) {
+  if (!syncSchedule.enabled) return false;
+  const nextRunTs = Date.parse(String(syncSchedule.nextRunAt || ""));
+  if (!Number.isFinite(nextRunTs)) return true;
+  return nextRunTs <= now.getTime();
+}
+
+async function refreshAskingRentFeedState(db, actorEmail = "") {
+  const refreshedFeed = generateRefreshedAskingFeed(db.askingRentFeed || {}, actorEmail);
+  db.askingRentFeed = refreshedFeed;
+  return refreshedFeed;
+}
+
+function buildCoverageTargetsFromCandidates(candidates = []) {
+  return approvedCoverageTargets(candidates).map((target) => ({
+    name: sourceCandidateName(target),
+    sourceKey: sourceCandidateKey(target),
+    requestEmail: target.requestEmail || "",
+    source: target.source || "member-account",
+    sampleRecordId: target.sampleRecordId || "",
+    approvedAt: target.reviewedAt || ""
+  }));
+}
+
+function sourceSyncNextRunAtOrDefault(syncSchedule, now = new Date()) {
+  const cadence = normalizeSourceSyncCadence(syncSchedule.cadence, "weekly");
+  const runHourSgt = cadence === "weekly"
+    ? 9
+    : Math.max(0, Math.min(23, Number(syncSchedule.runHourSgt || 9)));
+  return sourceSyncAutomationNextRun(cadence, runHourSgt, now);
+}
+
+function normalizeSourceSyncAutomationSchedule(payload = {}, current = {}) {
+  const normalizedCurrent = normalizeSourceSyncSchedulePayload(current, {});
+  const normalizedPayload = normalizeSourceSyncSchedulePayload(
+    {
+      enabled: payload.enabled ?? normalizedCurrent.enabled ?? true,
+      cadence: payload.cadence ?? normalizedCurrent.cadence ?? "weekly",
+      runHourSgt: payload.runHourSgt ?? normalizedCurrent.runHourSgt ?? 9,
+      nextRunAt: payload.nextRunAt ?? normalizedCurrent.nextRunAt ?? "",
+      lastRunAt: payload.lastRunAt ?? normalizedCurrent.lastRunAt ?? "",
+      lastRunStatus: payload.lastRunStatus ?? normalizedCurrent.lastRunStatus ?? "not-run",
+      lastRunMode: payload.lastRunMode ?? normalizedCurrent.lastRunMode ?? "",
+      lastFreshnessState: payload.lastFreshnessState ?? normalizedCurrent.lastFreshnessState ?? "",
+      lastFreshnessLabel: payload.lastFreshnessLabel ?? normalizedCurrent.lastFreshnessLabel ?? "",
+      lastBreachAt: payload.lastBreachAt ?? normalizedCurrent.lastBreachAt ?? "",
+      breachCount: Math.max(0, Number(payload.breachCount ?? normalizedCurrent.breachCount ?? 0)),
+      updatedAt: payload.updatedAt ?? normalizedCurrent.updatedAt ?? new Date().toISOString(),
+      updatedBy: payload.updatedBy ?? normalizedCurrent.updatedBy ?? "",
+      history: Array.isArray(payload.history)
+        ? payload.history
+        : (Array.isArray(normalizedCurrent.history) ? normalizedCurrent.history : normalizedCurrent.history || [])
+    },
+    {}
+  );
+  if (normalizedPayload.enabled && !normalizedPayload.nextRunAt) {
+    normalizedPayload.nextRunAt = sourceSyncNextRunAtOrDefault(normalizedPayload);
+  }
+  return normalizedPayload;
 }
 
 function marketNotesArtifactPathsFromPayload(payload = null) {
@@ -2503,10 +2589,13 @@ function normalizeSourceSyncRunPayload(payload = {}, memberEmail = "") {
 }
 
 function normalizeSourceSyncSchedulePayload(payload = {}, current = {}) {
+  const cadence = normalizeSourceSyncCadence(payload.cadence ?? current.cadence ?? "weekly");
   return {
     enabled: Boolean(payload.enabled ?? current.enabled),
-    cadence: String(payload.cadence || current.cadence || "daily").trim() === "12h" ? "12h" : "daily",
-    runHourSgt: Math.max(0, Math.min(23, Number(payload.runHourSgt ?? current.runHourSgt ?? 8))),
+    cadence,
+    runHourSgt: cadence === "weekly"
+      ? 9
+      : Math.max(0, Math.min(23, Number(payload.runHourSgt ?? current.runHourSgt ?? 9))),
     nextRunAt: payload.nextRunAt ?? current.nextRunAt ?? "",
     lastRunAt: payload.lastRunAt ?? current.lastRunAt ?? "",
     lastRunStatus: payload.lastRunStatus ?? current.lastRunStatus ?? "not-run",
@@ -2519,6 +2608,36 @@ function normalizeSourceSyncSchedulePayload(payload = {}, current = {}) {
     updatedBy: payload.updatedBy ?? current.updatedBy ?? "",
     history: Array.isArray(payload.history) ? payload.history : (Array.isArray(current.history) ? current.history : [])
   };
+}
+
+function sourceSyncAutomationNextRun(cadence, runHourSgt, now = new Date()) {
+  if (cadence === "weekly") {
+    const SGT_OFFSET_MS = 8 * 60 * 60 * 1000;
+    const nowSgt = new Date(now.getTime() + SGT_OFFSET_MS);
+    const nextSgt = new Date(nowSgt.getTime());
+    nextSgt.setUTCHours(runHourSgt, 0, 0, 0);
+    const daysToMonday = (8 - nextSgt.getUTCDay()) % 7;
+    const mondayOffset = nextSgt <= nowSgt ? (daysToMonday ? daysToMonday : 7) : daysToMonday;
+    nextSgt.setUTCDate(nextSgt.getUTCDate() + mondayOffset);
+    return new Date(nextSgt.getTime() - SGT_OFFSET_MS).toISOString();
+  }
+  if (cadence === "12h") {
+    const cursor = new Date(now.getTime());
+    cursor.setHours(cursor.getHours() + 12, 0, 0, 0);
+    return cursor.toISOString();
+  }
+  const cursor = new Date(now.getTime());
+  cursor.setHours(runHourSgt, 0, 0, 0);
+  if (cursor <= now) cursor.setDate(cursor.getDate() + 1);
+  return cursor.toISOString();
+}
+
+function normalizeSourceSyncCadence(rawCadence, fallback = "weekly") {
+  const cadence = String(rawCadence || "").trim();
+  if (cadence === "12h") return "12h";
+  if (cadence === "weekly") return "weekly";
+  if (cadence === "daily") return "daily";
+  return fallback;
 }
 
 function normalizeSourceFreshnessPolicyPayload(payload = {}, current = {}) {
@@ -2582,6 +2701,24 @@ function normalizeAskingSourceCandidatePayload(payload = {}, memberEmail = "", c
     updatedAt: now,
     backendStatus: "api-synced"
   };
+}
+
+function sourceCandidateName(candidate = {}) {
+  return String(candidate?.requestedQuery || candidate?.name || "").trim() || "Unnamed source";
+}
+
+function sourceCandidateKey(candidate = {}) {
+  return String(candidate?.type || "source").trim().toLowerCase() + ":" + sourceCandidateName(candidate).toLowerCase();
+}
+
+function approvedAskingSources(candidates = []) {
+  return candidates.filter((candidate) => String(candidate.status || "").trim().toLowerCase() === "approved for pilot");
+}
+
+function approvedCoverageTargets(candidates = []) {
+  return approvedAskingSources(candidates).filter(
+    (candidate) => String(candidate.type || "").trim().toLowerCase() === "coverage request"
+  );
 }
 
 function normalizeCoverageSampleRecordPayload(payload = {}, candidate = {}, actorEmail = "") {
@@ -3506,24 +3643,31 @@ async function handleSourceSyncSchedule(request, response) {
       const freshnessPolicy = await sqliteReadSourceFreshnessPolicy("asking-rent");
       return json(response, 200, {
         ok: true,
-        syncSchedule: syncSchedule || db.sourceSyncSchedule,
+        syncSchedule: normalizeSourceSyncAutomationSchedule(syncSchedule || db.sourceSyncSchedule || {}, {}),
         freshnessPolicy: freshnessPolicy || db.sourceFreshnessPolicy
       });
     }
     return json(response, 200, {
       ok: true,
-      syncSchedule: db.sourceSyncSchedule,
+      syncSchedule: normalizeSourceSyncAutomationSchedule(db.sourceSyncSchedule || {}, {}),
       freshnessPolicy: db.sourceFreshnessPolicy
     });
   }
   if (request.method === "POST") {
     const body = await readBody(request);
+    const sourceName = String(body.sourceName || "asking-rent").trim() || "asking-rent";
     const currentSchedule = DB_ENGINE === "sqlite"
-      ? (await sqliteReadSourceSyncSchedule("asking-rent")) || db.sourceSyncSchedule
+      ? (await sqliteReadSourceSyncSchedule(sourceName)) || db.sourceSyncSchedule
       : db.sourceSyncSchedule;
-    const syncSchedule = normalizeSourceSyncSchedulePayload(body, currentSchedule);
+    const syncSchedule = normalizeSourceSyncAutomationSchedule(
+      {
+        ...body,
+        sourceName
+      },
+      currentSchedule || {}
+    );
     if (DB_ENGINE === "sqlite") {
-      await sqliteSaveSourceSyncSchedule(syncSchedule, "asking-rent");
+      await sqliteSaveSourceSyncSchedule(syncSchedule, sourceName);
     } else {
       db.sourceSyncSchedule = syncSchedule;
       await writeDb(db);
@@ -3531,6 +3675,111 @@ async function handleSourceSyncSchedule(request, response) {
     return json(response, 200, { ok: true, syncSchedule });
   }
   return methodNotAllowed(response);
+}
+
+async function handleSourceSyncCron(request, response) {
+  if (request.method !== "POST") return methodNotAllowed(response);
+  if (!isCronSyncAuthorized(request)) {
+    return json(response, 401, { ok: false, error: "Unauthorized cron request" });
+  }
+  const db = await readDb();
+  const body = await readBody(request);
+  const sourceName = String(body.sourceName || "asking-rent").trim() || "asking-rent";
+  const force = isCronForceMode(body.force) || isCronForceMode(request.headers?.["x-rentintel-force"]);
+  const now = new Date();
+  const currentSchedule = DB_ENGINE === "sqlite"
+    ? (await sqliteReadSourceSyncSchedule(sourceName)) || db.sourceSyncSchedule || {}
+    : db.sourceSyncSchedule || {};
+  const approvedCandidates = approvedAskingSources(
+    DB_ENGINE === "sqlite"
+      ? await sqliteReadAskingSourceCandidates()
+      : db.askingSourceCandidates
+  );
+  const approvedCoverageTargets = buildCoverageTargetsFromCandidates(approvedCandidates);
+  let syncSchedule = normalizeSourceSyncAutomationSchedule({
+    ...currentSchedule,
+    sourceName,
+    ...(force ? { enabled: true } : {})
+  }, currentSchedule);
+  if (!syncSchedule.enabled && !force) {
+    syncSchedule = normalizeSourceSyncAutomationSchedule({
+      ...syncSchedule,
+      lastRunStatus: `automation skipped (${syncSchedule.enabled ? "not due" : "disabled"})`,
+      lastRunMode: "automation",
+      lastRunAt: syncSchedule.lastRunAt || new Date().toISOString(),
+      nextRunAt: syncSchedule.enabled ? syncSchedule.nextRunAt : ""
+    }, syncSchedule);
+    return json(response, 200, {
+      ok: true,
+      sourceName,
+      ran: false,
+      skipped: true,
+      skippedReason: "automation disabled",
+      syncRun: null,
+      syncSchedule
+    });
+  }
+
+  const due = sourceSyncAutomationNowDue(syncSchedule, now);
+  if (!due && !force) {
+    return json(response, 200, {
+      ok: true,
+      sourceName,
+      ran: false,
+      skipped: true,
+      skippedReason: "not due",
+      syncSchedule
+    });
+  }
+
+  const actorEmail = "automation@rentintel.local";
+  const refreshedFeed = await refreshAskingRentFeedState(db, actorEmail);
+  const source = approvedCandidates[0];
+  const runSourceName = source ? sourceCandidateName(source) : "RentIntel verified daily asking-rent capture";
+  const runSourceType = source ? source.type : "verified-daily-capture";
+  const runSourceKey = source ? sourceCandidateKey(source) : "verified-daily-capture:pipeline";
+  const syncRun = normalizeSourceSyncRunPayload({
+    sourceName: runSourceName,
+    sourceType: runSourceType,
+    sourceKey: runSourceKey,
+    status: "automation sync complete",
+    recordsChecked: (Array.isArray(refreshedFeed.records) ? refreshedFeed.records.length : 0) + approvedCoverageTargets.length,
+    benchmarkLayer: "URA benchmark sample",
+    coverageTargets: approvedCoverageTargets,
+    varianceFlag: "automation run",
+    memberEmail: actorEmail,
+    at: now.toISOString()
+  }, actorEmail);
+  if (DB_ENGINE === "sqlite") {
+    await sqliteSaveSourceSyncRun(syncRun);
+  } else {
+    db.sourceSyncRuns.unshift(syncRun);
+  }
+  syncSchedule.lastRunStatus = syncRun.status;
+  syncSchedule.lastRunAt = syncRun.at;
+  syncSchedule.lastRunMode = "automation";
+
+  db.askingRentFeed = refreshedFeed;
+  syncSchedule.nextRunAt = sourceSyncNextRunAtOrDefault(syncSchedule, now);
+  syncSchedule.lastFreshnessState = String(refreshedFeed?.updatedAt || syncSchedule.lastFreshnessState || "");
+  syncSchedule.lastFreshnessLabel = String(refreshedFeed?.connectionState || syncSchedule.lastFreshnessLabel || "");
+  syncSchedule.updatedAt = new Date().toISOString();
+  syncSchedule.updatedBy = actorEmail;
+
+  if (DB_ENGINE === "sqlite") {
+    await sqliteSaveSourceSyncSchedule(syncSchedule, sourceName);
+  } else {
+    db.sourceSyncSchedule = syncSchedule;
+  }
+  await writeDb(db);
+
+  return json(response, 200, {
+    ok: true,
+    sourceName,
+    ran: true,
+    syncRun,
+    syncSchedule
+  });
 }
 
 async function handleSourceFreshnessPolicy(request, response) {
@@ -4493,6 +4742,9 @@ async function route(request, response) {
     }
     if (pathname === "/api/sources/sync-schedule") {
       return await handleSourceSyncSchedule(request, response);
+    }
+    if (pathname === "/api/admin/source-sync/cron") {
+      return await handleSourceSyncCron(request, response);
     }
     if (pathname === "/api/sources/freshness-policy") {
       return await handleSourceFreshnessPolicy(request, response);
