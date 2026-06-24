@@ -1,11 +1,11 @@
 window.RENTINTEL_ASKING_RENT_FEED = {
-  "version": "asking-feed-pilot-2026-05-25",
-  "updatedAt": "2026-05-25",
+  "version": "asking-feed-pilot-2026-06-24",
+  "updatedAt": "2026-06-24",
   "connectionState": "pilot-manual-feed-connected",
   "sourceName": "RentIntel verified manual asking-rent pilot",
   "sourceType": "verified-manual-capture",
   "productionReady": false,
-  "note": "Pilot asking-rent layer only. Manual pilot refresh completed 2026-05-25. Replace with licensed listing feed, agent input, tenant input, or verified capture workflow before production.",
+  "note": "Pilot asking-rent layer only. Manual pilot refresh completed 2026-06-24. Replace with licensed listing feed, agent input, tenant input, or verified capture workflow before production.",
   "records": [
     {
       "recordId": "chinatown-shophouse",
@@ -16,9 +16,9 @@ window.RENTINTEL_ASKING_RENT_FEED = {
         "high": 14.6
       },
       "listingCount": 8,
-      "capturedAt": "2026-05-25",
+      "capturedAt": "2026-06-24",
       "freshness": "manual pilot refresh",
-      "note": "Recent shophouse listing checks around Chinatown, Telok Ayer, Club Street, Duxton, and Maxwell. Manual pilot refresh completed 2026-05-25."
+      "note": "Recent shophouse listing checks around Chinatown, Telok Ayer, Club Street, Duxton, and Maxwell. Manual pilot refresh completed 2026-06-24."
     },
     {
       "recordId": "orchard-mall",
@@ -29,9 +29,9 @@ window.RENTINTEL_ASKING_RENT_FEED = {
         "high": 34.8
       },
       "listingCount": 6,
-      "capturedAt": "2026-05-25",
+      "capturedAt": "2026-06-24",
       "freshness": "manual pilot refresh",
-      "note": "Prime mall asking checks around Orchard and Somerset retail nodes. Manual pilot refresh completed 2026-05-25."
+      "note": "Prime mall asking checks around Orchard and Somerset retail nodes. Manual pilot refresh completed 2026-06-24."
     },
     {
       "recordId": "serangoon-hdb",
@@ -42,9 +42,9 @@ window.RENTINTEL_ASKING_RENT_FEED = {
         "high": 10.9
       },
       "listingCount": 5,
-      "capturedAt": "2026-05-25",
+      "capturedAt": "2026-06-24",
       "freshness": "manual pilot refresh",
-      "note": "Heartland retail asking checks around Serangoon Central and NEX spillover area. Manual pilot refresh completed 2026-05-25."
+      "note": "Heartland retail asking checks around Serangoon Central and NEX spillover area. Manual pilot refresh completed 2026-06-24."
     },
     {
       "recordId": "tampines-hdb",
@@ -55,9 +55,9 @@ window.RENTINTEL_ASKING_RENT_FEED = {
         "high": 10.4
       },
       "listingCount": 7,
-      "capturedAt": "2026-05-25",
+      "capturedAt": "2026-06-24",
       "freshness": "manual pilot refresh",
-      "note": "Heartland retail asking checks around Tampines Central. Manual pilot refresh completed 2026-05-25."
+      "note": "Heartland retail asking checks around Tampines Central. Manual pilot refresh completed 2026-06-24."
     },
     {
       "recordId": "jurong-retail",
@@ -68,9 +68,22 @@ window.RENTINTEL_ASKING_RENT_FEED = {
         "high": 20.4
       },
       "listingCount": 4,
-      "capturedAt": "2026-05-25",
+      "capturedAt": "2026-06-24",
       "freshness": "manual pilot refresh",
-      "note": "Suburban mall and retail-cluster asking checks around Jurong East. Manual pilot refresh completed 2026-05-25."
+      "note": "Suburban mall and retail-cluster asking checks around Jurong East. Manual pilot refresh completed 2026-06-24."
+    },
+    {
+      "recordId": "hougang-green-retail",
+      "asking": 19,
+      "latestAskingMedian": 19.2,
+      "fairRange": {
+        "low": 15.6,
+        "high": 18.4
+      },
+      "listingCount": 4,
+      "capturedAt": "2026-06-24",
+      "freshness": "manual pilot refresh",
+      "note": "North-east convenience mall asking checks around Hougang Green. Manual pilot refresh completed 2026-06-24."
     }
   ]
 };

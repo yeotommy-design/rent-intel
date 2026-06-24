@@ -1,7 +1,7 @@
 window.RENTINTEL_SOURCE_STATUS = {
-  "version": "source-status-2026-05-25",
-  "updatedAt": "2026-05-25",
-  "lastReviewedAt": "2026-05-25",
+  "version": "source-status-2026-06-24",
+  "updatedAt": "2026-06-24",
+  "lastReviewedAt": "2026-06-24",
   "weeklyReviewSchedule": "Monday 09:00 SGT",
   "environment": "prototype",
   "status": [
@@ -53,7 +53,7 @@ window.RENTINTEL_SOURCE_STATUS = {
       "productionNextStep": "Replace pilot manual feed with licensed listing feed, agent input, tenant input, or verified capture workflow plus daily ingestion QA.",
       "refreshTarget": "Daily",
       "visibleTo": "Members",
-      "lastCompletedAt": "2026-05-25",
+      "lastCompletedAt": "2026-06-24",
       "timestampLabel": null,
       "weeklyReviewStep": "Monday review: check stale age, refresh the manual pilot if needed, and confirm daily QA logs or licensed-feed coverage are still missing."
     },
