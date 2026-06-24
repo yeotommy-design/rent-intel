@@ -4772,12 +4772,16 @@ async function route(request, response) {
   }
 }
 
-ensureMarketNotesArtifactsFresh()
-  .catch((error) => {
-    console.error("Market Notes rebuild failed during startup:", error instanceof Error ? error.message : error);
-  })
-  .finally(() => {
-    http.createServer(route).listen(PORT, HOST, () => {
-      console.log(`RentIntel server running at http://${HOST}:${PORT}`);
+module.exports = route;
+
+if (require.main === module) {
+  ensureMarketNotesArtifactsFresh()
+    .catch((error) => {
+      console.error("Market Notes rebuild failed during startup:", error instanceof Error ? error.message : error);
+    })
+    .finally(() => {
+      http.createServer(route).listen(PORT, HOST, () => {
+        console.log(`RentIntel server running at http://${HOST}:${PORT}`);
+      });
     });
-  });
+}
