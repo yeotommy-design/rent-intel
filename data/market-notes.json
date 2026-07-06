@@ -7,6 +7,33 @@
   },
   "notes": [
     {
+      "slug": "stale-asking-feeds-should-raise-proof-not-confidence",
+      "title": "Stale asking feeds should raise proof, not confidence",
+      "publishedAt": "2026-07-06",
+      "description": "This week's RentIntel note on using older asking-feed captures carefully when heartland retail premiums are still above benchmark.",
+      "summary": "When the latest asking-feed capture is still dated 2026-05-25, an above-range quote should face a higher proof burden instead of gaining false confidence from a familiar area story.",
+      "lede": "Market Notes is the short weekly RentIntel release for people who want one fast read, not a long blog post. This week's note is about what to do when the asking-feed layer is useful but no longer fresh enough to carry a premium by itself.",
+      "storyParagraphs": [
+        "The current pilot asking-feed capture still reads 2026-05-25, while Serangoon HDB rows remain around $12.2 psf pm against a fair-range high of $10.9 psf pm. That gap is still useful, but the age of the feed changes how it should be used. Older source context should keep the benchmark visible; it should not make an above-range quote feel safer than the evidence allows.",
+        "This is where teams can get pulled into the wrong shortcut. A stale feed can still confirm that a cluster has been expensive, but it cannot prove that today's exact unit deserves the same premium. Tampines HDB rows and other calmer comparisons should stay in the frame until frontage, approvals, condition, lease terms, and operator fit explain why the new quote should clear the range.",
+        "The decision cue this week is simple: when source freshness is not ideal, raise the proof standard instead of lowering it. Use the feed as a starting benchmark, keep one live fallback visible, and move into Workspace only after the landlord story is specific enough to survive unit-level checks."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Treat older asking-feed evidence as context for Serangoon and Tampines HDB rows, not as automatic approval for a new premium."
+        },
+        {
+          "label": "Coverage update",
+          "text": "Use direct-search coverage to keep a calmer fallback beside the stale capture while the team checks source freshness and unit details."
+        },
+        {
+          "label": "Decision cue",
+          "text": "If the quote only works because the feed is old and the comparison set is thin, keep negotiating from the benchmark. Latest pilot capture: 2026-05-25."
+        }
+      ]
+    },
+    {
       "slug": "two-hdb-rows-keep-heartland-premiums-honest",
       "title": "Two HDB rows keep heartland premiums honest",
       "publishedAt": "2026-06-22",
