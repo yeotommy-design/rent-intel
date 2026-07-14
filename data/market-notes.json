@@ -7,6 +7,33 @@
   },
   "notes": [
     {
+      "slug": "a-12-heartland-gap-needs-a-lease-term-bridge",
+      "title": "A 12% heartland gap needs a lease-term bridge",
+      "publishedAt": "2026-07-13",
+      "description": "This week's RentIntel note on turning a 12% Serangoon HDB asking gap into specific lease-term tests instead of accepting a softer benchmark.",
+      "summary": "When a Serangoon HDB quote sits 12% above the fair-range high, the useful question is which lease terms actually bridge the gap.",
+      "lede": "Market Notes is the short weekly RentIntel release for people who want one fast read, not a long blog post. This week's note is about converting a heartland asking premium into terms that can be tested, negotiated, and compared.",
+      "storyParagraphs": [
+        "Serangoon HDB rows are currently asking around $12.2 psf pm against a fair-range high of $10.9 psf pm. The roughly 12% gap does not make every quote unworkable, but it does need a bridge. A landlord can build that bridge with a longer rent-free fit-out period, a stepped opening rent, a capped review structure, or concrete unit advantages that improve the operator's economics. Without one of those, the premium is still just an asking position.",
+        "Tampines HDB rows remain a useful counterweight, with the current asking line closer to $10.4 psf pm. That comparison is not a claim that the two locations are identical. It is a way to price what the Serangoon premium must deliver. If the more expensive unit cannot recover the gap through better frontage, approvals, trading hours, condition, or lease flexibility, the calmer cluster should stay live in the shortlist.",
+        "The decision cue this week is simple: negotiate the bridge, not the story. Keep the $10.9 psf pm fair-range high visible, list the lease terms that could justify moving above it, and assign a value to each concession. If the landlord will not fund the gap through terms or unit-level proof, the benchmark has not moved."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Treat the 12% Serangoon HDB gap as a negotiation brief: identify exactly which unit advantages or lease concessions would pay for it."
+        },
+        {
+          "label": "Coverage update",
+          "text": "Keep Tampines HDB rows in the live comparison set so the Serangoon premium has a visible opportunity cost."
+        },
+        {
+          "label": "Decision cue",
+          "text": "If the premium cannot be translated into rent-free months, stepped rent, review caps, or unit-level upside, keep the fair-range high as the working anchor. Latest pilot capture: 2026-06-24."
+        }
+      ]
+    },
+    {
       "slug": "stale-asking-feeds-should-raise-proof-not-confidence",
       "title": "Stale asking feeds should raise proof, not confidence",
       "publishedAt": "2026-07-06",
