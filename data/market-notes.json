@@ -7,6 +7,33 @@
   },
   "notes": [
     {
+      "slug": "chinatown-asking-median-is-not-the-new-benchmark",
+      "title": "A Chinatown asking median is not the new benchmark",
+      "publishedAt": "2026-07-20",
+      "description": "This week's RentIntel note on why a $15.8 psf pm Chinatown asking median should not quietly replace the $14.6 fair-range high.",
+      "summary": "Chinatown shophouse asks are clustering above the fair range, but a cluster of seller expectations is still not proof that the benchmark has reset.",
+      "lede": "Market Notes is the short weekly RentIntel release for people who want one fast read, not a long blog post. This week's note is about the difference between seeing several similar asking rents and having enough evidence to move the working benchmark.",
+      "storyParagraphs": [
+        "The latest Chinatown shophouse pilot capture puts the representative asking line at $15.4 psf pm and the asking median at $15.8 psf pm, against a fair-range high of $14.6 psf pm. That clustering matters: it shows where owners are testing the market. But it does not, by itself, prove that occupiers are clearing deals at the same level or that the fair range should move up to meet the asks.",
+        "The distinction is especially important in shophouse rows, where two units can share a street and still carry very different operating value. Frontage, usable floor plate, upper-floor access, conservation constraints, approvals, extraction, and handover condition can justify part of the gap. A repeated asking number cannot tell the team which of those advantages is actually present in the unit under review.",
+        "The decision cue this week is simple: use the $15.8 psf pm median to understand seller confidence, but keep the $14.6 psf pm fair-range high as the negotiation anchor until unit-level proof explains the difference. If the landlord wants the asking cluster to become the new benchmark, ask for the evidence that converts advertised confidence into occupier value."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Treat the Chinatown asking cluster as evidence of owner positioning, not automatic evidence that completed rent economics have reset."
+        },
+        {
+          "label": "Coverage update",
+          "text": "The current pilot comparison covers eight Chinatown, Telok Ayer, Club Street, Duxton, and Maxwell shophouse checks captured on 2026-06-24."
+        },
+        {
+          "label": "Decision cue",
+          "text": "Keep $14.6 psf pm visible until frontage, approvals, configuration, condition, or lease terms explain why the exact unit deserves to move toward the $15.8 asking median."
+        }
+      ]
+    },
+    {
       "slug": "a-12-heartland-gap-needs-a-lease-term-bridge",
       "title": "A 12% heartland gap needs a lease-term bridge",
       "publishedAt": "2026-07-13",
