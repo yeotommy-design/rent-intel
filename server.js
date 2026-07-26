@@ -35,12 +35,13 @@ const EMAIL_FROM = String(process.env.RENTINTEL_EMAIL_FROM || "alerts@rent-intel
 const SMTP_URL = String(process.env.RENTINTEL_SMTP_URL || "").trim();
 const SMTP_USER = String(process.env.RENTINTEL_SMTP_USER || "").trim();
 const SMTP_PASS = String(process.env.RENTINTEL_SMTP_PASS || "").trim();
-const SOURCE_SYNC_CRON_TOKEN = String(
-  process.env.RENTINTEL_CRON_TOKEN ||
-  process.env.RENTINTEL_SOURCE_SYNC_CRON_TOKEN ||
-  process.env.CRON_SECRET ||
-  ""
-).trim();
+const SOURCE_SYNC_CRON_TOKENS = [
+  process.env.RENTINTEL_CRON_TOKEN,
+  process.env.RENTINTEL_SOURCE_SYNC_CRON_TOKEN,
+  process.env.CRON_SECRET
+]
+  .map((value) => String(value || "").trim())
+  .filter(Boolean);
 const execFileAsync = promisify(execFile);
 let contextSeedSyncPromise = null;
 let ensureSqliteDbPromise = null;
@@ -84,8 +85,8 @@ function getCronRequestToken(request) {
 }
 
 function isCronSyncAuthorized(request) {
-  if (!SOURCE_SYNC_CRON_TOKEN) return false;
-  return getCronRequestToken(request) === SOURCE_SYNC_CRON_TOKEN;
+  if (!SOURCE_SYNC_CRON_TOKENS.length) return false;
+  return SOURCE_SYNC_CRON_TOKENS.includes(getCronRequestToken(request));
 }
 
 function isCronForceMode(value = false) {
