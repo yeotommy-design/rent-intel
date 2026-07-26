@@ -4332,7 +4332,7 @@ function contextSummary(record = {}) {
 }
 
 async function readContextSampleRecords() {
-  const payload = JSON.parse(await fsp.readFile(CONTEXT_SAMPLE_FILE, "utf8"));
+  const payload = await readJsonFileOr(CONTEXT_SAMPLE_FILE, { records: [] });
   return Array.isArray(payload?.records) ? payload.records : [];
 }
 

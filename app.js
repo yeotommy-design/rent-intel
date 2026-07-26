@@ -312,20 +312,20 @@ function sourceFreshnessProfile(value) {
     return {
       state: "fresh",
       label: "Fresh",
-      detail: `${days} day${days === 1 ? "" : "s"} since latest capture (SLA <= ${freshMaxDays} days).`
+      detail: `${days} day${days === 1 ? "" : "s"} since the latest update. Current data should be no more than ${freshMaxDays} days old.`
     };
   }
   if (days <= watchMaxDays) {
     return {
       state: "watch",
       label: "Watch",
-      detail: `${days} days since latest capture (SLA watch: ${watchLower}-${watchMaxDays} days).`
+      detail: `${days} days since the latest update. This data is getting old and should be refreshed soon.`
     };
   }
   return {
     state: "stale",
     label: "Stale",
-    detail: `${days} days since latest capture (SLA stale: >${watchMaxDays} days).`
+    detail: `${days} days since the latest update. This data is out of date because it is more than ${watchMaxDays} days old.`
   };
 }
 
@@ -1481,8 +1481,8 @@ function confidenceProfile(record) {
   if (record?.askingSource?.productionReady || confidence.includes("production")) {
     return {
       tone: "production",
-      source: "Production verified",
-      evidence: "Production source + QA controls",
+      source: "Source checks complete",
+      evidence: "Source and quality checks complete",
       use: "Decision ready"
     };
   }
@@ -1531,8 +1531,8 @@ function benchmarkTrustProfile(record) {
   if (record?.askingSource?.productionReady || confidence.includes("production")) {
     return {
       key: "production",
-      title: "Production verified",
-      copy: "Official benchmark, asking source, QA gate, and review controls are connected."
+      title: "Source checks complete",
+      copy: "The official benchmark, asking source, quality checks, and review controls are connected."
     };
   }
   if (record?.prototypeSource === "coverage-request" || confidence.includes("coverage")) {
@@ -1577,13 +1577,13 @@ function publicTrustProfile(record) {
       action: "Next: request direct coverage before relying on it."
     },
     pilot: {
-      title: "Pilot Verified",
-      reason: "Manual asking checks are connected.",
-      action: "Next: treat as a working signal until production release."
+      title: "Manual checks added",
+      reason: "Manual asking-rent checks are connected.",
+      action: "Next: treat this as an early signal until all source checks are complete."
     },
     production: {
-      title: "Production Verified",
-      reason: "Production source and QA controls are connected.",
+      title: "Source checks complete",
+      reason: "The source and quality checks are connected.",
       action: "Next: still check lease terms and unit condition."
     }
   };
@@ -1640,7 +1640,7 @@ function publicEvidenceRows(record) {
       state: qa.freshnessState
     },
     {
-      label: "Freshness SLA",
+      label: "Data age",
       value: qa.freshnessLabel,
       detail: qa.freshnessDetail,
       state: qa.freshnessState
@@ -1942,10 +1942,10 @@ function searchableSuggestions() {
       return {
         query: candidate.requestedQuery,
         title: record?.title || candidate.requestedQuery,
-        meta: productionReady && record ? "Production verified" : approved && record ? "Pilot verified sample" : `Coverage ${coverageStatusProfile(candidate.status).label}`,
+        meta: productionReady && record ? "Source checks complete" : approved && record ? "Manually checked sample" : `Coverage ${coverageStatusProfile(candidate.status).label}`,
         type: "coverage",
         status: candidate.status,
-        confidence: productionReady ? "Production verified" : approved ? "Pilot verified" : "Requested",
+        confidence: productionReady ? "Source checks complete" : approved ? "Manual checks added" : "Requested",
         tone: approved || productionReady ? "coverage" : "requested",
         tokens: [candidate.requestedQuery, candidate.name, candidate.status, candidate.requestEmail, record?.title, record?.area, record?.propertyType]
           .filter(Boolean)
@@ -2160,18 +2160,18 @@ function searchResultProfile(record) {
   if (isProduction) {
     return {
       state: "production",
-      type: "Production verified",
-      label: "Production source and QA controls connected",
-      copy: "This answer has production-ready source status. Still check lease terms, unit condition, GST, and permitted use."
+      type: "Source checks complete",
+      label: "Source and quality checks are connected",
+      copy: "The data checks for this answer are complete. Still check lease terms, unit condition, GST, and permitted use."
     };
   }
 
   if (isCoverage) {
     return {
       state: "coverage",
-      type: "Pilot verified",
-      label: "Coverage request approved for pilot review",
-      copy: "This answer came from the coverage queue. Treat it as a pilot sample until source QA is released."
+      type: "Manual checks added",
+      label: "Coverage request approved for manual review",
+      copy: "This answer came from the coverage queue. Treat it as an early sample until all source checks are complete."
     };
   }
 
@@ -2365,18 +2365,18 @@ function coverageStatusProfile(status) {
   if (normalized === "production ready") {
     return {
       key: "production",
-      label: "Production Verified",
-      summaryLabel: "production verified",
-      detail: "Admin marked this coverage request ready for production ingestion.",
+      label: "Source checks complete",
+      summaryLabel: "source checks complete",
+      detail: "This coverage request has passed the required source checks.",
       nextStep: "Keep scheduled ingestion, source QA, and exception monitoring active."
     };
   }
   if (normalized === "approved for pilot") {
     return {
       key: "approved",
-      label: "Pilot verified",
-      summaryLabel: "pilot verified",
-      detail: "Admin approved this search for pilot evidence capture.",
+      label: "Manual checks added",
+      summaryLabel: "manual checks added",
+      detail: "This search was approved for manual evidence gathering.",
       nextStep: "Create or review the sample rent signal in Workspace."
     };
   }

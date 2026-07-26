@@ -9,7 +9,7 @@
       content="RentIntel Workspace for rent psf trend charts, saved reports, watchlist actions, and negotiation note export."
     >
     <link rel="icon" href="../../pulse-shared-transparent.png">
-    <link rel="stylesheet" href="../../styles.css?v=20260607-publicbridge">
+    <link rel="stylesheet" href="../../styles.css?v=20260726-mobile-cleanup">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YXF2DXG69P"></script>
     <script src="/analytics.js?v=20260520-ga" defer></script>
     <script src="../../api/context/mock-context-api.js?v=20260524-contextapi" defer></script>
@@ -94,23 +94,23 @@
               </div>
             </div>
             <dl class="workspace-v1-roster-metrics">
-              <div data-filter="all" role="button" tabindex="0" aria-label="Show all V1 records">
+              <div data-filter="all" role="button" tabindex="0" aria-label="Show all review records">
                 <dt>Total</dt>
                 <dd id="workspaceV1RosterTotal">0</dd>
               </div>
-              <div data-state="strong" data-filter="strong" role="button" tabindex="0" aria-label="Show strong V1 records">
+              <div data-state="strong" data-filter="strong" role="button" tabindex="0" aria-label="Show complete review records">
                 <dt>Strong</dt>
                 <dd id="workspaceV1RosterStrong">0</dd>
               </div>
-              <div data-state="partial" data-filter="partial" role="button" tabindex="0" aria-label="Show partial V1 records">
+              <div data-state="partial" data-filter="partial" role="button" tabindex="0" aria-label="Show partly completed review records">
                 <dt>Partial</dt>
                 <dd id="workspaceV1RosterPartial">0</dd>
               </div>
-              <div data-state="weak" data-filter="weak" role="button" tabindex="0" aria-label="Show weak V1 records">
+              <div data-state="weak" data-filter="weak" role="button" tabindex="0" aria-label="Show review records needing attention">
                 <dt>Weak</dt>
                 <dd id="workspaceV1RosterWeak">0</dd>
               </div>
-              <div data-filter="current" role="button" tabindex="0" aria-label="Show current V1 record">
+              <div data-filter="current" role="button" tabindex="0" aria-label="Show the current review record">
                 <dt>Current</dt>
                 <dd id="workspaceV1RosterCurrent">-</dd>
               </div>
@@ -307,7 +307,7 @@
         <article>
           <span>Benchmark trust</span>
           <strong id="spineBenchmarkTrust">Benchmark trust follows the selected area</strong>
-          <p id="spineBenchmarkCopy">RentIntel will show whether the read is direct, pilot-verified, comparable, or still under source review.</p>
+          <p id="spineBenchmarkCopy">RentIntel will show whether the information is direct, manually checked, comparable, or still under source review.</p>
         </article>
         <article>
           <span>Negotiation workflow</span>
@@ -400,7 +400,7 @@
             <strong id="workspaceSourceTimelineSummary">Source timeline starts after the first search</strong>
           </div>
           <p class="workspace-source-timeline-note" id="workspaceSourceTimelineNote" hidden>Source handoff details appear here.</p>
-          <div class="workspace-source-timeline-actions" id="workspaceSourceTimelineActions" hidden aria-label="Refreshed V1 layers"></div>
+          <div class="workspace-source-timeline-actions" id="workspaceSourceTimelineActions" hidden aria-label="Refreshed information"></div>
           <ol id="workspaceSourceTimelineList">
             <li data-state="pending"><span>Start</span><strong>Search a benchmark to begin the source timeline</strong></li>
           </ol>
@@ -409,45 +409,45 @@
 
       <details class="workspace-detail-group">
         <summary>
-          <span>V1 Context Layer</span>
+          <span>Area Context</span>
           <strong>Below benchmark, surrounding trade, and suitability</strong>
         </summary>
-        <section class="workspace-evidence-pack" id="workspaceV1ContextPack" aria-label="Workspace V1 decision context">
+        <section class="workspace-evidence-pack" id="workspaceV1ContextPack" aria-label="Workspace area context">
           <div class="card-label workspace-v1-context-head">
             <div>
-              <span>V1 Internal Layer</span>
-              <strong id="workspaceV1ContextSummary">Search to load the internal decision context</strong>
+              <span>Supporting Area Information</span>
+              <strong id="workspaceV1ContextSummary">Search to load additional area information</strong>
             </div>
             <button type="button" class="workspace-v1-context-why-toggle" id="workspaceV1ContextWhyToggle" hidden>Why this read</button>
           </div>
-          <p class="workspace-v1-context-why" id="workspaceV1ContextWhy" hidden>Commercial-read reasoning appears here once a linked V1 context record is loaded.</p>
-          <p class="workspace-v1-context-meta" id="workspaceV1ContextMeta">Metadata appears here once a linked V1 context record is loaded.</p>
-          <div class="workspace-v1-decision-snapshot" aria-label="V1 decision snapshot">
+          <p class="workspace-v1-context-why" id="workspaceV1ContextWhy" hidden>The reason for this area reading appears here when additional information is available.</p>
+          <p class="workspace-v1-context-meta" id="workspaceV1ContextMeta">Source details appear here when additional area information is available.</p>
+          <div class="workspace-v1-decision-snapshot" aria-label="Area decision summary">
             <article data-snapshot-key="opportunity">
               <span>What Helps</span>
               <strong id="workspaceV1SnapshotOpportunityTitle">Not loaded</strong>
               <p id="workspaceV1SnapshotOpportunityCopy">Search a linked area to surface the strongest commercial upside.</p>
-              <small id="workspaceV1SnapshotOpportunityMeta">Driver details appear here after a linked V1 context loads.</small>
+              <small id="workspaceV1SnapshotOpportunityMeta">Supporting details appear here when area information is available.</small>
             </article>
             <article data-snapshot-key="constraint">
               <span>What Blocks</span>
               <strong id="workspaceV1SnapshotConstraintTitle">Not loaded</strong>
               <p id="workspaceV1SnapshotConstraintCopy">Search a linked area to surface the main commercial constraint.</p>
-              <small id="workspaceV1SnapshotConstraintMeta">Driver details appear here after a linked V1 context loads.</small>
+              <small id="workspaceV1SnapshotConstraintMeta">Supporting details appear here when area information is available.</small>
             </article>
             <article data-snapshot-key="nextMove">
               <span>What To Do Now</span>
               <strong id="workspaceV1SnapshotNextTitle">Not loaded</strong>
               <p id="workspaceV1SnapshotNextCopy">Search a linked area to surface the best next internal action.</p>
-              <small id="workspaceV1SnapshotNextMeta">Driver details appear here after a linked V1 context loads.</small>
+              <small id="workspaceV1SnapshotNextMeta">Supporting details appear here when area information is available.</small>
             </article>
           </div>
-          <div class="workspace-v1-decision-outcome" data-snapshot-key="outcome" aria-label="V1 decision outcome">
+          <div class="workspace-v1-decision-outcome" data-snapshot-key="outcome" aria-label="Area decision outcome">
             <span>Decision Outcome</span>
             <strong id="workspaceV1SnapshotOutcomeTitle">Not loaded</strong>
             <p id="workspaceV1SnapshotOutcomeCopy">Search a linked area to surface the current internal decision state.</p>
-            <small id="workspaceV1SnapshotOutcomeReason">Outcome reasoning appears here after a linked V1 context loads.</small>
-            <small id="workspaceV1SnapshotOutcomePriority">Priority details appear here after a linked V1 context loads.</small>
+            <small id="workspaceV1SnapshotOutcomeReason">The reason appears here when area information is available.</small>
+            <small id="workspaceV1SnapshotOutcomePriority">Next-step details appear here when area information is available.</small>
             <small id="workspaceV1SnapshotOutcomeHistory" hidden>Last-change details appear here after the decision outcome changes.</small>
           </div>
           <div class="workspace-evidence-pack-grid">
@@ -473,8 +473,8 @@
             </article>
           </div>
           <div class="signal-depth member-signal-depth workspace-signal-depth">
-            <strong id="workspaceV1DecisionTitle">Search to load the V1 decision note</strong>
-            <p id="workspaceV1DecisionCopy">This internal layer is where below-benchmark logic, suitability, and watchouts will be validated before public rollout.</p>
+            <strong id="workspaceV1DecisionTitle">Search to load the area decision note</strong>
+            <p id="workspaceV1DecisionCopy">This section brings together below-benchmark signals, suitability, and important cautions.</p>
             <ul id="workspaceV1Watchouts">
               <li>Search a sample-linked area such as Serangoon HDB retail, Bedok HDB retail, or Tiong Bahru shophouse.</li>
             </ul>
@@ -522,12 +522,12 @@
               <li>No review checks are available yet.</li>
             </ul>
           </div>
-          <form class="workspace-v1-editor" id="workspaceV1Editor" aria-label="V1 internal context editor">
+          <form class="workspace-v1-editor" id="workspaceV1Editor" aria-label="Area context editor">
             <div class="card-label">
-              <span>V1 Internal Editor</span>
+              <span>Area Context Editor</span>
               <strong id="workspaceV1EditorTitle">Load a linked sample area to edit the decision layer</strong>
             </div>
-            <div class="workspace-v1-editor-nav" id="workspaceV1EditorNav" aria-label="V1 editor sections">
+            <div class="workspace-v1-editor-nav" id="workspaceV1EditorNav" aria-label="Area context sections">
               <button type="button" data-section-target="rent-signal">Rent Signal</button>
               <button type="button" data-section-target="value-gap">Value Gap</button>
               <button type="button" data-section-target="surrounding-trade">Surrounding Trade</button>
@@ -690,7 +690,7 @@
             </div>
             <div class="workspace-v1-validation" id="workspaceV1Validation" aria-live="polite">
               <div class="workspace-v1-validation-head">
-                <strong id="workspaceV1ValidationTitle">V1 validation</strong>
+                <strong id="workspaceV1ValidationTitle">Review checks</strong>
                 <button type="button" class="workspace-v1-validation-clear" id="workspaceV1ValidationClear" hidden>Clear section filter</button>
               </div>
               <ul id="workspaceV1ValidationList">
@@ -698,7 +698,7 @@
               </ul>
             </div>
             <div class="workspace-v1-editor-actions">
-              <button type="submit" id="workspaceV1SaveButton">Save V1 context</button>
+              <button type="submit" id="workspaceV1SaveButton">Save area context</button>
               <p class="account-status" id="workspaceV1EditorStatus" aria-live="polite"></p>
             </div>
           </form>
@@ -1096,8 +1096,8 @@
 <script src="../../data/sources/onemap-enrichment.js?v=20260512-onemap"></script>
 <script src="../../asking-feed-adapter.js?v=20260510-feedhardening"></script>
 <script src="../../onemap-enrichment-adapter.js?v=20260512-onemap"></script>
-<script src="../../source-trust.js?v=20260510-next5i"></script>
+<script src="../../source-trust.js?v=20260726-plain-language"></script>
 <script src="../../auth-client.js?v=20260510-authcutover"></script>
-<script src="../../member-toolbench.js?v=20260726-stale-safety"></script>
+<script src="../../member-toolbench.js?v=20260726-plain-language"></script>
 </body>
 </html>

@@ -144,7 +144,7 @@ const toolbenchStatusMessages = {
   resetQueueLens: {
     tone: "info",
     duration: toolbenchStatusDurations.filter,
-    text: () => "Reset the V1 queue lens to the default session view."
+    text: () => "Reset the review queue to the default view."
   },
   layerFilter: {
     tone: "info",
@@ -371,16 +371,16 @@ const toolbenchReviewPassMessages = {
     watchEmpty: () => "No watchlist areas yet.",
     savedLabel: () => "Saved",
     notSavedLabel: () => "Not saved",
-    v1Saving: () => "Saving V1 context...",
+    v1Saving: () => "Saving area context...",
     v1SavedAdvanced: ({ subjectRef = "", title = "", label = "" } = {}) =>
-      `${subjectRef}: V1 context saved. Advanced to next review item: ${title} • ${label}.`,
+      `${subjectRef}: area context saved. Moved to the next review item: ${title} • ${label}.`,
     v1SavedResolved: ({ subjectRef = "" } = {}) =>
-      `${subjectRef}: V1 context saved. Current review queue is fully resolved for this scope.`,
-    v1Saved: ({ subjectRef = "" } = {}) => `${subjectRef}: V1 context saved.`,
+      `${subjectRef}: area context saved. The current review queue is complete.`,
+    v1Saved: ({ subjectRef = "" } = {}) => `${subjectRef}: area context saved.`,
     v1SavedValidationCleared: ({ subjectRef = "" } = {}) =>
-      `${subjectRef}: V1 context saved. Cleared the selected validation review point.`,
+      `${subjectRef}: area context saved. Cleared the selected review item.`,
     v1SavedValidationClearedAdvanced: ({ subjectRef = "", title = "", label = "" } = {}) =>
-      `${subjectRef}: V1 context saved. Cleared the selected validation review point and advanced to next review item: ${title} • ${label}.`,
+      `${subjectRef}: area context saved. Cleared the selected review item and moved to: ${title} • ${label}.`,
     v1StatusShowDetail: () => "View save detail",
     v1StatusHideDetail: () => "Hide save detail",
     v1StatusAdvancedDetail: ({ title = "", label = "" } = {}) =>
@@ -553,25 +553,25 @@ const toolbenchReviewPassMessages = {
     v1EditorTitleEditable: ({ subjectRef = "" } = {}) => `${subjectRef}: edit internal decision notes`,
     v1ContextApiUnavailable: () => "Context API write path is unavailable in this workspace.",
     v1SaveReturnedNothing: () => "No context record returned after save.",
-    v1SaveFailed: () => "Could not save the V1 context.",
-    v1ContextMetaPending: () => "Metadata appears here once a linked V1 context record is loaded.",
+    v1SaveFailed: () => "Could not save the area context.",
+    v1ContextMetaPending: () => "Source details appear here when additional area information is available.",
     v1ContextMetaUnsaved: ({ count = 0, fields = "" } = {}) =>
       `Unsaved changes${count > 0 ? ` (${count})` : ""}${fields ? ` • ${fields}` : ""}`,
     v1ContextMetaSaved: ({ mode = "" } = {}) => `Saved state${mode ? ` • ${mode}` : ""}`,
     v1ContextMetaSavedTitle: ({ mode = "" } = {}) =>
       mode
-        ? `No unsaved V1 editor changes. Current context is clean in ${mode} mode.`
-        : "No unsaved V1 editor changes.",
-    v1ContextMetaHintDirty: () => "Unsaved V1 changes. Jumping to the save controls for this internal context pack.",
+        ? `No unsaved area-context changes. Current information is saved in ${mode} mode.`
+        : "No unsaved area-context changes.",
+    v1ContextMetaHintDirty: () => "There are unsaved area-context changes. Opening the save controls.",
     v1ContextMetaHintFreshness: ({ freshness = "" } = {}) =>
       `${freshness} capture state. Jumping to the source timeline so you can review freshness and source-stage context.`,
     v1ContextMetaHintHealth: ({ health = "" } = {}) =>
-      `${health} V1 health state. Jumping to Record Health so you can review completion and the next fix path.`,
-    v1ContextMetaHintPending: () => "Load a linked V1 record before using metadata shortcuts.",
+      `${health} review state. Opening Review Health so you can see what is complete and what to do next.`,
+    v1ContextMetaHintPending: () => "Load a linked area record before using source-detail shortcuts.",
     v1ContextMetaActionDirty: ({ fields = "" } = {}) =>
       fields
-        ? `Click to jump to the V1 save controls. Changed: ${fields}.`
-        : "Click to jump to the V1 save controls.",
+        ? `Open the area-context save controls. Changed: ${fields}.`
+        : "Open the area-context save controls.",
     v1ContextMetaActionFreshness: ({ freshness = "", days = null, freshMaxDays = null, watchMaxDays = null } = {}) => {
       const thresholdCopy = Number.isFinite(freshMaxDays) && Number.isFinite(watchMaxDays)
         ? ` Fresh <= ${freshMaxDays}d, watch <= ${watchMaxDays}d.`
@@ -584,9 +584,9 @@ const toolbenchReviewPassMessages = {
         ? `Click to review Record Health for this ${String(health || "").toLowerCase()} context state. First missing layer: ${nextLabel}.`
         : `Click to review Record Health for this ${String(health || "").toLowerCase()} context state.`,
     v1ContextMetaHintUpdated: ({ updated = "" } = {}) =>
-      `Newer saved override from ${updated}. Jumping to the V1 editor so you can review the current saved context state.`,
+      `Newer saved information from ${updated}. Opening the area-context editor for review.`,
     v1ContextMetaActionUpdated: ({ updated = "", scope = "" } = {}) =>
-      `Click to review the V1 editor state for the newer ${scope || "saved override"} from ${updated}.`,
+      `Review the newer ${scope || "saved information"} from ${updated} in the area-context editor.`,
     v1ContextMetaCapturedLabel: ({ captured = "" } = {}) => `Captured ${captured}`,
     v1ContextMetaCapturedTitle: ({ captured = "", source = "" } = {}) =>
       source
@@ -606,31 +606,31 @@ const toolbenchReviewPassMessages = {
     v1ContextModeInternal: () => "internal bundle",
     v1ContextModeTitle: ({ mode = "" } = {}) =>
       mode
-        ? `Current V1 context mode: ${mode}.`
-        : "Current V1 context mode.",
+        ? `Current area-context mode: ${mode}.`
+        : "Current area-context mode.",
     v1ContextOriginChipSample: () => "Sample-backed",
     v1ContextOriginChipSaved: () => "Saved override",
     v1ContextOriginChipRefreshed: () => "Refreshed",
     v1ContextOriginChipInternal: () => "Internal bundle",
     v1ContextOriginTitle: ({ origin = "" } = {}) =>
       origin
-        ? `Current V1 context source: ${origin}.`
-        : "Current V1 context source.",
+        ? `Current area-context source: ${origin}.`
+        : "Current area-context source.",
     v1ContextOriginAction: ({ origin = "" } = {}) => {
       if (origin === "saved override") {
-        return "Click to review the current saved override in the V1 editor.";
+        return "Review the current saved information in the area-context editor.";
       }
       if (origin === "refreshed from sample") {
         return "Click to review the source timeline for this context refreshed from the latest sample bundle.";
       }
       if (origin === "sample-backed") {
-        return "Click to review the source timeline for this sample-backed V1 context.";
+        return "Review the source timeline for this sample-based area context.";
       }
-      return "Click to review the linked V1 editor context for this internal bundle.";
+      return "Review the linked information in the area-context editor.";
     },
     v1ContextOriginHint: ({ origin = "" } = {}) => {
       if (origin === "saved override") {
-        return "Saved override source. Jumping to the V1 editor so you can review the current saved context.";
+        return "Saved information source. Opening the area-context editor for review.";
       }
       if (origin === "refreshed from sample") {
         return "Refreshed-from-sample source. Jumping to the source timeline so you can review the latest sample-backed provenance.";
@@ -638,7 +638,7 @@ const toolbenchReviewPassMessages = {
       if (origin === "sample-backed") {
         return "Sample-backed source. Jumping to the source timeline so you can review provenance and freshness.";
       }
-      return "Internal bundle source. Jumping to the V1 editor so you can review the linked context pack.";
+      return "Linked source information. Opening the area-context editor for review.";
     },
     v1ContextRefreshReviewLabel: ({ reviewed = 0, total = 0, complete = false } = {}) =>
       complete
@@ -646,7 +646,7 @@ const toolbenchReviewPassMessages = {
         : `Refresh review${total ? ` (${reviewed}/${total})` : ""}`,
     v1ContextRefreshReviewTitle: ({ reviewed = 0, total = 0, complete = false, next = "" } = {}) => {
       if (complete) {
-        return "All refreshed V1 layers for this context have already been reviewed in this browser session.";
+        return "All refreshed information for this area has already been reviewed in this browser session.";
       }
       if (next) {
         return `Click to continue the refreshed-layer review flow. ${reviewed}/${total} reviewed so far. Next: ${next}.`;
@@ -666,11 +666,11 @@ const toolbenchReviewPassMessages = {
     sourceTimelineOriginLayers: ({ layers = "" } = {}) =>
       layers ? `Refreshed layers: ${layers}.` : "",
     sourceTimelineOriginSample: ({ title = "" } = {}) =>
-      `${title}: this V1 context is still sample-backed, so the timeline is showing the current sample provenance and freshness path.`,
+      `${title}: this area context still uses sample data, so the timeline shows its source and age.`,
     sourceTimelineOriginRefreshed: ({ title = "", layers = "" } = {}) =>
-      `${title}: this V1 context was refreshed from the latest sample bundle, so the timeline is showing the newest sample-backed provenance that was pulled through backend sync.${layers ? ` Refreshed layers: ${layers}.` : ""}`,
+      `${title}: this area context was refreshed from the latest sample data, so the timeline shows the newest source information.${layers ? ` Refreshed information: ${layers}.` : ""}`,
     sourceTimelineOriginCompleted: ({ title = "" } = {}) =>
-      `${title}: all refreshed V1 layers in this sample-sync handoff have been reviewed.`,
+      `${title}: all refreshed sample information has been reviewed.`,
     sourceTimelineReviewProgress: ({ reviewed = 0, total = 0, complete = false } = {}) =>
       complete
         ? "Refresh review complete"
@@ -690,15 +690,15 @@ const toolbenchReviewPassMessages = {
     v1CommercialWhyToggle: () => "Why this read",
     v1CommercialWhyHide: () => "Hide reasoning",
     v1SnapshotOpportunityPendingTitle: () => "Opportunity pending",
-    v1SnapshotOpportunityPendingCopy: () => "Load a linked V1 context to surface the strongest commercial upside.",
+    v1SnapshotOpportunityPendingCopy: () => "Load additional area information to see the strongest commercial upside.",
     v1SnapshotConstraintPendingTitle: () => "Constraint pending",
-    v1SnapshotConstraintPendingCopy: () => "Load a linked V1 context to surface the main commercial constraint.",
+    v1SnapshotConstraintPendingCopy: () => "Load additional area information to see the main commercial constraint.",
     v1SnapshotNextPendingTitle: () => "Next move pending",
-    v1SnapshotNextPendingCopy: () => "Load a linked V1 context to surface the best immediate internal next move.",
+    v1SnapshotNextPendingCopy: () => "Load additional area information to see the best next step.",
     v1SnapshotOutcomePendingTitle: () => "Outcome pending",
-    v1SnapshotOutcomePendingCopy: () => "Load a linked V1 context to surface the current internal decision state.",
-    v1SnapshotOutcomePendingReason: () => "Outcome reasoning appears here after a linked V1 context loads.",
-    v1SnapshotOutcomePendingPriority: () => "Priority details appear here after a linked V1 context loads.",
+    v1SnapshotOutcomePendingCopy: () => "Load additional area information to see the current decision state.",
+    v1SnapshotOutcomePendingReason: () => "The reason appears here when additional area information is available.",
+    v1SnapshotOutcomePendingPriority: () => "Next-step details appear here when additional area information is available.",
     v1SnapshotOutcomePendingHistory: () => "Last-change details appear here after the decision outcome changes.",
     v1CommercialWhySummary: ({ rent = "", value = "", fit = "", trade = "" } = {}) =>
       [
@@ -842,7 +842,7 @@ const toolbenchReviewPassMessages = {
     sourceStageBenchmarkLoaded: () => "Benchmark series loaded",
     sourceStageBenchmarkPending: () => "Sample benchmark pending",
     sourceStageComparableOnly: () => "Comparable signal only",
-    sourceStageProductionReady: () => "Production verified",
+    sourceStageProductionReady: () => "Source checks complete",
     sourceStageProductionNotReady: () => "Not ready",
     sourceStageMonitorReady: () => "Ready for release monitoring",
     sourceStageMonitorPending: () => "Monitor after production release",
@@ -924,11 +924,11 @@ const toolbenchReviewPassMessages = {
     freshnessDetailMissingCapture: () => "No captured date is connected.",
     freshnessDetailInvalidCapture: () => "Captured date format is invalid.",
     freshnessDetailFresh: ({ days = 0, maxDays = 0 } = {}) =>
-      `${days} day${days === 1 ? "" : "s"} since latest capture (SLA <= ${maxDays} days).`,
-    freshnessDetailWatch: ({ days = 0, watchLower = 0, watchMaxDays = 0 } = {}) =>
-      `${days} days since latest capture (SLA watch: ${watchLower}-${watchMaxDays} days).`,
+      `${days} day${days === 1 ? "" : "s"} since the latest update. Current data should be no more than ${maxDays} days old.`,
+    freshnessDetailWatch: ({ days = 0 } = {}) =>
+      `${days} days since the latest update. This data is getting old and should be refreshed soon.`,
     freshnessDetailStale: ({ days = 0, watchMaxDays = 0 } = {}) =>
-      `${days} days since latest capture (SLA stale: >${watchMaxDays} days).`,
+      `${days} days since the latest update. This data is out of date because it is more than ${watchMaxDays} days old.`,
     sourceQaComparableStatus: () => "Comparable estimate",
     sourceQaCapturedMissing: () => "Not connected",
     sourceQaProductionNotReady: () => "Not ready",
@@ -950,23 +950,23 @@ const toolbenchReviewPassMessages = {
     chartAxisRent: () => "S$/psf/month"
   },
   validation: {
-    titleIdle: () => "V1 validation",
-    titleAligned: () => "V1 validation • aligned",
-    titleWarnings: ({ count = 0 } = {}) => `V1 validation • ${count} review point${count > 1 ? "s" : ""}`,
+    titleIdle: () => "Review checks",
+    titleAligned: () => "Review checks • complete",
+    titleWarnings: ({ count = 0 } = {}) => `Review checks • ${count} item${count > 1 ? "s" : ""} to check`,
     empty: () => "No validation issues yet.",
     cleared: ({ text = "" } = {}) => `Cleared just now • ${text}`,
     advanced: ({ label = "" } = {}) =>
       `Moved to the next validation review point in ${label}.`,
     sectionCompleteTitle: ({ label = "" } = {}) => `${label} • complete`,
     sectionComplete: ({ label = "" } = {}) =>
-      `${label} validation is complete for the current V1 context.`,
-    allCompleteTitle: () => "V1 validation • complete",
-    allComplete: () => "All tracked V1 validation points are clear for this context.",
+      `${label} checks are complete for the current area context.`,
+    allCompleteTitle: () => "Review checks • complete",
+    allComplete: () => "All tracked checks are clear for this area context.",
     clearSectionFilter: () => "Clear section filter",
     backToAll: () => "Back to full validation",
     showClearedDetail: () => "View just-cleared detail",
     hideClearedDetail: () => "Hide just-cleared detail",
-    pendingCopy: () => "Load a linked V1 record to validate the decision layer.",
+    pendingCopy: () => "Load a linked area record to review the supporting information.",
     alignedCopy: () => "No obvious rent or value-gap conflicts detected.",
     warningBenchmarkRange: () => "Benchmark low psf should not be higher than benchmark high psf.",
     warningFairOutOfRange: () => "Verdict is set to fair, but the asking psf does not currently sit within the benchmark range.",
@@ -988,14 +988,14 @@ const toolbenchReviewPassMessages = {
     noLinkedNextAction: () => "Next: link a review record first.",
     pendingSummary: ({ title = "" } = {}) => `${title}: review sample not linked yet`,
     noInternalSample: () => "No internal sample",
-    noInternalSampleCopy: () => "This area does not yet have a linked V1 context sample record.",
+    noInternalSampleCopy: () => "This area does not yet have additional area context.",
     pendingTitle: () => "Pending",
     valueGapPending: () => "Below-benchmark and value-gap logic will appear here once this area is modeled.",
     surroundingPending: () => "Nearby operator mix and trade pattern will appear here once loaded.",
     fitPending: () => "Use-case fit scores are not available for this area yet.",
     decisionNotePending: () => "No decision note yet",
     decisionNotePendingCopy: () => "Use Serangoon HDB retail, Bedok HDB retail, or Tiong Bahru shophouse to preview the internal decision layer.",
-    watchoutsMissing: () => "No V1 watchouts loaded for this area yet.",
+    watchoutsMissing: () => "No additional cautions are available for this area yet.",
     operatorSummaryPendingTitle: () => "No operator summary",
     operatorSummaryMissing: () => "No surrounding-business summary is linked for this area yet.",
     competitionPendingTitle: () => "No competition read",
@@ -3185,7 +3185,7 @@ async function loadBackendV1ReviewPassState() {
     updateBackendReviewPassMeta(null);
     return null;
   } catch (error) {
-    console.warn("Could not load backend V1 review pass state.", error);
+    console.warn("Could not load the saved review state.", error);
     return null;
   }
 }
@@ -3220,7 +3220,7 @@ async function saveBackendV1ReviewPassState() {
     writeSessionJson(toolbenchV1ReviewPassStateKey, currentSessionReviewPassStatePayload());
     renderV1Roster();
     renderV1Health(contextRecordForRecord(toolbenchRecord));
-    console.warn("Could not save backend V1 review pass state.", error);
+    console.warn("Could not save the review state.", error);
     return null;
   }
 }
@@ -3353,15 +3353,7 @@ async function loadDecisionContextRecords() {
       console.warn("RentIntelContextApi listContextRecords failed; checking sample bundle fallback.", error);
     }
   }
-  try {
-    const response = await fetch("../../data/sources/rent-decision-context-sample.json", { cache: "no-store" });
-    if (!response.ok) throw new Error(`Decision context request failed: ${response.status}`);
-    const payload = await response.json();
-    return Array.isArray(payload?.records) ? payload.records : [];
-  } catch (error) {
-    console.warn("RentIntel decision context sample could not be loaded.", error);
-    return [];
-  }
+  return [];
 }
 
 function mergeAskingRentFeed(records) {
@@ -9299,8 +9291,8 @@ function renderV1EditorStatus() {
     ? toolbenchReviewPassMessages.workspace.v1StatusHideDetail()
     : toolbenchReviewPassMessages.workspace.v1StatusShowDetail();
   toggle.title = toolbenchV1EditorStatusExpanded
-    ? "Hide the V1 save detail."
-    : "Show the V1 save detail.";
+    ? "Hide the save details."
+    : "Show the save details.";
   toggle.addEventListener("click", () => {
     toolbenchV1EditorStatusExpanded = !toolbenchV1EditorStatusExpanded;
     renderV1EditorStatus();
@@ -9565,7 +9557,7 @@ function handleV1ReadCardAction(event) {
     setDecisionFocusSection(focusSection);
     focusV1EditorSection(
       focusSection,
-      `Jumped to the dominant decision section in the V1 editor.`,
+      "Opened the most important section in the area-context editor.",
       `Decision Outcome: ${toolbenchEl.v1SnapshotOutcomeTitle?.textContent || "Decision Outcome"}`
     );
     return;
@@ -9576,7 +9568,7 @@ function handleV1ReadCardAction(event) {
   if (action === "rent-signal") {
     focusV1EditorControl(
       toolbenchEl.v1VerdictInput || toolbenchEl.v1BenchmarkLowInput,
-      "Jumped to the rent-signal verdict and benchmark fields in the V1 editor.",
+      "Opened the rent-signal and benchmark fields in the area-context editor.",
       "Rent Signal"
     );
     return;
@@ -9584,7 +9576,7 @@ function handleV1ReadCardAction(event) {
   if (action === "value-gap-summary") {
     focusV1EditorControl(
       toolbenchEl.v1ValueGapInput || toolbenchEl.v1ValueGapStatusInput,
-      "Jumped to the value-gap summary and scoring fields in the V1 editor.",
+      "Opened the value-gap summary and scoring fields in the area-context editor.",
       "Value Gap"
     );
     return;
@@ -9592,7 +9584,7 @@ function handleV1ReadCardAction(event) {
   if (action === "decision-note") {
     focusV1EditorControl(
       toolbenchEl.v1DecisionInput || toolbenchEl.v1AngleInput,
-      "Jumped to the V1 decision note and negotiation-angle fields.",
+      "Opened the decision note and negotiation fields.",
       "Decision Note"
     );
     return;
@@ -9600,7 +9592,7 @@ function handleV1ReadCardAction(event) {
   if (action === "surrounding-trade") {
     focusV1EditorControl(
       toolbenchEl.v1TradePatternInput || toolbenchEl.v1CategoryMixInput,
-      "Jumped to the surrounding-trade summary and mix fields in the V1 editor.",
+      "Opened the surrounding-trade fields in the area-context editor.",
       "Surrounding Trade"
     );
     return;
@@ -9608,7 +9600,7 @@ function handleV1ReadCardAction(event) {
   if (action === "best-fit-summary") {
     focusV1EditorControl(
       toolbenchEl.v1FitScoresInput || toolbenchEl.v1GoodFitInput,
-      "Jumped to the suitability scoring fields in the V1 editor.",
+      "Opened the suitability fields in the area-context editor.",
       "Best Fit"
     );
     return;
@@ -9616,7 +9608,7 @@ function handleV1ReadCardAction(event) {
   if (action === "operators-summary") {
     focusV1EditorControl(
       toolbenchEl.v1OperatorsInput || toolbenchEl.v1TradePatternInput,
-      "Jumped to the nearby-operator trade context in the V1 editor.",
+      "Opened the nearby-business information in the area-context editor.",
       "Top Operators"
     );
     return;
@@ -9624,7 +9616,7 @@ function handleV1ReadCardAction(event) {
   if (action === "competition-read") {
     focusV1EditorControl(
       toolbenchEl.v1CompetitionFlagsInput || toolbenchEl.v1ComplementaryFlagsInput,
-      "Jumped to the competition and complementary-trade signals in the V1 editor.",
+      "Opened the competition and supporting-trade information in the area-context editor.",
       "Competition"
     );
     return;
@@ -9632,7 +9624,7 @@ function handleV1ReadCardAction(event) {
   if (action === "good-fit") {
     focusV1EditorControl(
       toolbenchEl.v1GoodFitInput || toolbenchEl.v1FitScoresInput,
-      "Jumped to the strongest-fit suitability notes in the V1 editor.",
+      "Opened the strongest-fit notes in the area-context editor.",
       "Good For"
     );
     return;
@@ -9640,7 +9632,7 @@ function handleV1ReadCardAction(event) {
   if (action === "caution-fit") {
     focusV1EditorControl(
       toolbenchEl.v1CautionInput || toolbenchEl.v1FitScoresInput,
-      "Jumped to the weak-fit and approval-caution notes in the V1 editor.",
+      "Opened the caution and approval notes in the area-context editor.",
       "Use Caution"
     );
   }
@@ -10457,7 +10449,7 @@ async function saveV1Context() {
       );
     }
   } catch (error) {
-    console.error("V1 context save failed.", error);
+    console.error("Area context save failed.", error);
     setV1EditorStatus(error.message || toolbenchReviewPassMessages.workspace.v1SaveFailed(), { tone: "error" });
   } finally {
     toolbenchEl.v1SaveButton.disabled = false;
@@ -10709,7 +10701,7 @@ function renderWorkspaceSourceTimeline(record) {
   const source = record.askingSource || {};
   const hasDirectSource = Boolean(source.sourceName || source.sourceType);
   const hasEvidenceRows = evidenceRows(record).length > 0;
-  const productionReady = qa.ready || sourceTrust.level === "released" || sourceTrust.title === "Production Verified";
+  const productionReady = qa.ready || ["production", "released"].includes(sourceTrust.level);
   const steps = [
     {
       label: toolbenchReviewPassMessages.workspace.sourceStageSample(),
@@ -10836,8 +10828,8 @@ function renderWorkspaceSourceTimeline(record) {
         button.dataset.justReviewed = toolbenchJustReviewedRefreshedSection === sectionKey ? "true" : "false";
         button.textContent = v1ContextOriginLayerLabel(layerKey);
         button.title = toolbenchReviewedRefreshedContextSections[sectionKey]
-          ? `Reviewed: ${v1ContextOriginLayerLabel(layerKey)}. Jump back to this refreshed V1 section in the editor.`
-          : `Jump to the refreshed ${v1ContextOriginLayerLabel(layerKey)} section in the V1 editor.`;
+          ? `Reviewed: ${v1ContextOriginLayerLabel(layerKey)}. Return to this refreshed section in the editor.`
+          : `Open the refreshed ${v1ContextOriginLayerLabel(layerKey)} section in the area-context editor.`;
         toolbenchEl.sourceTimelineActions.append(button);
       });
       if (!toolbenchEl.sourceTimelineActions.childElementCount) {
@@ -11108,25 +11100,25 @@ function summarizeCommercialReadWhy(rentSignalRead = {}, valueGapRead = {}, fitS
       label: "Rent signal",
       copy: rentSignalRead.copy || "",
       action: "rent-signal",
-      title: "Click to jump to the rent-signal fields in the V1 editor."
+      title: "Open the rent-signal fields in the area-context editor."
     },
     {
       label: "Value gap",
       copy: valueGapRead.copy || "",
       action: "value-gap-summary",
-      title: "Click to jump to the value-gap fields in the V1 editor."
+      title: "Open the value-gap fields in the area-context editor."
     },
     {
       label: "Best fit",
       copy: fitStrength.copy || "",
       action: "best-fit-summary",
-      title: "Click to jump to the suitability fields in the V1 editor."
+      title: "Open the suitability fields in the area-context editor."
     },
     {
       label: "Trade context",
       copy: tradePressure.copy || "",
       action: "surrounding-trade",
-      title: "Click to jump to the surrounding-trade fields in the V1 editor."
+      title: "Open the surrounding-trade fields in the area-context editor."
     }
   ].filter((item) => item.copy);
 }
@@ -11225,19 +11217,19 @@ function summarizeCommercialReadAction({
     if (fitStrength.title === "Fragile fit") {
       return {
         action: "caution-fit",
-        title: "Click to jump to the weakest-fit commercial constraint in the V1 editor."
+        title: "Open the weakest-fit commercial constraint in the area-context editor."
       };
     }
     if (valueGapRead.title === "Stretched ask") {
       return {
         action: "value-gap-summary",
-        title: "Click to jump to the pricing stretch read in the V1 editor."
+        title: "Open the pricing-stretch information in the area-context editor."
       };
     }
     if (rentSignalRead.title === "Above range") {
       return {
         action: "rent-signal",
-        title: "Click to jump to the above-range rent signal in the V1 editor."
+        title: "Open the above-range rent signal in the area-context editor."
       };
     }
   }
@@ -11245,13 +11237,13 @@ function summarizeCommercialReadAction({
     if (fitStrength.title === "Strong fit") {
       return {
         action: "good-fit",
-        title: "Click to jump to the strongest commercial use-case fit in the V1 editor."
+        title: "Open the strongest commercial use-case fit in the area-context editor."
       };
     }
     if (valueGapRead.title === "Fairly priced" || valueGapRead.title === "Negotiable") {
       return {
         action: "value-gap-summary",
-        title: "Click to jump to the most supportive pricing read in the V1 editor."
+        title: "Open the most supportive pricing information in the area-context editor."
       };
     }
   }
@@ -11397,7 +11389,7 @@ function summarizeCommercialSnapshot({
     if (healthSummary?.nextLabel) {
       return {
         title: `Tighten ${healthSummary.nextLabel}`,
-        copy: v1HealthActionForLabel(healthSummary.nextLabel) || "Close the next incomplete V1 layer before relying on this context.",
+        copy: v1HealthActionForLabel(healthSummary.nextLabel) || "Complete the next missing check before relying on this area context.",
         meta: "Driver: review health",
         action: v1ReadActionForHealthLabel(healthSummary.nextLabel),
         tone: "watch"
@@ -11442,10 +11434,10 @@ function summarizeCommercialSnapshot({
   const outcome = (() => {
     if (healthSummary?.nextLabel) {
       return {
-        title: "Needs V1 completion",
+        title: "Needs more review",
         copy: `Finish ${healthSummary.nextLabel} before treating this context as fully decision-ready.`,
-        reason: `${healthSummary.nextLabel} is still the next incomplete tracked V1 layer for this record.${provenance ? ` ${provenance}` : ""}`,
-        priority: "Priority: medium review - complete the next V1 layer before relying on this read.",
+        reason: `${healthSummary.nextLabel} is still the next incomplete check for this record.${provenance ? ` ${provenance}` : ""}`,
+        priority: "Priority: review the next missing item before relying on this information.",
         action: v1ReadActionForHealthLabel(healthSummary.nextLabel),
         tone: "watch"
       };
@@ -11506,7 +11498,7 @@ function renderV1DecisionSnapshot(snapshot = null) {
     if (!item) {
       titleEl.textContent = pendingTitle;
       copyEl.textContent = pendingCopy;
-      if (metaEl) metaEl.textContent = "Driver details appear here after a linked V1 context loads.";
+      if (metaEl) metaEl.textContent = "Supporting details appear here when area information is available.";
       setV1ReadCardTone(titleEl, "");
       setV1ReadCardAction(titleEl, { enabled: false });
       if (card) delete card.dataset.routedWork;
@@ -11517,16 +11509,16 @@ function renderV1DecisionSnapshot(snapshot = null) {
     if (metaEl) {
       metaEl.textContent =
         routedCue && routedCue.cardKey === cardKey
-          ? `${item.meta || "Driver details are available through the linked V1 read."} • Routed now for ${toolbenchReviewPassMessages.workspace.quickPickWorkMeta({
+          ? `${item.meta || "Supporting details are available in the linked area information."} • Routed now for ${toolbenchReviewPassMessages.workspace.quickPickWorkMeta({
               workType: routedCue.workType
             }).toLowerCase()}.${routedCue.reopenMemoryType === "productive" ? " Productive reopen lane." : routedCue.reopenMemoryType === "pressure" ? " Pressure reopen lane." : ""}`
-          : item.meta || "Driver details are available through the linked V1 read.";
+          : item.meta || "Supporting details are available in the linked area information.";
     }
     setV1ReadCardTone(titleEl, item.tone || "");
     setV1ReadCardAction(titleEl, {
       action: item.action,
       enabled: Boolean(item.action),
-      title: `Click to follow this ${String(titleEl.closest("article")?.querySelector("span")?.textContent || "").toLowerCase()} read in the V1 editor.`
+      title: `Open this ${String(titleEl.closest("article")?.querySelector("span")?.textContent || "").toLowerCase()} information in the area-context editor.`
     });
     if (card) {
       if (routedCue && routedCue.cardKey === cardKey) card.dataset.routedWork = "true";
@@ -11596,15 +11588,15 @@ function renderV1DecisionSnapshot(snapshot = null) {
     if (toolbenchEl.v1SnapshotOutcomeReason) {
       toolbenchEl.v1SnapshotOutcomeReason.textContent =
         routedCue && routedCue.cardKey === "outcome"
-          ? `${snapshot.outcome.reason || "Outcome reasoning is available through the linked V1 decision read."} Routed now for ${toolbenchReviewPassMessages.workspace.quickPickWorkMeta({
+          ? `${snapshot.outcome.reason || "The decision reason is available in the linked area information."} Routed now for ${toolbenchReviewPassMessages.workspace.quickPickWorkMeta({
               workType: routedCue.workType
             }).toLowerCase()}.${routedCue.reopenMemoryType === "productive" ? " Productive reopen lane." : routedCue.reopenMemoryType === "pressure" ? " Pressure reopen lane." : ""}`
-          : snapshot.outcome.reason || "Outcome reasoning is available through the linked V1 decision read.";
+          : snapshot.outcome.reason || "The decision reason is available in the linked area information.";
     }
     if (toolbenchEl.v1SnapshotOutcomePriority) {
       const progress = currentDecisionOutcomeProgress(toolbenchContextDraft);
       toolbenchEl.v1SnapshotOutcomePriority.textContent =
-        progress?.copy || snapshot.outcome.priority || "Priority details are available through the linked V1 decision read.";
+        progress?.copy || snapshot.outcome.priority || "Next-step details are available in the linked area information.";
     }
     if (toolbenchEl.v1SnapshotOutcomeHistory) {
       const history = currentDecisionOutcomeHistory(toolbenchContextDraft);
@@ -11629,7 +11621,7 @@ function renderV1DecisionSnapshot(snapshot = null) {
         if (focusSection) outcomeCard.dataset.decisionFocusSection = focusSection;
         else delete outcomeCard.dataset.decisionFocusSection;
         outcomeCard.setAttribute("role", "button");
-        outcomeCard.title = "Click to follow this decision outcome in the V1 editor.";
+        outcomeCard.title = "Open this decision outcome in the area-context editor.";
         outcomeCard.setAttribute("aria-label", outcomeCard.title);
         outcomeCard.setAttribute("tabindex", "0");
       } else {
@@ -11898,7 +11890,7 @@ function renderV1ContextLayer(record) {
   setV1ReadCardAction(toolbenchEl.v1DecisionTitle, {
     action: "decision-note",
     enabled: Boolean(decisionNotes.summary || decisionNotes.negotiationAngle || (Array.isArray(decisionNotes.watchouts) && decisionNotes.watchouts.length)),
-    title: `Click to jump to the V1 decision note and negotiation-angle fields for ${context.subjectRef || record.title}.`
+    title: `Open the decision note and negotiation-angle fields for ${context.subjectRef || record.title}.`
   });
   setListContent(toolbenchEl.v1Watchouts, cautionItems.slice(0, 4), toolbenchReviewPassMessages.v1Context.watchoutsLinkedMissing());
   toolbenchEl.v1OperatorsTitle.textContent = operatorNames.length
@@ -12485,7 +12477,7 @@ function renderEvidenceTable() {
   const sourceTrust = sourceTrustProfile(toolbenchRecord);
   const qa = sourceQaProfile(toolbenchRecord);
   const source = toolbenchRecord.askingSource || {};
-  const productionReady = qa.ready || sourceTrust.level === "released" || sourceTrust.title === "Production Verified";
+  const productionReady = qa.ready || ["production", "released"].includes(sourceTrust.level);
   const stateFor = (ready, review = false) => ready ? "ready" : review ? "review" : "pending";
 
   toolbenchEl.evidenceSummary.textContent = toolbenchReviewPassMessages.workspace.evidenceSummary({
@@ -14055,7 +14047,7 @@ async function initToolbench() {
         sectionKey,
         button.dataset.validation === "warning"
           ? `Jumped to the ${sectionKey.replace(/-/g, " ")} section and filtered validation to its review points.`
-          : `Jumped to the ${sectionKey.replace(/-/g, " ")} section in the V1 editor.`,
+          : `Opened the ${sectionKey.replace(/-/g, " ")} section in the area-context editor.`,
         `Section: ${sectionKey.replace(/-/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase())}`
       );
       if (button.dataset.validation === "warning") {
@@ -14090,7 +14082,7 @@ async function initToolbench() {
       revealWorkspaceSection(toolbenchEl.v1EditorForm || toolbenchEl.v1EditorTitle);
       focusV1EditorSection(
         sectionKey,
-        `Reviewed the refreshed ${v1ValidationSectionLabel(sectionKey)} section and jumped into the V1 editor.`,
+        `Reviewed the refreshed ${v1ValidationSectionLabel(sectionKey)} section and opened it in the area-context editor.`,
         `Source Refresh: ${v1ValidationSectionLabel(sectionKey)}`
       );
     });
@@ -14118,11 +14110,11 @@ async function initToolbench() {
         toolbenchActiveValidationWarningKey = nextWarning.key || "";
         focusV1EditorControl(
           nextWarning.target,
-          `Returned to the full V1 validation view and loaded the next remaining warning in ${v1ValidationSectionLabel(nextWarning.section)}.`,
+          `Returned to all review checks and loaded the next item in ${v1ValidationSectionLabel(nextWarning.section)}.`,
           `Validation: ${v1ValidationSectionLabel(nextWarning.section)}`
         );
       } else {
-        setSearchStatus("Restored the full V1 validation view.", {
+        setSearchStatus("Restored all review checks.", {
           autoClearMs: toolbenchStatusDurations.reviewStep,
           tone: "info"
         });

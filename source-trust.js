@@ -51,9 +51,9 @@
       return {
         key: "production-ready",
         level: "production",
-        title: "Production Verified",
-        reason: "Production asking source is marked ready with official benchmark and QA controls.",
-        action: "Keep scheduled ingestion, exception alerts, and source-owner review active.",
+        title: "Source checks complete",
+        reason: "The asking-rent source, official benchmark, and quality checks are connected.",
+        action: "Keep scheduled updates, issue alerts, and source-owner review active.",
         sourceName
       };
     }
@@ -62,9 +62,9 @@
       return {
         key: "pilot-verified",
         level: "pilot",
-        title: "Pilot Verified",
-        reason: "This coverage request has been approved into a pilot rent signal.",
-        action: "Complete production source evidence, QA gate, and controlled release before treating it as production verified.",
+        title: "Manual checks added",
+        reason: "This coverage request has been approved for a manually checked rent signal.",
+        action: "Complete the remaining source and quality checks before treating it as fully checked.",
         sourceName
       };
     }
@@ -84,9 +84,9 @@
       return {
         key: "pilot-verified",
         level: "pilot",
-        title: "Pilot Verified",
-        reason: "Manual asking checks are connected, but production release is not complete.",
-        action: "Complete production evidence, QA gate, owner review, and controlled release.",
+        title: "Manual checks added",
+        reason: "Manual asking-rent checks are connected, but the full source review is not complete.",
+        action: "Complete the remaining evidence, quality checks, owner review, and release checks.",
         sourceName
       };
     }
