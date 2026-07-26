@@ -1,5 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
+import {
+  evaluateMarketNoteSource
+} from "./market-note-source-evidence.mjs";
 
 const projectRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const notesPath = path.join(projectRoot, "data", "market-notes.json");
@@ -277,7 +280,7 @@ function buildUseIt(primary, secondary, feedState) {
   ];
 }
 
-function createNote({ targetDate, notesPayload, askingFeed, sourceStatus }) {
+function createNote({ targetDate, notesPayload, askingFeed, sourceStatus, sourceEvidence }) {
   const ranked = rankSignals(askingFeed.records || []);
   const primary = ranked[0];
   const secondary = ranked[1] || null;
@@ -306,6 +309,12 @@ function createNote({ targetDate, notesPayload, askingFeed, sourceStatus }) {
     slug,
     title,
     publishedAt: targetDate,
+    sourceEvidence: {
+      captureDate: sourceEvidence.captureDate,
+      captureSignature: sourceEvidence.captureSignature,
+      feedVersion: sourceEvidence.feedVersion,
+      ageDaysAtPublication: sourceEvidence.ageDays
+    },
     description,
     summary,
     lede,
@@ -351,7 +360,29 @@ function main() {
     return;
   }
 
-  const generated = createNote({ targetDate, notesPayload, askingFeed, sourceStatus });
+  const sourceEvidence = evaluateMarketNoteSource({
+    askingFeed,
+    latestNote: latest,
+    targetDate
+  });
+  if (!sourceEvidence.eligible) {
+    console.log(JSON.stringify({
+      status: "blocked",
+      reason: "fresh approved source evidence is required before publishing a market-change article",
+      targetDate,
+      latestPublishedAt: latest.publishedAt,
+      sourceEvidence
+    }, null, 2));
+    return;
+  }
+
+  const generated = createNote({
+    targetDate,
+    notesPayload,
+    askingFeed,
+    sourceStatus,
+    sourceEvidence
+  });
 
   if (args.write) {
     const nextNotes = existingForDate

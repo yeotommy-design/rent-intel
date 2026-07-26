@@ -379,6 +379,34 @@ function sourceQaProfile(record) {
   };
 }
 
+function currentVerdictSafety(record, qa = sourceQaProfile(record)) {
+  const feed = currentAskingFeed();
+  const source = record?.askingSource;
+  const capturedAt = source?.capturedAt || feed.updatedAt || "";
+  const capturedDate = capturedAt
+    ? new Date(String(capturedAt).includes("T") ? capturedAt : `${capturedAt}T00:00:00+08:00`)
+    : null;
+  const ageDays = capturedDate && !Number.isNaN(capturedDate.getTime())
+    ? Math.max(0, Math.floor((Date.now() - capturedDate.getTime()) / 86400000))
+    : null;
+  const hasChecks = Number(qa.checks || 0) > 0;
+  const current = Boolean(source && hasChecks && Number.isFinite(ageDays) && ageDays <= 14);
+  const reason = !source || !hasChecks
+    ? "No approved direct asking-rent checks are connected for this result."
+    : !Number.isFinite(ageDays)
+      ? "The asking-rent capture date is missing or invalid."
+      : `The latest asking-rent capture is ${ageDays} days old. Current verdicts pause after 14 days.`;
+  return {
+    current,
+    ageDays,
+    capturedAt,
+    reason,
+    copy: current
+      ? ""
+      : `${reason} The figures below remain available as historical context, but they should not be treated as today's market position.`
+  };
+}
+
 function sourceTimestampLabel(status, value) {
   if (value) return formatShortDate(value);
   if (status?.lastCompletedAt) return formatShortDate(status.lastCompletedAt);
@@ -452,6 +480,15 @@ function renderDataFreshness(record) {
 }
 
 function signalDrivers(record) {
+  const safety = currentVerdictSafety(record);
+  if (!safety.current) {
+    return [
+      safety.reason,
+      "Use the official benchmark history only as background context.",
+      "Wait for a new approved asking-rent capture before treating the gap as current.",
+      "Unit frontage, permitted use, lease terms, and condition still require direct checks."
+    ];
+  }
   if (Array.isArray(record.drivers) && record.drivers.length) return record.drivers;
   const property = String(record.propertyType || "").toLowerCase();
   const area = String(record.area || "").toLowerCase();
@@ -488,6 +525,14 @@ function signalDrivers(record) {
 }
 
 function actionChecklist(record) {
+  const safety = currentVerdictSafety(record);
+  if (!safety.current) {
+    return [
+      "Confirm that a new approved asking-rent capture has arrived.",
+      "Use the older figures only as historical context, not as today's rent position.",
+      "Recheck the exact unit, lease terms, frontage, permitted use, and condition."
+    ];
+  }
   if (record?.gap <= -8) {
     const nearby = nearbyBusinessProfile(record);
     return [
@@ -527,6 +572,7 @@ function actionChecklist(record) {
 }
 
 function decisionOutcomeLabel(record) {
+  if (!currentVerdictSafety(record).current) return "Historical context only";
   const gap = Number(record?.gap || 0);
   if (gap <= -8) return "Possible under-value";
   if (gap >= 18) return "Likely high";
@@ -535,6 +581,14 @@ function decisionOutcomeLabel(record) {
 }
 
 function publicVerdictProfile(record) {
+  const safety = currentVerdictSafety(record);
+  if (!safety.current) {
+    return {
+      key: "stale",
+      label: "Current verdict paused",
+      copy: safety.copy
+    };
+  }
   const gap = Number(record?.gap || 0);
   const nearby = nearbyBusinessProfile(record);
   const nearbyTitle = String(nearby.title || "").toLowerCase();
@@ -573,6 +627,14 @@ function publicVerdictProfile(record) {
 }
 
 function decisionActionProfile(record) {
+  const safety = currentVerdictSafety(record);
+  if (!safety.current) {
+    return {
+      label: "Refresh evidence first",
+      copy: `${safety.reason} Keep the historical benchmark visible, but wait for a new approved asking-rent capture before negotiating from this gap.`,
+      mobile: "Historical context only. Refresh the asking-rent evidence before using this result."
+    };
+  }
   const gap = Number(record?.gap || 0);
   const fairLow = record?.fairRange?.low || record?.official || 0;
   const fairHigh = record?.fairRange?.high || record?.official || 0;
@@ -612,6 +674,27 @@ function decisionActionProfile(record) {
 }
 
 function pulseGuideProfile(record) {
+  const safety = currentVerdictSafety(record);
+  if (!safety.current) {
+    return {
+      tone: "warning",
+      hero: {
+        label: "Source warning",
+        title: "Current verdict paused.",
+        copy: "Next: wait for a new approved asking-rent capture."
+      },
+      decision: {
+        label: "Historical context",
+        title: "Do not use this gap as today's market position.",
+        copy: safety.reason
+      },
+      next: {
+        label: "Next step",
+        title: "Refresh evidence before deciding.",
+        copy: "The benchmark history remains useful, but the asking-rent comparison needs a new capture."
+      }
+    };
+  }
   const gap = Number(record?.gap || 0);
   const fairHigh = record?.fairRange?.high || record?.official || 0;
   const fairLow = record?.fairRange?.low || record?.official || 0;
@@ -759,14 +842,17 @@ function renderHeroBrief(record) {
   const pulse = pulseGuideProfile(record);
   const status = pressureStatus(record);
   const action = decisionActionProfile(record);
+  const safety = currentVerdictSafety(record);
   if (el.heroBriefPanel) {
     el.heroBriefPanel.dataset.status = status.key;
   }
   el.heroBriefTitle.textContent = pulse.hero.title;
   el.heroBriefCopy.textContent = `${action.label}. ${pulse.next.copy}`;
-  el.heroBriefTrust.textContent = record.confidence;
+  el.heroBriefTrust.textContent = safety.current ? record.confidence : "Historical context";
   el.heroBriefRange.textContent = moneyRange(record.fairRange);
-  el.heroBriefGap.textContent = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
+  el.heroBriefGap.textContent = safety.current
+    ? `${record.gap > 0 ? "+" : ""}${record.gap}%`
+    : "Paused";
 }
 
 function renderPublicVerdict(record) {
@@ -1532,14 +1618,15 @@ function renderPublicTrustGuide(trust) {
 
 function publicEvidenceRows(record) {
   const qa = sourceQaProfile(record);
+  const safety = currentVerdictSafety(record, qa);
   const trust = benchmarkTrustProfile(record);
   const confidence = confidenceProfile(record);
   const sourceTrust = publicTrustProfile(record);
   const rows = [
     {
       label: "Public badge",
-      value: sourceTrust.title,
-      detail: sourceTrust.action
+      value: safety.current ? sourceTrust.title : "Pilot data — out of date",
+      detail: safety.current ? sourceTrust.action : safety.reason
     },
     {
       label: "Benchmark source",
@@ -1560,13 +1647,13 @@ function publicEvidenceRows(record) {
     },
     {
       label: "Confidence",
-      value: record.confidence || confidence.source,
-      detail: confidence.evidence
+      value: safety.current ? record.confidence || confidence.source : "Historical context",
+      detail: safety.current ? confidence.evidence : safety.reason
     },
     {
       label: "Production gate",
       value: qa.production,
-      detail: sourceTrust.reason
+      detail: safety.current ? sourceTrust.reason : "A new approved capture is required before current verdicts resume."
     }
   ];
   if (record?.oneMap?.planningArea || record?.oneMap?.postalCode) {
@@ -1681,6 +1768,10 @@ function renderNearbyBusinesses(record) {
 }
 
 function verificationPrompt(record) {
+  const safety = currentVerdictSafety(record);
+  if (!safety.current) {
+    return "Wait for a new approved asking-rent capture before using this result as a current rent position.";
+  }
   const confidence = String(record?.confidence || "").toLowerCase();
   if (record?.prototypeSource === "coverage-request" || confidence.includes("coverage")) {
     return "Confirm the approved coverage record, source owner, and latest asking feed before using this as a final position.";
@@ -1703,6 +1794,14 @@ function verificationPrompt(record) {
 function publicDecisionNote(record) {
   const trust = benchmarkTrustProfile(record);
   const qa = sourceQaProfile(record);
+  const safety = currentVerdictSafety(record, qa);
+  if (!safety.current) {
+    return {
+      lead: `${record.title} is currently shown as historical context because the asking-rent evidence is no longer current.`,
+      body: `${safety.reason} The benchmark range and earlier asking figures can support background research, but they cannot support a fresh high, fair, or under-value conclusion.`,
+      next: "Refresh the asking-rent evidence and recheck the exact unit before preparing a negotiation position."
+    };
+  }
   const gapText = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
   const absoluteGapText = `${Math.abs(Number(record.gap || 0))}%`;
   let lead = `RentIntel reads ${record.title} as ${String(record.decision || "").toLowerCase()} because the current asking rent sits ${record.gap > 0 ? `${gapText} above` : `${gapText.replace("-", "")}% below`} the current fair range.`;
@@ -1727,6 +1826,15 @@ function publicDecisionNote(record) {
 }
 
 function publicDecisionAngles(record) {
+  const safety = currentVerdictSafety(record);
+  if (!safety.current) {
+    const copy = `${safety.reason} Use the older range only as background until a new approved capture arrives.`;
+    return [
+      { label: "New lease", title: "Pause the current verdict", copy },
+      { label: "Renewal", title: "Request fresh market evidence", copy },
+      { label: "Area comparison", title: "Treat comparisons as historical", copy }
+    ];
+  }
   const trust = benchmarkTrustProfile(record);
   const highGap = record.gap >= 15;
   const strongGap = record.gap >= 22;
@@ -1796,15 +1904,18 @@ function renderDecisionNotePreview(record) {
 }
 
 function searchableSuggestions() {
-  const direct = rentRecords.map((record) => ({
-    query: record.title,
-    title: record.title,
-    meta: record.prototypeSource === "coverage-request" ? "Coverage sample" : "Direct record",
-    confidence: record.confidence,
-    tone: confidenceProfile(record).tone,
-    type: "direct",
-    tokens: [record.title, record.area, record.propertyType, ...record.aliases].join(" ").toLowerCase()
-  }));
+  const direct = rentRecords.map((record) => {
+    const safety = currentVerdictSafety(record);
+    return {
+      query: record.title,
+      title: record.title,
+      meta: record.prototypeSource === "coverage-request" ? "Coverage sample" : "Direct record",
+      confidence: safety.current ? record.confidence : "Historical",
+      tone: safety.current ? confidenceProfile(record).tone : "estimate",
+      type: "direct",
+      tokens: [record.title, record.area, record.propertyType, ...record.aliases].join(" ").toLowerCase()
+    };
+  });
   const comparable = comparableAreaProfiles.flatMap((profile) => {
     const baseTypes = [
       `${profile.area} HDB retail`,
@@ -2120,6 +2231,8 @@ function updateResult(record, options = {}) {
   el.noMatch.dataset.coverageStatus = "";
   const previousRecord = options.previousRecord || null;
   selectedRecord = record;
+  const sourceQa = sourceQaProfile(record);
+  const safety = currentVerdictSafety(record, sourceQa);
   const confidence = confidenceProfile(record);
   const action = decisionActionProfile(record);
   renderSearchResultState(searchResultProfile(record));
@@ -2135,12 +2248,14 @@ function updateResult(record, options = {}) {
     el.searchResultReturn.textContent = returnRecord ? `Return to ${returnRecord.area || returnRecord.title}` : "";
   }
   el.resultTitle.textContent = record.title;
-  el.confidenceBadge.textContent = record.confidence;
+  el.confidenceBadge.textContent = safety.current ? record.confidence : "Historical context";
   if (el.confidenceStrip) {
     el.confidenceStrip.dataset.confidenceTone = confidence.tone;
-    el.confidenceSource.textContent = confidence.source;
-    el.confidenceEvidence.textContent = confidence.evidence;
-    el.confidenceUse.textContent = confidence.use;
+    el.confidenceSource.textContent = safety.current ? confidence.source : "Current verdict paused";
+    el.confidenceEvidence.textContent = safety.current ? confidence.evidence : safety.reason;
+    el.confidenceUse.textContent = safety.current
+      ? confidence.use
+      : "Use as background only until a new approved capture arrives.";
   }
   if (el.trustBadge) {
     const trust = benchmarkTrustProfile(record);
@@ -2150,13 +2265,20 @@ function updateResult(record, options = {}) {
   }
   if (el.publicTrustBadge) {
     const publicTrust = publicTrustProfile(record);
-    el.publicTrustBadge.dataset.level = publicTrust.level;
-    el.publicTrustTitle.textContent = publicTrust.title;
-    el.publicTrustCopy.textContent = publicTrust.copy;
-    renderPublicTrustGuide(publicTrust);
+    el.publicTrustBadge.dataset.level = safety.current ? publicTrust.level : "sample";
+    el.publicTrustTitle.textContent = safety.current ? publicTrust.title : "Pilot data — out of date";
+    el.publicTrustCopy.textContent = safety.current ? publicTrust.copy : safety.copy;
+    renderPublicTrustGuide(safety.current
+      ? publicTrust
+      : {
+          ...publicTrust,
+          level: "sample",
+          title: "Pilot data — out of date",
+          reason: safety.reason
+        });
   }
   el.rentDecision.textContent = `${decisionOutcomeLabel(record)} for this area.`;
-  el.rentReason.textContent = record.reason;
+  el.rentReason.textContent = safety.current ? record.reason : safety.copy;
   el.mobileSummary.textContent = action.mobile;
   el.officialMetric.textContent = money(record.official);
   el.askingMetric.textContent = money(record.asking);
@@ -2172,7 +2294,6 @@ function updateResult(record, options = {}) {
       el.actionChecklist.append(item);
     });
   }
-  const sourceQa = sourceQaProfile(record);
   el.sourceSummary.textContent = record.sourceSummary;
   if (el.sourceQaPanel) {
     el.sourceQaPanel.dataset.ready = sourceQa.ready ? "true" : "false";
@@ -3545,6 +3666,7 @@ function drawRentChart() {
 }
 
 function pressureStatus(record) {
+  if (!currentVerdictSafety(record).current) return { key: "stale", label: "Historical" };
   if (record.gap <= -8) return { key: "under", label: "Value" };
   if (record.gap >= 22) return { key: "high", label: "High" };
   if (record.gap >= 10) return { key: "watch", label: "Watch" };
@@ -3643,6 +3765,7 @@ function renderPressurePanel() {
   if (!selectedRecord || !el.pressureList) return;
   const rows = pressurePanelRows();
   const status = pressureStatus(selectedRecord);
+  const safety = currentVerdictSafety(selectedRecord);
   const fairLow = selectedRecord.fairRange?.low || selectedRecord.official * 0.95;
   const fairHigh = selectedRecord.fairRange?.high || selectedRecord.official * 1.15;
   const gaugeMin = Math.min(fairLow, selectedRecord.official, selectedRecord.asking) * 0.94;
@@ -3655,7 +3778,9 @@ function renderPressurePanel() {
   el.pressurePanelTitle.textContent = selectedRecord.title;
   el.pressureFocus.dataset.status = status.key;
   el.pressureSignal.textContent = status.label;
-  el.pressureGap.textContent = `${selectedRecord.gap > 0 ? "+" : ""}${selectedRecord.gap}%`;
+  el.pressureGap.textContent = safety.current
+    ? `${selectedRecord.gap > 0 ? "+" : ""}${selectedRecord.gap}%`
+    : "Paused";
   el.pressureAsking.textContent = money(selectedRecord.asking);
   el.pressureFairRange.textContent = moneyRange(selectedRecord.fairRange);
   el.pressureGauge.style.setProperty("--fair-start", `${fairStart}%`);
@@ -3664,7 +3789,9 @@ function renderPressurePanel() {
   el.pressureGauge.style.setProperty("--asking-pos", `${askingPos}%`);
   el.pressureBoardSummary.textContent = `${rows.length} areas compared`;
   if (el.pressureBoardTakeaway) {
-    el.pressureBoardTakeaway.textContent = pressureBoardTakeaway(rows, selectedRecord);
+    el.pressureBoardTakeaway.textContent = safety.current
+      ? pressureBoardTakeaway(rows, selectedRecord)
+      : "These comparisons are historical. Wait for a new approved asking-rent capture before using them as current pressure signals.";
   }
   el.pressureList.replaceChildren();
 
@@ -3717,12 +3844,14 @@ function renderPressurePanel() {
 
 function topRentMovers() {
   return [...rentRecords]
+    .filter((record) => currentVerdictSafety(record).current)
     .sort((a, b) => Math.abs(b.gap) - Math.abs(a.gap))
     .slice(0, 4);
 }
 
 function underValueRows() {
   return [...rentRecords]
+    .filter((record) => currentVerdictSafety(record).current)
     .filter((record) => Number(record?.gap || 0) <= -8)
     .sort((a, b) => a.gap - b.gap)
     .slice(0, 4);
@@ -3744,7 +3873,9 @@ function renderRentMovers() {
   if (!el.rentMoversList || !el.freshnessWatchList || !el.underValueList || !el.underValueSummary) return;
 
   const movers = topRentMovers();
-  el.rentMoversSummary.textContent = `${movers.length} areas to watch`;
+  el.rentMoversSummary.textContent = movers.length
+    ? `${movers.length} current areas to watch`
+    : "Waiting for fresh asking-rent evidence";
   el.rentMoversList.replaceChildren();
   movers.forEach((record) => {
     const status = pressureStatus(record);
@@ -3807,11 +3938,11 @@ function renderRentMovers() {
   const underValue = underValueRows();
   el.underValueSummary.textContent = underValue.length
     ? `${underValue.length} areas below range`
-    : "No below-range signals yet";
+    : "No current below-range signals";
   el.underValueList.replaceChildren();
   if (!underValue.length) {
     const empty = document.createElement("p");
-    empty.textContent = "RentIntel is not seeing any clear below-range asking signals in the current sample yet.";
+    empty.textContent = "Below-range labels are paused until a fresh approved asking-rent capture arrives.";
     el.underValueList.append(empty);
     return;
   }
@@ -3960,7 +4091,10 @@ async function init() {
   setupPulseInteractions();
 
   const daily = chooseDailyInsight();
-  el.dailyInsight.textContent = daily.daily;
+  const dailySafety = currentVerdictSafety(daily);
+  el.dailyInsight.textContent = dailySafety.current
+    ? daily.daily
+    : "Asking-rent evidence is out of date. Current verdicts are paused until a new approved capture arrives.";
   startDailyInsightTicker();
   el.dailyInsightLink.addEventListener("click", () => {
     trackAnalyticsEvent("daily_signal_click", {

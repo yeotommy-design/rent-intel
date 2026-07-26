@@ -3961,6 +3961,26 @@ function sourceQaProfile(record) {
   };
 }
 
+function workspaceVerdictSafety(record, qa = sourceQaProfile(record)) {
+  const feed = currentAskingFeed();
+  const source = record?.askingSource;
+  const capturedAt = source?.capturedAt || feed.updatedAt || "";
+  const capturedDate = capturedAt
+    ? new Date(String(capturedAt).includes("T") ? capturedAt : `${capturedAt}T00:00:00+08:00`)
+    : null;
+  const ageDays = capturedDate && !Number.isNaN(capturedDate.getTime())
+    ? Math.max(0, Math.floor((Date.now() - capturedDate.getTime()) / 86400000))
+    : null;
+  const hasChecks = Number(qa.checks || 0) > 0;
+  const current = Boolean(source && hasChecks && Number.isFinite(ageDays) && ageDays <= 14);
+  const reason = !source || !hasChecks
+    ? "No approved direct asking-rent checks are connected for this result."
+    : !Number.isFinite(ageDays)
+      ? "The asking-rent capture date is missing or invalid."
+      : `The latest asking-rent capture is ${ageDays} days old. Current verdicts pause after 14 days.`;
+  return { current, ageDays, reason };
+}
+
 function sourceTimestampLabel(status, value) {
   if (value) return formatShortDate(value);
   if (status?.lastCompletedAt) return formatShortDate(status.lastCompletedAt);
@@ -10543,6 +10563,7 @@ function pulseSummaryForRecord(record) {
     };
   }
   const qa = sourceQaProfile(record);
+  const safety = workspaceVerdictSafety(record, qa);
   const confidence = confidenceProfile(record);
   const sourceTrust = sourceTrustProfile(record);
   const fairHigh = record.fairRange?.high || record.official;
@@ -10552,6 +10573,18 @@ function pulseSummaryForRecord(record) {
     : toolbenchReviewPassMessages.workspace.pulseSourceCaveatWorking({
         production: qa.production
       });
+
+  if (!safety.current) {
+    return {
+      label: "Source warning",
+      tone: "warning",
+      title: "Current verdict paused",
+      summary: safety.reason,
+      warning: "The figures remain visible as historical context, not as today's market position.",
+      nextStep: "Refresh the asking-rent evidence before preparing an offer or negotiation note.",
+      caveat: "Do not use the historical asking gap as a current rent recommendation."
+    };
+  }
 
   if (!qa.ready) {
     return {
@@ -10604,19 +10637,23 @@ function renderDecisionSpine(record) {
   const access = hasToolbenchAccess();
   const fairHigh = record.fairRange?.high || record.official;
   const fairLow = record.fairRange?.low || record.official;
+  const safety = workspaceVerdictSafety(record);
 
-  toolbenchEl.spineConfidenceTitle.textContent = confidence.title;
-  toolbenchEl.spineConfidenceCopy.textContent = confidence.copy;
+  toolbenchEl.spineConfidenceTitle.textContent = safety.current ? confidence.title : "Historical context";
+  toolbenchEl.spineConfidenceCopy.textContent = safety.current ? confidence.copy : safety.reason;
   toolbenchEl.spineBenchmarkTrust.textContent = sourceTrust.title;
   toolbenchEl.spineBenchmarkCopy.textContent = `${trust.officialLayer}; ${trust.askingLayer}. ${sourceTrust.reason}`;
-  toolbenchEl.spineNegotiationPosition.textContent = toolbenchReviewPassMessages.workspace.spineNegotiationTarget({
-    range: moneyRange(record.fairRange)
-  });
-  toolbenchEl.spineNegotiationCopy.textContent =
-    toolbenchReviewPassMessages.workspace.spineNegotiationCopy({
-      fairLow: money(fairLow),
-      fairHigh: money(fairHigh)
-    });
+  toolbenchEl.spineNegotiationPosition.textContent = safety.current
+    ? toolbenchReviewPassMessages.workspace.spineNegotiationTarget({
+        range: moneyRange(record.fairRange)
+      })
+    : "Offer guidance paused";
+  toolbenchEl.spineNegotiationCopy.textContent = safety.current
+    ? toolbenchReviewPassMessages.workspace.spineNegotiationCopy({
+        fairLow: money(fairLow),
+        fairHigh: money(fairHigh)
+      })
+    : "Refresh the asking-rent evidence before setting an offer or walk-away line.";
   toolbenchEl.spineMemberAccess.textContent = toolbenchReviewPassMessages.workspace.spineFreeToolsActive();
   toolbenchEl.spineMemberCopy.textContent = toolbenchReviewPassMessages.workspace.spineFreeToolsCopy();
   renderToolbenchPulse(record);
@@ -10640,6 +10677,7 @@ function renderWorkspaceEvidencePack(record) {
   const trust = benchmarkTrust(record);
   const sourceTrust = sourceTrustProfile(record);
   const qa = sourceQaProfile(record);
+  const safety = workspaceVerdictSafety(record, qa);
   const fairHigh = record.fairRange?.high || record.official;
 
   toolbenchEl.evidencePack.dataset.level = sourceTrust.level || sourceTrust.key || "sample";
@@ -10651,14 +10689,17 @@ function renderWorkspaceEvidencePack(record) {
   toolbenchEl.evidencePackAsking.textContent = qa.status;
   toolbenchEl.evidencePackAskingCopy.textContent =
     `${trust.askingLayer}. ${qa.checks} checks, captured ${qa.captured}, freshness ${qa.freshnessLabel.toLowerCase()}, production ${qa.production.toLowerCase()}.`;
-  toolbenchEl.evidencePackAction.textContent = toolbenchReviewPassMessages.workspace.evidencePackAction({
-    fairHigh: money(fairHigh)
-  });
-  toolbenchEl.evidencePackActionCopy.textContent =
-    toolbenchReviewPassMessages.workspace.evidencePackActionCopy({
-      actionLabel: record.actionLabel,
-      action: record.action
-    });
+  toolbenchEl.evidencePackAction.textContent = safety.current
+    ? toolbenchReviewPassMessages.workspace.evidencePackAction({
+        fairHigh: money(fairHigh)
+      })
+    : "Refresh evidence first";
+  toolbenchEl.evidencePackActionCopy.textContent = safety.current
+    ? toolbenchReviewPassMessages.workspace.evidencePackActionCopy({
+        actionLabel: record.actionLabel,
+        action: record.action
+      })
+    : `${safety.reason} Do not turn this historical gap into an offer position.`;
 }
 
 function renderWorkspaceSourceTimeline(record) {
@@ -12271,6 +12312,27 @@ function drawMemberChart() {
 
 function generateNote(record) {
   if (!record) return toolbenchReviewPassMessages.workspace.noteEmpty();
+  const safety = workspaceVerdictSafety(record);
+  if (!safety.current) {
+    return [
+      `RentIntel historical context note: ${record.title}`,
+      `Generated: ${new Date().toLocaleString("en-SG", { dateStyle: "medium", timeStyle: "short" })}`,
+      "",
+      "CURRENT STATUS",
+      "Current verdict paused.",
+      safety.reason,
+      "",
+      "HISTORICAL FIGURES",
+      `Official median: ${money(record.official)}`,
+      `Earlier asking figure: ${money(record.asking)}`,
+      `Earlier fair range: ${moneyRange(record.fairRange)}`,
+      "",
+      "NEXT STEP",
+      "Refresh the approved asking-rent evidence and recheck the exact unit before preparing an offer or negotiation position.",
+      "",
+      "RentIntel is decision support, not valuation advice. Verify source freshness, lease terms, GST, service charge, permitted use, and unit condition."
+    ].join("\n");
+  }
   const confidence = confidenceProfile(record);
   const trust = benchmarkTrust(record);
   const pulse = pulseSummaryForRecord(record);
@@ -12933,22 +12995,29 @@ function renderCalculator() {
 function renderRecord(record) {
   if (!record) return;
   toolbenchRecord = record;
+  const qa = sourceQaProfile(record);
+  const safety = workspaceVerdictSafety(record, qa);
   toolbenchEl.input.value = record.title;
-  toolbenchEl.confidence.textContent = record.confidence;
+  toolbenchEl.confidence.textContent = safety.current ? record.confidence : "Historical context";
   toolbenchEl.resultTitle.textContent = record.title;
-  toolbenchEl.decision.textContent = record.decision;
-  toolbenchEl.reason.textContent = record.reason;
+  toolbenchEl.decision.textContent = safety.current
+    ? record.decision
+    : "Current verdict paused — asking evidence is too old.";
+  toolbenchEl.reason.textContent = safety.current
+    ? record.reason
+    : `${safety.reason} The figures remain available for historical comparison only.`;
   toolbenchEl.official.textContent = money(record.official);
   toolbenchEl.asking.textContent = money(record.asking);
   toolbenchEl.fairRange.textContent = moneyRange(record.fairRange);
   toolbenchEl.gap.textContent = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
-  toolbenchEl.actionLabel.textContent = record.actionLabel;
-  toolbenchEl.actionCopy.textContent = record.action;
+  toolbenchEl.actionLabel.textContent = safety.current ? record.actionLabel : "Refresh evidence first";
+  toolbenchEl.actionCopy.textContent = safety.current
+    ? record.action
+    : "Wait for a new approved asking-rent capture before preparing an offer or negotiation position.";
   toolbenchEl.sourceCopy.textContent = record.oneMap?.planningArea
     ? `${record.sourceSummary} OneMap context: ${record.oneMap.planningArea}${record.oneMap.postalCode ? `, Singapore ${record.oneMap.postalCode}` : ""}.`
     : record.sourceSummary;
   if (toolbenchEl.sourceQaPanel) {
-    const qa = sourceQaProfile(record);
     toolbenchEl.sourceQaPanel.dataset.ready = qa.ready ? "true" : "false";
     toolbenchEl.sourceQaPanel.dataset.freshness = qa.freshnessState;
     toolbenchEl.sourceQaStatus.textContent = qa.status;
@@ -12978,11 +13047,14 @@ function renderRecord(record) {
     toolbenchEl.chartGapMetric.textContent = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
   }
   if (toolbenchEl.chartReadMetric) {
-    toolbenchEl.chartReadMetric.textContent = confidenceProfile(record).title;
+    toolbenchEl.chartReadMetric.textContent = safety.current
+      ? confidenceProfile(record).title
+      : "Historical only";
   }
   if (toolbenchEl.chartContextNote) {
-    toolbenchEl.chartContextNote.textContent =
-      `${record.actionLabel}: compare the asking line against the benchmark trend before accepting the rent.`;
+    toolbenchEl.chartContextNote.textContent = safety.current
+      ? `${record.actionLabel}: compare the asking line against the benchmark trend before accepting the rent.`
+      : "Historical chart only. Refresh the asking-rent evidence before treating the latest gap as current.";
   }
   toolbenchEl.noteLabel.textContent = hasToolbenchAccess()
     ? toolbenchReviewPassMessages.workspace.noteLabelReady()
