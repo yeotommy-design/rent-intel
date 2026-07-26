@@ -1,6 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
+  "crons": [
+    {
+      "path": "/api/admin/source-health/cron",
+      "schedule": "10 1 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/members/(.*)",

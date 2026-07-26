@@ -6,8 +6,13 @@ Weekly review anchor:
 - Automation: `RentIntel Weekly Source Update Review`
 
 Daily freshness watch:
-- Automation: `Ask Feed Freshness`
+- Automation: `Vercel Cron` calls the read-only RentIntel source-health endpoint
+- Schedule: `09:10 AM` Singapore time
 - Purpose: specifically monitor the asking-rent pilot feed for stale age and capture gaps
+- Public status: `/api/sources/health` calculates the current state whenever the page checks it
+- Fallback: generated source-health files keep the last known status visible if the live check is unavailable
+- Daily record: Vercel keeps the scheduled function run in the project logs
+- Safety: read-only; the monitor never changes or invents asking-rent values
 
 ## Source-by-source workflow
 

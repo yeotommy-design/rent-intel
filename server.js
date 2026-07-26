@@ -19,6 +19,7 @@ const DB_FILE = path.join(DB_DIR, "prototype-db.json");
 const SQLITE_FILE = path.join(DB_DIR, "prototype.sqlite");
 const ALERT_DELIVERY_DIR = path.join(DB_DIR, "alert-deliveries");
 const ASKING_FEED_FILE = path.join(ROOT_DIR, "data", "sources", "asking-rent-feed.json");
+const SOURCE_STATUS_FILE = path.join(ROOT_DIR, "data", "sources", "source-status.json");
 const CONTEXT_SAMPLE_FILE = path.join(ROOT_DIR, "data", "sources", "rent-decision-context-sample.json");
 const MARKET_NOTES_SOURCE_FILE = path.join(ROOT_DIR, "data", "market-notes.json");
 const MARKET_NOTES_BUILD_SCRIPT = path.join(ROOT_DIR, "scripts", "build-market-notes.mjs");
@@ -34,7 +35,12 @@ const EMAIL_FROM = String(process.env.RENTINTEL_EMAIL_FROM || "alerts@rent-intel
 const SMTP_URL = String(process.env.RENTINTEL_SMTP_URL || "").trim();
 const SMTP_USER = String(process.env.RENTINTEL_SMTP_USER || "").trim();
 const SMTP_PASS = String(process.env.RENTINTEL_SMTP_PASS || "").trim();
-const SOURCE_SYNC_CRON_TOKEN = String(process.env.RENTINTEL_CRON_TOKEN || process.env.RENTINTEL_SOURCE_SYNC_CRON_TOKEN || "").trim();
+const SOURCE_SYNC_CRON_TOKEN = String(
+  process.env.RENTINTEL_CRON_TOKEN ||
+  process.env.RENTINTEL_SOURCE_SYNC_CRON_TOKEN ||
+  process.env.CRON_SECRET ||
+  ""
+).trim();
 const execFileAsync = promisify(execFile);
 let contextSeedSyncPromise = null;
 let ensureSqliteDbPromise = null;
@@ -96,6 +102,87 @@ function sourceSyncAutomationNowDue(syncSchedule, now = new Date()) {
   const nextRunTs = Date.parse(String(syncSchedule.nextRunAt || ""));
   if (!Number.isFinite(nextRunTs)) return true;
   return nextRunTs <= now.getTime();
+}
+
+function sourceHealthDate(value) {
+  if (!value) return null;
+  const date = String(value).includes("T")
+    ? new Date(value)
+    : new Date(`${value}T00:00:00+08:00`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function sourceHealthNextCheck(now = new Date()) {
+  const singaporeParts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Singapore",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(now);
+  const part = (type) => singaporeParts.find((item) => item.type === type)?.value || "";
+  const todayAtCheck = new Date(`${part("year")}-${part("month")}-${part("day")}T09:10:00+08:00`);
+  return (todayAtCheck.getTime() > now.getTime()
+    ? todayAtCheck
+    : new Date(todayAtCheck.getTime() + 86400000)).toISOString();
+}
+
+async function currentSourceHealth(now = new Date()) {
+  const [feed, sourceStatus] = await Promise.all([
+    readJsonFileOr(ASKING_FEED_FILE, {}),
+    readJsonFileOr(SOURCE_STATUS_FILE, {})
+  ]);
+  const askingStatus = (sourceStatus.status || []).find((item) => item.sourceId === "asking-rent-feed") || {};
+  const captures = [
+    feed.updatedAt,
+    askingStatus.lastCompletedAt,
+    ...(Array.isArray(feed.records) ? feed.records.map((record) => record.capturedAt) : [])
+  ]
+    .map((value) => ({ value, date: sourceHealthDate(value) }))
+    .filter((entry) => entry.date)
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
+  const latest = captures[0] || {};
+  const ageDays = latest.date
+    ? Math.max(0, Math.floor((now.getTime() - latest.date.getTime()) / 86400000))
+    : null;
+  const monitorState = !latest.date
+    ? "missing"
+    : ageDays <= 7
+      ? "healthy"
+      : ageDays <= 14
+        ? "warning"
+        : "overdue";
+  const monitorLabel = monitorState === "healthy"
+    ? "Working normally"
+    : monitorState === "warning"
+      ? "Refresh soon"
+      : monitorState === "overdue"
+        ? "Update overdue"
+        : "Capture missing";
+  const summary = monitorState === "healthy"
+    ? `Asking-rent data is current. The latest capture is ${ageDays} day${ageDays === 1 ? "" : "s"} old.`
+    : monitorState === "warning"
+      ? `Asking-rent data is ${ageDays} days old and should be refreshed soon.`
+      : monitorState === "overdue"
+        ? `Asking-rent data is overdue. The latest capture is ${ageDays} days old.`
+        : "No valid asking-rent capture date is connected.";
+  return {
+    version: "source-sync-health-v1",
+    sourceId: "asking-rent-feed",
+    schedule: "Daily 09:10 SGT",
+    monitorState,
+    monitorLabel,
+    summary,
+    action: monitorState === "healthy"
+      ? "No action needed. The monitor will check again automatically."
+      : monitorState === "warning"
+        ? "Prepare a verified asking-rent refresh before the data becomes overdue."
+        : "Keep current rent verdicts paused until a new verified asking-rent capture passes review.",
+    lastCheckedAt: now.toISOString(),
+    nextCheckAt: sourceHealthNextCheck(now),
+    latestCaptureAt: latest.value ? String(latest.value).slice(0, 10) : "",
+    captureAgeDays: ageDays,
+    monitorCompleted: true
+  };
 }
 
 async function refreshAskingRentFeedState(db, actorEmail = "") {
@@ -3818,6 +3905,22 @@ async function handleSourceSyncCron(request, response) {
   });
 }
 
+async function handleSourceHealth(request, response, { cron = false } = {}) {
+  if (request.method !== "GET") return methodNotAllowed(response);
+  if (cron && !isCronSyncAuthorized(request)) {
+    return json(response, 401, { ok: false, error: "Unauthorized cron request" });
+  }
+  const health = await currentSourceHealth();
+  if (cron && health.monitorState !== "healthy") {
+    console.warn(`[source-health] ${health.monitorLabel}: ${health.summary} ${health.action}`);
+  }
+  return json(response, 200, {
+    ok: true,
+    checkedBy: cron ? "vercel-cron" : "page-request",
+    health
+  });
+}
+
 async function handleSourceFreshnessPolicy(request, response) {
   if (request.method !== "POST") return methodNotAllowed(response);
   const lookup = await lookupSession(request);
@@ -4781,6 +4884,12 @@ async function route(request, response) {
     }
     if (pathname === "/api/admin/source-sync/cron") {
       return await handleSourceSyncCron(request, response);
+    }
+    if (pathname === "/api/admin/source-health/cron") {
+      return await handleSourceHealth(request, response, { cron: true });
+    }
+    if (pathname === "/api/sources/health") {
+      return await handleSourceHealth(request, response);
     }
     if (pathname === "/api/sources/freshness-policy") {
       return await handleSourceFreshnessPolicy(request, response);

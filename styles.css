@@ -1501,6 +1501,124 @@ a {
   line-height: 1.4;
 }
 
+.source-health-monitor {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 7px;
+  border: 1px solid rgba(53, 93, 124, 0.22);
+  border-left: 5px solid var(--blue);
+  border-radius: 10px;
+  padding: 13px 14px;
+  background: #edf4f8;
+}
+
+.source-health-monitor > span {
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.source-health-monitor > strong {
+  margin: 0;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.source-health-monitor > p {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.source-qa-panel[data-freshness] .source-health-monitor > p {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.source-health-monitor > em {
+  color: var(--muted);
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.4;
+}
+
+.source-health-monitor dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin: 4px 0 0;
+}
+
+.source-health-monitor dl > div {
+  border: 1px solid rgba(53, 93, 124, 0.14);
+  border-radius: 8px;
+  padding: 8px 9px;
+  background: rgba(255, 253, 249, 0.76);
+}
+
+.source-health-monitor dt {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.source-health-monitor dd {
+  margin: 5px 0 0;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.3;
+}
+
+.source-health-monitor[data-state="healthy"] {
+  border-color: rgba(25, 107, 85, 0.25);
+  border-left-color: var(--green);
+  background: #eff8f3;
+}
+
+.source-health-monitor[data-state="healthy"] > span {
+  color: var(--green);
+}
+
+.source-health-monitor[data-state="warning"] {
+  border-color: rgba(180, 117, 34, 0.28);
+  border-left-color: var(--gold);
+  background: #fff8e3;
+}
+
+.source-health-monitor[data-state="warning"] > span {
+  color: var(--gold);
+}
+
+.source-health-monitor[data-state="overdue"],
+.source-health-monitor[data-state="missing"] {
+  border-color: rgba(182, 70, 54, 0.28);
+  border-left-color: var(--red);
+  background: #fdf0ed;
+}
+
+.source-health-monitor[data-state="overdue"] > span,
+.source-health-monitor[data-state="missing"] > span {
+  color: var(--red);
+}
+
+@media (max-width: 560px) {
+  .source-health-monitor dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .member-chart-card {
   position: relative;
   overflow: hidden;

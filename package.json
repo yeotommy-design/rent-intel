@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "audit:search": "node ./scripts/audit-sample-search.mjs",
+    "monitor:sources": "node ./scripts/update-source-health.mjs",
+    "test:source-health": "node ./scripts/test-source-health-monitor.mjs",
     "consolidate:sample-data": "node ./scripts/consolidate-sample-data.mjs",
     "draft:market-notes": "node ./scripts/generate-weekly-market-note.mjs",
     "test:market-notes-source": "node ./scripts/test-market-note-source-evidence.mjs",

@@ -1,0 +1,15 @@
+{
+  "version": "source-sync-health-v1",
+  "sourceId": "asking-rent-feed",
+  "schedule": "Daily 09:10 SGT",
+  "monitorState": "overdue",
+  "monitorLabel": "Update overdue",
+  "summary": "Asking-rent data is overdue. The latest capture is 32 days old.",
+  "action": "Keep current rent verdicts paused until a new verified asking-rent capture passes review.",
+  "lastCheckedAt": "2026-07-26T04:43:17.708Z",
+  "nextCheckAt": "2026-07-27T01:10:00.000Z",
+  "latestCaptureAt": "2026-06-24",
+  "captureAgeDays": 32,
+  "consecutiveOverdueChecks": 2,
+  "monitorCompleted": true
+}

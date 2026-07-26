@@ -384,6 +384,26 @@
                 <strong id="sourceQaProduction">Not ready</strong>
               </div>
               <p id="sourceQaWarning">Connect and QA the asking-rent source before using this as a final rent position.</p>
+              <section class="source-health-monitor" data-source-health-monitor data-state="missing" aria-label="Automatic source refresh monitor">
+                <span>Automatic refresh monitor</span>
+                <strong data-source-health-label>Status unavailable</strong>
+                <p data-source-health-summary>The automated source check has not recorded a result yet.</p>
+                <em data-source-health-action>Check the source workflow before relying on current rent signals.</em>
+                <dl>
+                  <div>
+                    <dt>Status checked</dt>
+                    <dd data-source-health-checked>Not recorded</dd>
+                  </div>
+                  <div>
+                    <dt>Latest real capture</dt>
+                    <dd data-source-health-captured>No capture connected</dd>
+                  </div>
+                  <div>
+                    <dt>Next check</dt>
+                    <dd data-source-health-next>Not scheduled</dd>
+                  </div>
+                </dl>
+              </section>
               <div class="source-refresh-list" aria-label="Source timestamps and refresh workflow">
                 <strong class="source-refresh-title">Source timestamps</strong>
                 <ul id="sourceQaSources">
@@ -877,10 +897,12 @@
     <script src="./data/rentintel-sample-data.js?v=20260606-undervalue"></script>
     <script src="./data/sources/asking-rent-feed.js?v=20260624-asking-pilot-refresh"></script>
     <script src="./data/sources/source-status.js?v=20260624-source-status-refresh"></script>
+    <script src="./data/sources/source-sync-health.js?v=20260726-live-monitor"></script>
     <script src="./data/sources/onemap-enrichment.js?v=20260512-onemap"></script>
     <script src="./asking-feed-adapter.js?v=20260510-feedhardening"></script>
     <script src="./onemap-enrichment-adapter.js?v=20260512-onemap"></script>
     <script src="./source-trust.js?v=20260726-plain-language"></script>
+    <script src="./source-health-monitor.js?v=20260726-live-monitor"></script>
     <script src="./app.js?v=20260726-plain-language"></script>
   </body>
 </html>
