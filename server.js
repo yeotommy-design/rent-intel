@@ -12,7 +12,9 @@ const PORT = Number(process.env.PORT || 4173);
 const SESSION_COOKIE = "rentintel_session";
 const LOGIN_CODE_TTL_MS = 10 * 60 * 1000;
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-const DB_DIR = path.join(ROOT_DIR, "backend", "data");
+const DB_DIR = process.env.VERCEL
+  ? path.join("/tmp", "rentintel-backend-data")
+  : path.join(ROOT_DIR, "backend", "data");
 const DB_FILE = path.join(DB_DIR, "prototype-db.json");
 const SQLITE_FILE = path.join(DB_DIR, "prototype.sqlite");
 const ALERT_DELIVERY_DIR = path.join(DB_DIR, "alert-deliveries");
@@ -26,7 +28,7 @@ const ROBOTS_FILE = path.join(ROOT_DIR, "robots.txt");
 const HOMEPAGE_FILE = path.join(ROOT_DIR, "index.html");
 const SQLITE_BINARY = process.env.SQLITE3_BIN || "/usr/bin/sqlite3";
 const CURL_BINARY = process.env.CURL_BIN || "/usr/bin/curl";
-const DB_ENGINE = (process.env.RENTINTEL_DB_ENGINE || "sqlite").trim().toLowerCase();
+const DB_ENGINE = (process.env.RENTINTEL_DB_ENGINE || (process.env.VERCEL ? "json" : "sqlite")).trim().toLowerCase();
 const EMAIL_TRANSPORT = (process.env.RENTINTEL_EMAIL_TRANSPORT || "file").trim().toLowerCase();
 const EMAIL_FROM = String(process.env.RENTINTEL_EMAIL_FROM || "alerts@rent-intel.local").trim() || "alerts@rent-intel.local";
 const SMTP_URL = String(process.env.RENTINTEL_SMTP_URL || "").trim();
@@ -296,11 +298,20 @@ async function ensureDb() {
   }
 }
 
+async function readJsonFileOr(filePath, fallback) {
+  try {
+    return JSON.parse(await fsp.readFile(filePath, "utf8"));
+  } catch (error) {
+    if (error?.code === "ENOENT") return fallback;
+    throw error;
+  }
+}
+
 async function buildInitialDbState() {
   const seedMembers = JSON.parse(await fsp.readFile(path.join(ROOT_DIR, "data", "rentintel-members.json"), "utf8"));
   const members = Array.isArray(seedMembers.members) ? seedMembers.members.map(toMemberRecord).filter(Boolean) : [];
   const seedAskingFeed = JSON.parse(await fsp.readFile(ASKING_FEED_FILE, "utf8"));
-  const contextSeed = JSON.parse(await fsp.readFile(CONTEXT_SAMPLE_FILE, "utf8"));
+  const contextSeed = await readJsonFileOr(CONTEXT_SAMPLE_FILE, { records: [] });
   const contextRecords = Array.isArray(contextSeed.records) ? contextSeed.records : [];
   return {
     members,
@@ -3728,6 +3739,31 @@ async function handleSourceSyncCron(request, response) {
       ran: false,
       skipped: true,
       skippedReason: "not due",
+      syncSchedule
+    });
+  }
+
+  if (!approvedCandidates.length) {
+    const skippedAt = now.toISOString();
+    syncSchedule.lastRunStatus = "automation skipped (no approved source capture)";
+    syncSchedule.lastRunAt = skippedAt;
+    syncSchedule.lastRunMode = "automation";
+    syncSchedule.nextRunAt = sourceSyncNextRunAtOrDefault(syncSchedule, now);
+    syncSchedule.updatedAt = skippedAt;
+    syncSchedule.updatedBy = "automation@rentintel.local";
+    if (DB_ENGINE === "sqlite") {
+      await sqliteSaveSourceSyncSchedule(syncSchedule, sourceName);
+    } else {
+      db.sourceSyncSchedule = syncSchedule;
+      await writeDb(db);
+    }
+    return json(response, 200, {
+      ok: true,
+      sourceName,
+      ran: false,
+      skipped: true,
+      skippedReason: "no approved source capture",
+      syncRun: null,
       syncSchedule
     });
   }
