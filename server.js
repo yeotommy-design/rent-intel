@@ -5,6 +5,11 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const { execFile } = require("node:child_process");
 const { promisify } = require("node:util");
+const {
+  verifyBatchSignature,
+  validateAskingFeedBatch,
+  buildPromotedFeed
+} = require("./asking-feed-ingestion");
 
 const ROOT_DIR = __dirname;
 const HOST = "127.0.0.1";
@@ -42,6 +47,18 @@ const SOURCE_SYNC_CRON_TOKENS = [
 ]
   .map((value) => String(value || "").trim())
   .filter(Boolean);
+const ASKING_FEED_INGESTION_SECRETS = [
+  process.env.RENTINTEL_ASKING_FEED_WEBHOOK_SECRET
+]
+  .map((value) => String(value || "").trim())
+  .filter(Boolean);
+const ALLOW_ASKING_FEED_PROMOTION = String(process.env.RENTINTEL_ALLOW_ASKING_FEED_PROMOTION || "")
+  .trim()
+  .toLowerCase() === "true";
+const DURABLE_ASKING_FEED_STORAGE = !process.env.VERCEL &&
+  String(process.env.RENTINTEL_DURABLE_ASKING_FEED_STORAGE || "")
+    .trim()
+    .toLowerCase() === "true";
 const execFileAsync = promisify(execFile);
 let contextSeedSyncPromise = null;
 let ensureSqliteDbPromise = null;
@@ -184,23 +201,6 @@ async function currentSourceHealth(now = new Date()) {
     captureAgeDays: ageDays,
     monitorCompleted: true
   };
-}
-
-async function refreshAskingRentFeedState(db, actorEmail = "") {
-  const refreshedFeed = generateRefreshedAskingFeed(db.askingRentFeed || {}, actorEmail);
-  db.askingRentFeed = refreshedFeed;
-  return refreshedFeed;
-}
-
-function buildCoverageTargetsFromCandidates(candidates = []) {
-  return approvedCoverageTargets(candidates).map((target) => ({
-    name: sourceCandidateName(target),
-    sourceKey: sourceCandidateKey(target),
-    requestEmail: target.requestEmail || "",
-    source: target.source || "member-account",
-    sampleRecordId: target.sampleRecordId || "",
-    approvedAt: target.reviewedAt || ""
-  }));
 }
 
 function sourceSyncNextRunAtOrDefault(syncSchedule, now = new Date()) {
@@ -2909,82 +2909,6 @@ function normalizeBackendHandoffAuditPayload(payload = {}, memberEmail = "", cur
   };
 }
 
-function isoDateOnly(value = new Date()) {
-  return new Date(value).toISOString().slice(0, 10);
-}
-
-function normalizeAskingRentFeedPayload(payload = {}, current = {}) {
-  const records = Array.isArray(payload.records)
-    ? payload.records
-      .map((record) => ({
-        recordId: String(record.recordId || "").trim(),
-        asking: Number.isFinite(Number(record.asking)) ? Number(Number(record.asking).toFixed(1)) : null,
-        latestAskingMedian: Number.isFinite(Number(record.latestAskingMedian)) ? Number(Number(record.latestAskingMedian).toFixed(1)) : null,
-        fairRange: record.fairRange && typeof record.fairRange === "object"
-          ? {
-              low: Number.isFinite(Number(record.fairRange.low)) ? Number(Number(record.fairRange.low).toFixed(1)) : null,
-              high: Number.isFinite(Number(record.fairRange.high)) ? Number(Number(record.fairRange.high).toFixed(1)) : null
-            }
-          : null,
-        listingCount: Math.max(0, Number(record.listingCount || 0)),
-        capturedAt: String(record.capturedAt || "").trim(),
-        freshness: String(record.freshness || "").trim(),
-        note: String(record.note || "").trim()
-      }))
-      .filter((record) => record.recordId)
-    : (Array.isArray(current.records) ? current.records : []);
-  return {
-    ...current,
-    version: String(payload.version || current.version || `asking-feed-capture-${isoDateOnly()}`).trim(),
-    updatedAt: String(payload.updatedAt || current.updatedAt || isoDateOnly()).trim(),
-    connectionState: String(payload.connectionState || current.connectionState || "pending-source").trim(),
-    sourceName: String(payload.sourceName || current.sourceName || "RentIntel asking-rent feed").trim(),
-    sourceType: String(payload.sourceType || current.sourceType || "verified-daily-capture").trim(),
-    productionReady: Boolean(payload.productionReady ?? current.productionReady),
-    note: String(payload.note || current.note || "").trim(),
-    records
-  };
-}
-
-function generateRefreshedAskingFeed(current = {}, actorEmail = "") {
-  const refreshedDate = isoDateOnly();
-  const baseFeed = normalizeAskingRentFeedPayload(current, current);
-  const adjustedRecords = (Array.isArray(baseFeed.records) ? baseFeed.records : []).map((record, index) => {
-    const delta = ((index % 3) - 1) * 0.2 + 0.1;
-    const asking = Number.isFinite(Number(record.asking)) ? Number(record.asking) : 0;
-    const latest = Number.isFinite(Number(record.latestAskingMedian)) ? Number(record.latestAskingMedian) : asking;
-    const nextAsking = Number((asking + delta).toFixed(1));
-    const nextLatest = Number((latest + delta).toFixed(1));
-    const fairRange = record.fairRange && typeof record.fairRange === "object"
-      ? {
-          low: Number((Number(record.fairRange.low || Math.max(0, nextAsking - 2)) + delta / 2).toFixed(1)),
-          high: Number((Number(record.fairRange.high || nextAsking + 2) + delta / 2).toFixed(1))
-        }
-      : null;
-    return {
-      ...record,
-      asking: nextAsking,
-      latestAskingMedian: nextLatest,
-      fairRange,
-      listingCount: Math.max(Number(record.listingCount || 0) + 1, 3),
-      capturedAt: refreshedDate,
-      freshness: "verified daily capture",
-      note: `${record.note || "Daily capture workflow refreshed."} Refreshed ${refreshedDate}${actorEmail ? ` by ${actorEmail}` : ""}.`.trim()
-    };
-  });
-  return normalizeAskingRentFeedPayload({
-    ...baseFeed,
-    version: `asking-feed-capture-${refreshedDate}`,
-    updatedAt: refreshedDate,
-    connectionState: "verified-daily-capture-connected",
-    sourceName: "RentIntel verified daily asking-rent capture",
-    sourceType: "verified-daily-capture",
-    productionReady: false,
-    note: "Verified daily capture workflow connected. Keep ingestion QA and source-owner review running before production release.",
-    records: adjustedRecords
-  }, baseFeed);
-}
-
 async function handleRequestCode(request, response) {
   if (request.method !== "POST") return methodNotAllowed(response);
   const body = await readBody(request);
@@ -3711,23 +3635,129 @@ async function handleSourceAskingFeed(request, response) {
   });
 }
 
-async function handleSourceAskingFeedRefresh(request, response) {
-  if (request.method !== "POST") return methodNotAllowed(response);
-  const lookup = await lookupSession(request);
-  const member = requireMemberSession(lookup, response);
-  if (!member) return;
-  const { db } = lookup;
-  const refreshedFeed = generateRefreshedAskingFeed(db.askingRentFeed || {}, member.email);
-  db.askingRentFeed = refreshedFeed;
-  await writeDb(db);
+async function handleAskingFeedIngestionReadiness(request, response) {
+  if (request.method !== "GET") return methodNotAllowed(response);
   return json(response, 200, {
     ok: true,
-    feed: refreshedFeed,
-    refresh: {
-      refreshedAt: refreshedFeed.updatedAt,
-      sourceName: refreshedFeed.sourceName,
-      recordCount: Array.isArray(refreshedFeed.records) ? refreshedFeed.records.length : 0
+    readiness: {
+      validationAvailable: ASKING_FEED_INGESTION_SECRETS.length > 0,
+      webhookSecretConfigured: ASKING_FEED_INGESTION_SECRETS.length > 0,
+      promotionAllowed: ALLOW_ASKING_FEED_PROMOTION,
+      durableStorageConfigured: DURABLE_ASKING_FEED_STORAGE,
+      defaultMode: "validate-only",
+      syntheticRefreshDisabled: true,
+      nextStep: ASKING_FEED_INGESTION_SECRETS.length
+        ? "Send a signed provider batch in validation-only mode."
+        : "Configure RENTINTEL_ASKING_FEED_WEBHOOK_SECRET before testing a provider batch."
     }
+  });
+}
+
+async function handleAskingFeedIngest(request, response) {
+  if (request.method !== "POST") return methodNotAllowed(response);
+  if (!ASKING_FEED_INGESTION_SECRETS.length) {
+    return json(response, 503, {
+      ok: false,
+      error: "Asking-feed ingestion is not configured",
+      nextStep: "Set RENTINTEL_ASKING_FEED_WEBHOOK_SECRET and redeploy."
+    });
+  }
+  const body = await readBody(request);
+  const signature = request.headers?.["x-rentintel-ingestion-signature"];
+  if (!verifyBatchSignature(body, signature, ASKING_FEED_INGESTION_SECRETS)) {
+    return json(response, 401, {
+      ok: false,
+      error: "Invalid asking-feed ingestion signature"
+    });
+  }
+
+  const qa = validateAskingFeedBatch(body);
+  if (!qa.ok) {
+    return json(response, 422, {
+      ok: false,
+      accepted: false,
+      promotionState: "rejected-by-qa",
+      qa
+    });
+  }
+
+  const validateOnly = body.validateOnly !== false;
+  if (validateOnly) {
+    return json(response, 200, {
+      ok: true,
+      accepted: false,
+      promotionState: "validated-not-promoted",
+      qa,
+      nextStep: "Complete source-owner review and durable-storage setup before requesting promotion."
+    });
+  }
+
+  if (!ALLOW_ASKING_FEED_PROMOTION || !DURABLE_ASKING_FEED_STORAGE) {
+    return json(response, 409, {
+      ok: false,
+      accepted: false,
+      promotionState: "promotion-locked",
+      qa,
+      blockers: [
+        ...(!ALLOW_ASKING_FEED_PROMOTION ? ["Promotion approval is not enabled."] : []),
+        ...(!DURABLE_ASKING_FEED_STORAGE ? ["Durable asking-feed storage is not configured."] : [])
+      ]
+    });
+  }
+
+  const db = await readDb();
+  const currentBatchId = String(db.askingRentFeed?.ingestion?.batchId || "").trim();
+  if (currentBatchId && currentBatchId === qa.batchId) {
+    return json(response, 409, {
+      ok: false,
+      accepted: false,
+      promotionState: "duplicate-batch",
+      error: "This batch has already been promoted."
+    });
+  }
+
+  const ingestedAt = new Date();
+  const feed = buildPromotedFeed(body, qa, ingestedAt);
+  const actorEmail = "asking-feed-ingestion@rentintel.local";
+  const syncRun = normalizeSourceSyncRunPayload({
+    sourceName: qa.source.name,
+    sourceType: qa.source.type,
+    sourceKey: `${qa.source.type}:${qa.source.licenseReference}`,
+    status: "signed batch ingested; release review pending",
+    recordsChecked: qa.recordCount,
+    benchmarkLayer: "asking-rent evidence only",
+    coverageTargets: [],
+    varianceFlag: qa.warnings.length ? "qa warnings present" : "none",
+    memberEmail: actorEmail,
+    at: ingestedAt.toISOString()
+  }, actorEmail);
+  db.askingRentFeed = feed;
+  db.sourceSyncRuns.unshift(syncRun);
+  await writeDb(db);
+
+  return json(response, 202, {
+    ok: true,
+    accepted: true,
+    promotionState: "ingested-release-review-pending",
+    qa,
+    feed: {
+      version: feed.version,
+      updatedAt: feed.updatedAt,
+      sourceName: feed.sourceName,
+      sourceType: feed.sourceType,
+      recordCount: feed.records.length,
+      productionReady: feed.productionReady
+    },
+    syncRun
+  });
+}
+
+async function handleSourceAskingFeedRefresh(request, response) {
+  if (request.method !== "POST") return methodNotAllowed(response);
+  return json(response, 410, {
+    ok: false,
+    error: "Synthetic asking-feed refresh has been retired.",
+    nextStep: "Use the signed asking-feed ingestion endpoint with verified source evidence."
   });
 }
 
@@ -3794,7 +3824,6 @@ async function handleSourceSyncCron(request, response) {
       ? await sqliteReadAskingSourceCandidates()
       : db.askingSourceCandidates
   );
-  const approvedCoverageTargets = buildCoverageTargetsFromCandidates(approvedCandidates);
   let syncSchedule = normalizeSourceSyncAutomationSchedule({
     ...currentSchedule,
     sourceName,
@@ -3856,52 +3885,27 @@ async function handleSourceSyncCron(request, response) {
     });
   }
 
-  const actorEmail = "automation@rentintel.local";
-  const refreshedFeed = await refreshAskingRentFeedState(db, actorEmail);
-  const source = approvedCandidates[0];
-  const runSourceName = source ? sourceCandidateName(source) : "RentIntel verified daily asking-rent capture";
-  const runSourceType = source ? source.type : "verified-daily-capture";
-  const runSourceKey = source ? sourceCandidateKey(source) : "verified-daily-capture:pipeline";
-  const syncRun = normalizeSourceSyncRunPayload({
-    sourceName: runSourceName,
-    sourceType: runSourceType,
-    sourceKey: runSourceKey,
-    status: "automation sync complete",
-    recordsChecked: (Array.isArray(refreshedFeed.records) ? refreshedFeed.records.length : 0) + approvedCoverageTargets.length,
-    benchmarkLayer: "URA benchmark sample",
-    coverageTargets: approvedCoverageTargets,
-    varianceFlag: "automation run",
-    memberEmail: actorEmail,
-    at: now.toISOString()
-  }, actorEmail);
-  if (DB_ENGINE === "sqlite") {
-    await sqliteSaveSourceSyncRun(syncRun);
-  } else {
-    db.sourceSyncRuns.unshift(syncRun);
-  }
-  syncSchedule.lastRunStatus = syncRun.status;
-  syncSchedule.lastRunAt = syncRun.at;
+  const skippedAt = now.toISOString();
+  syncSchedule.lastRunStatus = "automation skipped (signed provider batch required)";
+  syncSchedule.lastRunAt = skippedAt;
   syncSchedule.lastRunMode = "automation";
-
-  db.askingRentFeed = refreshedFeed;
   syncSchedule.nextRunAt = sourceSyncNextRunAtOrDefault(syncSchedule, now);
-  syncSchedule.lastFreshnessState = String(refreshedFeed?.updatedAt || syncSchedule.lastFreshnessState || "");
-  syncSchedule.lastFreshnessLabel = String(refreshedFeed?.connectionState || syncSchedule.lastFreshnessLabel || "");
-  syncSchedule.updatedAt = new Date().toISOString();
-  syncSchedule.updatedBy = actorEmail;
-
+  syncSchedule.updatedAt = skippedAt;
+  syncSchedule.updatedBy = "automation@rentintel.local";
   if (DB_ENGINE === "sqlite") {
     await sqliteSaveSourceSyncSchedule(syncSchedule, sourceName);
   } else {
     db.sourceSyncSchedule = syncSchedule;
+    await writeDb(db);
   }
-  await writeDb(db);
 
   return json(response, 200, {
     ok: true,
     sourceName,
-    ran: true,
-    syncRun,
+    ran: false,
+    skipped: true,
+    skippedReason: "signed provider batch required",
+    syncRun: null,
     syncSchedule
   });
 }
@@ -4780,6 +4784,9 @@ async function route(request, response) {
     if (pathname === "/api/sources/asking-feed") {
       return await handleSourceAskingFeed(request, response);
     }
+    if (pathname === "/api/sources/ingestion-readiness") {
+      return await handleAskingFeedIngestionReadiness(request, response);
+    }
     if (pathname === "/api/context/records") {
       return await handleContextRecords(request, response);
     }
@@ -4885,6 +4892,9 @@ async function route(request, response) {
     }
     if (pathname === "/api/admin/source-sync/cron") {
       return await handleSourceSyncCron(request, response);
+    }
+    if (pathname === "/api/admin/asking-feed/ingest") {
+      return await handleAskingFeedIngest(request, response);
     }
     if (pathname === "/api/admin/source-health/cron") {
       return await handleSourceHealth(request, response, { cron: true });

@@ -1,0 +1,40 @@
+{
+  "version": "asking-rent-ingestion-v1",
+  "endpoint": "/api/admin/asking-feed/ingest",
+  "method": "POST",
+  "authentication": {
+    "header": "x-rentintel-ingestion-signature",
+    "algorithm": "HMAC-SHA256",
+    "secretEnvironmentVariable": "RENTINTEL_ASKING_FEED_WEBHOOK_SECRET",
+    "signatureInput": "Canonical JSON with recursively sorted object keys"
+  },
+  "defaultMode": "validate-only",
+  "promotionRequirements": [
+    "RENTINTEL_ALLOW_ASKING_FEED_PROMOTION=true",
+    "Durable storage configured outside the Vercel temporary filesystem; the current Vercel deployment cannot promote batches",
+    "All batch QA checks pass",
+    "Source usage rights confirmed",
+    "At least one evidence reference for every record"
+  ],
+  "requiredBatchFields": [
+    "batchId",
+    "capturedAt",
+    "source.name",
+    "source.type",
+    "source.licenseReference",
+    "source.termsConfirmed",
+    "records"
+  ],
+  "requiredRecordFields": [
+    "recordId",
+    "asking",
+    "latestAskingMedian",
+    "fairRange.low",
+    "fairRange.high",
+    "listingCount",
+    "capturedAt",
+    "evidence[].reference",
+    "evidence[].observedAt"
+  ],
+  "safety": "The gate never generates, estimates, or adjusts asking-rent values."
+}

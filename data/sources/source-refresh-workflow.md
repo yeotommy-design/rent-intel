@@ -14,16 +14,26 @@ Daily freshness watch:
 - Daily record: Vercel keeps the scheduled function run in the project logs
 - Safety: read-only; the monitor never changes or invents asking-rent values
 
+Production asking-rent ingestion gate:
+- Endpoint: `POST /api/admin/asking-feed/ingest`
+- Default mode: validate a signed provider batch without changing the active feed
+- Authentication: HMAC signature using `RENTINTEL_ASKING_FEED_WEBHOOK_SECRET`
+- Required checks: source rights, capture age, unique record IDs, psf ranges, listing counts, and evidence references
+- Promotion lock: a batch cannot be promoted until both controlled promotion and durable storage are explicitly enabled
+- Vercel safety: the current temporary function filesystem is never treated as durable promotion storage
+- Retired path: `/api/sources/asking-feed/refresh` no longer changes rent figures
+- Safety: the ingestion gate never calculates substitute values or advances a capture date by itself
+
 ## Source-by-source workflow
 
 ### Asking rent feed
 - Target cadence: `Daily`
 - Current mode: `Pilot manual feed`
-- What updates it: manual pilot refresh or a future licensed / verified capture workflow
+- What updates it: only a future signed licensed or verified provider batch after QA
 - Weekly Monday review:
   - check last completed capture date
   - confirm stale age against SLA
-  - refresh the manual pilot if still being used
+  - validate a signed provider batch without promoting it
   - record whether licensed-feed or QA-log production readiness is still missing
 - Escalate when:
   - stale age exceeds the daily freshness target

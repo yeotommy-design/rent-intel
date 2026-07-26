@@ -198,9 +198,25 @@
     {
       "method": "POST",
       "path": "/sources/asking-feed/refresh",
-      "purpose": "Run the verified daily capture workflow and persist a refreshed asking-rent feed snapshot.",
+      "purpose": "Retired safety route. Returns 410 and never generates or changes asking-rent values.",
       "request": [],
-      "response": ["feed", "refresh"],
+      "response": ["error", "nextStep"],
+      "targetTables": []
+    },
+    {
+      "method": "GET",
+      "path": "/sources/ingestion-readiness",
+      "purpose": "Report whether signed validation, durable storage, and controlled promotion are configured.",
+      "request": [],
+      "response": ["readiness"],
+      "targetTables": []
+    },
+    {
+      "method": "POST",
+      "path": "/admin/asking-feed/ingest",
+      "purpose": "Validate a signed provider batch and promote it only when explicit approval and durable storage are configured.",
+      "request": ["batchId", "capturedAt", "source", "records", "validateOnly"],
+      "response": ["promotionState", "qa", "feed", "syncRun"],
       "targetTables": ["asking_source_production_evidence", "source_sync_runs"]
     },
     {
