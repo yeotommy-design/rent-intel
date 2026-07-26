@@ -9,6 +9,7 @@
     "monitor:sources": "node ./scripts/update-source-health.mjs",
     "test:source-health": "node ./scripts/test-source-health-monitor.mjs",
     "test:asking-ingestion": "node ./scripts/test-asking-feed-ingestion.mjs",
+    "test:asking-storage": "node ./scripts/test-supabase-asking-feed-store.mjs",
     "consolidate:sample-data": "node ./scripts/consolidate-sample-data.mjs",
     "draft:market-notes": "node ./scripts/generate-weekly-market-note.mjs",
     "test:market-notes-source": "node ./scripts/test-market-note-source-evidence.mjs",

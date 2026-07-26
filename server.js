@@ -10,6 +10,10 @@ const {
   validateAskingFeedBatch,
   buildPromotedFeed
 } = require("./asking-feed-ingestion");
+const {
+  createStore: createAskingFeedStore,
+  isConfigured: isAskingFeedStoreConfigured
+} = require("./supabase-asking-feed-store");
 
 const ROOT_DIR = __dirname;
 const HOST = "127.0.0.1";
@@ -55,10 +59,8 @@ const ASKING_FEED_INGESTION_SECRETS = [
 const ALLOW_ASKING_FEED_PROMOTION = String(process.env.RENTINTEL_ALLOW_ASKING_FEED_PROMOTION || "")
   .trim()
   .toLowerCase() === "true";
-const DURABLE_ASKING_FEED_STORAGE = !process.env.VERCEL &&
-  String(process.env.RENTINTEL_DURABLE_ASKING_FEED_STORAGE || "")
-    .trim()
-    .toLowerCase() === "true";
+const DURABLE_ASKING_FEED_STORAGE = isAskingFeedStoreConfigured();
+const askingFeedStore = createAskingFeedStore();
 const execFileAsync = promisify(execFile);
 let contextSeedSyncPromise = null;
 let ensureSqliteDbPromise = null;
@@ -145,8 +147,16 @@ function sourceHealthNextCheck(now = new Date()) {
 }
 
 async function currentSourceHealth(now = new Date()) {
+  let durableFeed = null;
+  if (DURABLE_ASKING_FEED_STORAGE) {
+    try {
+      durableFeed = await askingFeedStore.getLatestPromotedFeed();
+    } catch (error) {
+      console.warn(`[asking-feed-storage] Could not read promoted feed: ${error.message}`);
+    }
+  }
   const [feed, sourceStatus] = await Promise.all([
-    readJsonFileOr(ASKING_FEED_FILE, {}),
+    durableFeed || readJsonFileOr(ASKING_FEED_FILE, {}),
     readJsonFileOr(SOURCE_STATUS_FILE, {})
   ]);
   const askingStatus = (sourceStatus.status || []).find((item) => item.sourceId === "asking-rent-feed") || {};
@@ -3628,15 +3638,40 @@ async function handleSourceSyncRuns(request, response) {
 
 async function handleSourceAskingFeed(request, response) {
   if (request.method !== "GET") return methodNotAllowed(response);
+  if (DURABLE_ASKING_FEED_STORAGE) {
+    try {
+      const feed = await askingFeedStore.getLatestPromotedFeed();
+      if (feed) {
+        return json(response, 200, {
+          ok: true,
+          feed,
+          storage: "durable"
+        });
+      }
+    } catch (error) {
+      console.warn(`[asking-feed-storage] Falling back to bundled feed: ${error.message}`);
+    }
+  }
   const db = await readDb();
   return json(response, 200, {
     ok: true,
-    feed: db.askingRentFeed
+    feed: db.askingRentFeed,
+    storage: "bundled-fallback"
   });
 }
 
 async function handleAskingFeedIngestionReadiness(request, response) {
   if (request.method !== "GET") return methodNotAllowed(response);
+  let durableStorageReachable = false;
+  let durableStorageError = "";
+  if (DURABLE_ASKING_FEED_STORAGE) {
+    try {
+      await askingFeedStore.checkHealth();
+      durableStorageReachable = true;
+    } catch (error) {
+      durableStorageError = error.message;
+    }
+  }
   return json(response, 200, {
     ok: true,
     readiness: {
@@ -3644,11 +3679,15 @@ async function handleAskingFeedIngestionReadiness(request, response) {
       webhookSecretConfigured: ASKING_FEED_INGESTION_SECRETS.length > 0,
       promotionAllowed: ALLOW_ASKING_FEED_PROMOTION,
       durableStorageConfigured: DURABLE_ASKING_FEED_STORAGE,
+      durableStorageReachable,
+      durableStorageError,
       defaultMode: "validate-only",
       syntheticRefreshDisabled: true,
-      nextStep: ASKING_FEED_INGESTION_SECRETS.length
-        ? "Send a signed provider batch in validation-only mode."
-        : "Configure RENTINTEL_ASKING_FEED_WEBHOOK_SECRET before testing a provider batch."
+      nextStep: !ASKING_FEED_INGESTION_SECRETS.length
+        ? "Configure RENTINTEL_ASKING_FEED_WEBHOOK_SECRET before testing a provider batch."
+        : !durableStorageReachable
+          ? "Connect the dedicated RentIntel Supabase project before testing a provider batch."
+          : "Send a signed provider batch in validation-only mode."
     }
   });
 }
@@ -3672,12 +3711,37 @@ async function handleAskingFeedIngest(request, response) {
   }
 
   const qa = validateAskingFeedBatch(body);
+  const storageStatus = {
+    configured: DURABLE_ASKING_FEED_STORAGE,
+    persisted: false
+  };
+  if (DURABLE_ASKING_FEED_STORAGE) {
+    try {
+      await askingFeedStore.saveBatch({
+        payload: body,
+        qa,
+        status: qa.ok ? "validated" : "rejected",
+        signature
+      });
+      storageStatus.persisted = true;
+    } catch (error) {
+      return json(response, 503, {
+        ok: false,
+        accepted: false,
+        promotionState: "storage-unavailable",
+        error: error.message,
+        qa,
+        storage: storageStatus
+      });
+    }
+  }
   if (!qa.ok) {
     return json(response, 422, {
       ok: false,
       accepted: false,
       promotionState: "rejected-by-qa",
-      qa
+      qa,
+      storage: storageStatus
     });
   }
 
@@ -3688,7 +3752,10 @@ async function handleAskingFeedIngest(request, response) {
       accepted: false,
       promotionState: "validated-not-promoted",
       qa,
-      nextStep: "Complete source-owner review and durable-storage setup before requesting promotion."
+      storage: storageStatus,
+      nextStep: storageStatus.persisted
+        ? "Complete source-owner review before requesting promotion."
+        : "Connect durable storage, then repeat validation before requesting promotion."
     });
   }
 
@@ -3698,6 +3765,7 @@ async function handleAskingFeedIngest(request, response) {
       accepted: false,
       promotionState: "promotion-locked",
       qa,
+      storage: storageStatus,
       blockers: [
         ...(!ALLOW_ASKING_FEED_PROMOTION ? ["Promotion approval is not enabled."] : []),
         ...(!DURABLE_ASKING_FEED_STORAGE ? ["Durable asking-feed storage is not configured."] : [])
@@ -3705,9 +3773,8 @@ async function handleAskingFeedIngest(request, response) {
     });
   }
 
-  const db = await readDb();
-  const currentBatchId = String(db.askingRentFeed?.ingestion?.batchId || "").trim();
-  if (currentBatchId && currentBatchId === qa.batchId) {
+  const existingBatch = await askingFeedStore.getBatch(qa.batchId);
+  if (existingBatch?.status === "promoted") {
     return json(response, 409, {
       ok: false,
       accepted: false,
@@ -3731,9 +3798,14 @@ async function handleAskingFeedIngest(request, response) {
     memberEmail: actorEmail,
     at: ingestedAt.toISOString()
   }, actorEmail);
-  db.askingRentFeed = feed;
-  db.sourceSyncRuns.unshift(syncRun);
-  await writeDb(db);
+  await askingFeedStore.saveBatch({
+    payload: body,
+    qa,
+    status: "promoted",
+    signature,
+    feed,
+    now: ingestedAt
+  });
 
   return json(response, 202, {
     ok: true,
@@ -3748,7 +3820,11 @@ async function handleAskingFeedIngest(request, response) {
       recordCount: feed.records.length,
       productionReady: feed.productionReady
     },
-    syncRun
+    syncRun,
+    storage: {
+      configured: true,
+      persisted: true
+    }
   });
 }
 
