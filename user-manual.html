@@ -79,17 +79,16 @@
         </div>
       </section>
       <section class="info-panel">
-        <p class="eyebrow">Automatic Refresh Monitor</p>
+        <p class="eyebrow">Evidence Status</p>
         <h2>How to read the source update status</h2>
         <div class="info-list">
           <p><strong>Working normally:</strong> the latest asking-rent capture is no more than seven days old.</p>
           <p><strong>Refresh soon:</strong> the capture is eight to fourteen days old and should be updated before it becomes overdue.</p>
-          <p><strong>Update overdue:</strong> the capture is more than fourteen days old, so current rent verdicts remain paused.</p>
-          <p><strong>Status checked:</strong> when RentIntel last read the source files and calculated the status shown on the page.</p>
-          <p><strong>Latest real capture:</strong> the date of the newest verified asking-rent evidence, not the date the monitor ran.</p>
+          <p><strong>Historical only:</strong> the capture is more than fourteen days old or no approved checks cover the selected area. The official benchmark remains available, but RentIntel does not show the asking-rent gap as a current verdict.</p>
+          <p><strong>Latest verified capture:</strong> the date of the newest reviewed asking-rent evidence.</p>
           <p><strong>URA benchmark release:</strong> the latest official quarterly retail rental index imported from data.gov.sg. It shows the broad market direction, not S$/psf for a particular unit.</p>
           <p><strong>Separate update clocks:</strong> a fresh URA benchmark does not make an older asking-rent capture current. RentIntel displays and checks these two sources separately.</p>
-          <p><strong>Important:</strong> the monitor is read-only. It reports stale or missing evidence but never invents or changes asking-rent values.</p>
+          <p><strong>Important:</strong> RentIntel never changes an asking-rent date or value merely to make a result look current.</p>
         </div>
       </section>
       <section class="info-panel">
@@ -98,9 +97,9 @@
         <div class="info-list">
           <p><strong>Real evidence only:</strong> RentIntel does not move rent figures forward automatically or create replacement values.</p>
           <p><strong>Source permission:</strong> every incoming batch must identify its licensed or verified source and confirm that RentIntel may use it.</p>
-          <p><strong>Evidence checks:</strong> every rent record needs a capture date, listing count, sensible psf values, and at least one evidence reference.</p>
-          <p><strong>Safe testing first:</strong> a new provider batch is validated without changing the active feed.</p>
-          <p><strong>Release remains locked:</strong> the batch can only move forward after durable storage and controlled approval are connected.</p>
+          <p><strong>Evidence checks:</strong> every rent record needs a capture date, listing count, sensible psf values, and evidence references. Three or more current references are recommended for an area-level review.</p>
+          <p><strong>Safe testing first:</strong> an admin prepares the batch in the Verified Asking Feed Capture screen. Validation never changes the active public feed.</p>
+          <p><strong>Controlled release:</strong> a reviewed batch becomes current only after the generated feed is approved and published.</p>
         </div>
       </section>
       <section class="info-panel">

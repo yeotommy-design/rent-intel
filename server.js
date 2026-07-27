@@ -3692,6 +3692,60 @@ async function handleAskingFeedIngestionReadiness(request, response) {
   });
 }
 
+async function handleAdminAskingFeedCapture(request, response) {
+  const lookup = await lookupSession(request);
+  const member = requireMemberSession(lookup, response);
+  if (!member) return;
+  if (member.role !== "admin") {
+    return json(response, 403, { ok: false, error: "Admin access required" });
+  }
+
+  if (request.method === "GET") {
+    return json(response, 200, {
+      ok: true,
+      capture: {
+        mode: "admin-validated-manual-capture",
+        maxCaptureAgeDays: 7,
+        minimumRecommendedEvidence: 3,
+        promotionAvailable: ALLOW_ASKING_FEED_PROMOTION && DURABLE_ASKING_FEED_STORAGE,
+        storage: DURABLE_ASKING_FEED_STORAGE ? "durable" : "controlled-file-release",
+        note: "Validation prepares a release candidate. It does not make asking-rent evidence live until the reviewed feed is published."
+      }
+    });
+  }
+
+  if (request.method !== "POST") return methodNotAllowed(response);
+  const body = await readBody(request);
+  const payload = {
+    ...body,
+    validateOnly: true,
+    source: {
+      ...(body.source || {}),
+      type: "verified-manual-capture"
+    }
+  };
+  const qa = validateAskingFeedBatch(payload);
+  if (!qa.ok) {
+    return json(response, 422, {
+      ok: false,
+      accepted: false,
+      promotionState: "rejected-by-qa",
+      qa
+    });
+  }
+
+  const feed = buildPromotedFeed(payload, qa, new Date());
+  return json(response, 200, {
+    ok: true,
+    accepted: false,
+    promotionState: "validated-for-controlled-release",
+    qa,
+    batch: payload,
+    feed,
+    nextStep: "Review the evidence references, then publish the generated feed through the controlled repository release."
+  });
+}
+
 async function handleAskingFeedIngest(request, response) {
   if (request.method !== "POST") return methodNotAllowed(response);
   if (!ASKING_FEED_INGESTION_SECRETS.length) {
@@ -4968,6 +5022,9 @@ async function route(request, response) {
     }
     if (pathname === "/api/admin/source-sync/cron") {
       return await handleSourceSyncCron(request, response);
+    }
+    if (pathname === "/api/admin/asking-feed/capture") {
+      return await handleAdminAskingFeedCapture(request, response);
     }
     if (pathname === "/api/admin/asking-feed/ingest") {
       return await handleAskingFeedIngest(request, response);

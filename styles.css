@@ -25,6 +25,329 @@
   --chrome-line: rgba(206, 223, 236, 0.22);
 }
 
+/* Verified asking-feed capture */
+.asking-capture-page {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 42px 0 80px;
+}
+
+.asking-capture-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.5fr);
+  gap: 24px;
+  align-items: end;
+  padding: clamp(28px, 5vw, 58px);
+  border: 1px solid rgba(14, 78, 65, 0.24);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 88% 10%, rgba(255, 205, 76, 0.36), transparent 34%),
+    linear-gradient(135deg, #f7f1df 0%, #fffdf7 60%, #e7f2ed 100%);
+  box-shadow: 0 24px 60px rgba(29, 56, 47, 0.1);
+}
+
+.asking-capture-hero > div > p,
+.asking-capture-panel-head span,
+.asking-capture-result > div > span,
+.asking-capture-record-head span {
+  margin: 0 0 8px;
+  color: #9a5a0a;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.asking-capture-hero h1 {
+  max-width: 760px;
+  margin: 0;
+  color: #17231f;
+  font-size: clamp(2.1rem, 5vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.asking-capture-hero > div > span {
+  display: block;
+  max-width: 760px;
+  margin-top: 22px;
+  color: #556660;
+  font-size: 1.04rem;
+  line-height: 1.7;
+}
+
+.asking-capture-hero aside {
+  padding: 22px;
+  border: 1px solid rgba(14, 78, 65, 0.2);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.asking-capture-hero aside strong {
+  display: block;
+  color: #0e4e41;
+  font-size: 1.08rem;
+}
+
+.asking-capture-hero aside p {
+  margin: 8px 0 0;
+  color: #65736e;
+  line-height: 1.55;
+}
+
+.asking-capture-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 22px 0;
+}
+
+.asking-capture-steps article {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  padding: 18px;
+  border: 1px solid #d8ded8;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.asking-capture-steps article > span {
+  grid-row: 1 / span 2;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  background: #153f37;
+  color: #fff;
+  font-weight: 900;
+}
+
+.asking-capture-steps strong {
+  color: #1d2925;
+}
+
+.asking-capture-steps p {
+  margin: 0;
+  color: #66736e;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.asking-capture-form {
+  display: grid;
+  gap: 20px;
+}
+
+.asking-capture-panel,
+.asking-capture-result {
+  padding: clamp(20px, 4vw, 34px);
+  border: 1px solid #d6ddd7;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 16px 44px rgba(29, 56, 47, 0.07);
+}
+
+.asking-capture-panel-head,
+.asking-capture-record-head,
+.asking-capture-submit {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.asking-capture-panel-head strong,
+.asking-capture-record-head strong {
+  display: block;
+  color: #17231f;
+  font-size: 1.18rem;
+}
+
+.asking-capture-panel-head button,
+.asking-capture-record-head button,
+.asking-capture-result-actions button,
+.asking-capture-submit button {
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 1px solid #174f42;
+  border-radius: 12px;
+  background: #fff;
+  color: #174f42;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.asking-capture-submit button {
+  background: #174f42;
+  color: #fff;
+}
+
+.asking-capture-fields,
+.asking-capture-record-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.asking-capture-fields label,
+.asking-capture-record-grid label {
+  display: grid;
+  gap: 7px;
+  color: #3e4d48;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.asking-capture-fields input,
+.asking-capture-record-grid input,
+.asking-capture-record-grid textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 13px;
+  border: 1px solid #cbd5cf;
+  border-radius: 11px;
+  background: #fcfdfb;
+  color: #18231f;
+  font: inherit;
+}
+
+.asking-capture-record-grid textarea {
+  resize: vertical;
+}
+
+.asking-capture-confirm {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 18px;
+  color: #4c5c56;
+  line-height: 1.5;
+}
+
+.asking-capture-confirm input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+}
+
+.asking-capture-records {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.asking-capture-record {
+  padding: 20px;
+  border: 1px solid #d9dfda;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #fbfaf5, #f4f8f5);
+}
+
+.asking-capture-record-head button {
+  border-color: #d9a5a0;
+  color: #9d342b;
+}
+
+.asking-capture-wide {
+  grid-column: 1 / -1;
+}
+
+.asking-capture-submit {
+  padding: 20px 24px;
+  border: 1px solid rgba(23, 79, 66, 0.22);
+  border-radius: 18px;
+  background: #e9f3ee;
+}
+
+.asking-capture-submit strong {
+  color: #173f36;
+}
+
+.asking-capture-submit p {
+  margin: 4px 0 0;
+  color: #5a6c65;
+}
+
+.asking-capture-result {
+  display: grid;
+  gap: 18px;
+  margin-top: 20px;
+  border-left: 7px solid #8d9a94;
+}
+
+.asking-capture-result[data-state="success"] {
+  border-left-color: #13705c;
+  background: #f1f8f4;
+}
+
+.asking-capture-result[data-state="warning"],
+.asking-capture-result[data-state="working"] {
+  border-left-color: #c47a12;
+  background: #fff9e8;
+}
+
+.asking-capture-result[data-state="error"] {
+  border-left-color: #bc4337;
+  background: #fff2ef;
+}
+
+.asking-capture-result strong {
+  color: #17231f;
+  font-size: 1.2rem;
+}
+
+.asking-capture-result p {
+  margin: 7px 0 0;
+  color: #5e6d67;
+}
+
+.asking-capture-result ul {
+  margin: 0;
+  padding-left: 22px;
+  color: #70443e;
+  line-height: 1.55;
+}
+
+.asking-capture-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.asking-capture-result-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@media (max-width: 760px) {
+  .asking-capture-page {
+    width: min(100% - 20px, 1180px);
+    padding-top: 20px;
+  }
+
+  .asking-capture-hero,
+  .asking-capture-steps,
+  .asking-capture-fields,
+  .asking-capture-record-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .asking-capture-panel-head,
+  .asking-capture-record-head,
+  .asking-capture-submit {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .asking-capture-wide {
+    grid-column: auto;
+  }
+}
+
 * {
   box-sizing: border-box;
 }

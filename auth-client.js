@@ -340,6 +340,17 @@
     return apiRequest("/api/admin/ops-report");
   }
 
+  async function fetchAskingFeedCaptureReadiness() {
+    return apiRequest("/api/admin/asking-feed/capture");
+  }
+
+  async function validateAskingFeedCapture(payload) {
+    return apiRequest("/api/admin/asking-feed/capture", {
+      method: "POST",
+      body: payload
+    });
+  }
+
   async function restoreSession() {
     const api = await fetchMemberMe();
     if (api.ok && api.session?.email) {
@@ -428,6 +439,8 @@
     fetchRoleAudit,
     updateMemberRole,
     fetchAdminOpsReport,
+    fetchAskingFeedCaptureReadiness,
+    validateAskingFeedCapture,
     restoreSession,
     requireAccess
   };

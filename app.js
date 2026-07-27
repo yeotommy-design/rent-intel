@@ -293,8 +293,8 @@ function sourceFreshnessProfile(value) {
   if (!value) {
     return {
       state: "stale",
-      label: "Stale",
-      detail: "No captured date is connected."
+      label: "No current capture",
+      detail: "No verified asking-rent capture is connected yet."
     };
   }
   const date = String(value).includes("T")
@@ -303,8 +303,8 @@ function sourceFreshnessProfile(value) {
   if (Number.isNaN(date.getTime())) {
     return {
       state: "stale",
-      label: "Stale",
-      detail: "Captured date format is invalid."
+      label: "Needs review",
+      detail: "The asking-rent capture date needs to be corrected."
     };
   }
   const days = Math.max(0, Math.floor((Date.now() - date.getTime()) / 86400000));
@@ -324,8 +324,8 @@ function sourceFreshnessProfile(value) {
   }
   return {
     state: "stale",
-    label: "Stale",
-    detail: `${days} days since the latest update. This data is out of date because it is more than ${watchMaxDays} days old.`
+    label: "Historical",
+    detail: `Latest verified asking-rent capture: ${days} days ago. A current comparison needs evidence no more than ${watchMaxDays} days old.`
   };
 }
 
@@ -354,9 +354,9 @@ function sourceQaProfile(record) {
       checks: "0",
       captured: "Not connected",
       freshnessState: "stale",
-      freshnessLabel: "Stale",
-      freshnessDetail: "No captured date is connected.",
-      production: "Not ready",
+      freshnessLabel: "No current capture",
+      freshnessDetail: "No verified asking-rent capture is connected yet.",
+      production: "Needs current checks",
       ready: false,
       warning: "Direct asking-rent source is not connected for this comparable estimate. Request source coverage before relying on it."
     };
@@ -371,11 +371,11 @@ function sourceQaProfile(record) {
     freshnessState: freshness.state,
     freshnessLabel: freshness.label,
     freshnessDetail: freshness.detail,
-    production: productionReady ? "Ready" : "Not ready",
+    production: productionReady ? "Ready" : "Needs current checks",
     ready: productionReady,
     warning: productionReady
       ? `${freshness.detail} Asking-rent source is production-ready; still verify unit-specific lease terms, GST, service charge, and permitted use.`
-      : `${freshness.detail} Pilot manual asking feed is connected, but production still needs licensed feed or a verified daily capture workflow with QA logs. Target sync schedule: ${sourceSyncAutomationStatus().schedule}. Actual freshness depends on the latest completed capture, not the schedule alone.`
+      : `${freshness.detail} Add current, permitted evidence through the verified capture workflow to restore a current result.`
   };
 }
 
@@ -584,8 +584,8 @@ function publicVerdictProfile(record) {
   if (!safety.current) {
     return {
       key: "stale",
-      label: "Current verdict paused",
-      copy: safety.copy
+      label: "Historical only",
+      copy: "The official benchmark remains useful, but current asking-rent evidence is not available for this result."
     };
   }
   const gap = Number(record?.gap || 0);
@@ -678,19 +678,19 @@ function pulseGuideProfile(record) {
     return {
       tone: "warning",
       hero: {
-        label: "Source warning",
-        title: "Current verdict paused.",
-        copy: "Next: wait for a new approved asking-rent capture."
+        label: "Evidence status",
+        title: "Historical evidence only.",
+        copy: "Current asking-rent checks are not available for this result."
       },
       decision: {
         label: "Historical context",
-        title: "Do not use this gap as today's market position.",
-        copy: safety.reason
+        title: "Use the benchmark as background only.",
+        copy: "A new verified asking-rent capture is needed for a current comparison."
       },
       next: {
         label: "Next step",
-        title: "Refresh evidence before deciding.",
-        copy: "The benchmark history remains useful, but the asking-rent comparison needs a new capture."
+        title: "Add current asking-rent evidence.",
+        copy: "The result becomes current after a reviewed evidence batch is published."
       }
     };
   }
@@ -851,7 +851,7 @@ function renderHeroBrief(record) {
   el.heroBriefRange.textContent = moneyRange(record.fairRange);
   el.heroBriefGap.textContent = safety.current
     ? `${record.gap > 0 ? "+" : ""}${record.gap}%`
-    : "Paused";
+    : "Historical";
 }
 
 function renderPublicVerdict(record) {
@@ -1527,6 +1527,7 @@ function confidenceProfile(record) {
 
 function benchmarkTrustProfile(record) {
   const confidence = String(record?.confidence || "").toLowerCase();
+  const safety = currentVerdictSafety(record);
   if (record?.askingSource?.productionReady || confidence.includes("production")) {
     return {
       key: "production",
@@ -1551,7 +1552,9 @@ function benchmarkTrustProfile(record) {
   return {
     key: "direct",
     title: "Direct benchmark",
-    copy: "Official benchmark and asking signal are available for comparison and review."
+    copy: safety.current
+      ? "Official benchmark and current asking evidence are available for comparison and review."
+      : "The official benchmark is available. Current asking-rent evidence still needs a reviewed capture."
   };
 }
 
@@ -1621,11 +1624,11 @@ function publicEvidenceRows(record) {
   const trust = benchmarkTrustProfile(record);
   const confidence = confidenceProfile(record);
   const sourceTrust = publicTrustProfile(record);
-  const rows = [
+  const rows = safety.current ? [
     {
       label: "Public badge",
-      value: safety.current ? sourceTrust.title : "Pilot data — out of date",
-      detail: safety.current ? sourceTrust.action : safety.reason
+      value: sourceTrust.title,
+      detail: sourceTrust.action
     },
     {
       label: "Benchmark source",
@@ -1653,6 +1656,28 @@ function publicEvidenceRows(record) {
       label: "Production gate",
       value: qa.production,
       detail: safety.current ? sourceTrust.reason : "A new approved capture is required before current verdicts resume."
+    }
+  ] : [
+    {
+      label: "Result mode",
+      value: "Historical only",
+      detail: "The official benchmark remains visible, but this is not a current asking-rent verdict."
+    },
+    {
+      label: "Official benchmark",
+      value: trust.title,
+      detail: trust.copy
+    },
+    {
+      label: "Asking evidence",
+      value: `${qa.checks} checks | ${qa.captured}`,
+      detail: qa.freshnessDetail,
+      state: qa.freshnessState
+    },
+    {
+      label: "What restores a current result",
+      value: "Publish reviewed evidence",
+      detail: "Add current, permitted asking-rent references and pass the controlled release checks."
     }
   ];
   if (record?.oneMap?.planningArea || record?.oneMap?.postalCode) {
@@ -2152,6 +2177,7 @@ function initialRecordFromUrl() {
 
 function searchResultProfile(record) {
   const confidence = String(record?.confidence || "").toLowerCase();
+  const safety = currentVerdictSafety(record);
   const isProduction = record?.askingSource?.productionReady || confidence.includes("production");
   const isCoverage = record?.prototypeSource === "coverage-request" || confidence.includes("coverage");
   const isComparable = confidence.includes("comparable") || String(record?.id || "").startsWith("estimate-");
@@ -2187,7 +2213,9 @@ function searchResultProfile(record) {
     state: "direct",
     type: "Direct Record",
     label: "Direct RentIntel record loaded",
-    copy: "Official benchmark and asking signal are available for this area."
+    copy: safety.current
+      ? "Official benchmark and current asking evidence are available for this area."
+      : "The official benchmark is available; current asking-rent evidence still needs a reviewed capture."
   };
 }
 
@@ -2250,11 +2278,11 @@ function updateResult(record, options = {}) {
   el.confidenceBadge.textContent = safety.current ? record.confidence : "Historical context";
   if (el.confidenceStrip) {
     el.confidenceStrip.dataset.confidenceTone = confidence.tone;
-    el.confidenceSource.textContent = safety.current ? confidence.source : "Current verdict paused";
-    el.confidenceEvidence.textContent = safety.current ? confidence.evidence : safety.reason;
+    el.confidenceSource.textContent = safety.current ? confidence.source : "Historical only";
+    el.confidenceEvidence.textContent = safety.current ? confidence.evidence : "Current asking-rent checks are not available.";
     el.confidenceUse.textContent = safety.current
       ? confidence.use
-      : "Use as background only until a new approved capture arrives.";
+      : "Use the official benchmark as background only.";
   }
   if (el.trustBadge) {
     const trust = benchmarkTrustProfile(record);
@@ -2265,15 +2293,17 @@ function updateResult(record, options = {}) {
   if (el.publicTrustBadge) {
     const publicTrust = publicTrustProfile(record);
     el.publicTrustBadge.dataset.level = safety.current ? publicTrust.level : "sample";
-    el.publicTrustTitle.textContent = safety.current ? publicTrust.title : "Pilot data — out of date";
-    el.publicTrustCopy.textContent = safety.current ? publicTrust.copy : safety.copy;
+    el.publicTrustTitle.textContent = safety.current ? publicTrust.title : "Historical asking evidence";
+    el.publicTrustCopy.textContent = safety.current
+      ? publicTrust.copy
+      : "The official benchmark is current, but the asking-rent comparison needs a new verified capture.";
     renderPublicTrustGuide(safety.current
       ? publicTrust
       : {
           ...publicTrust,
           level: "sample",
-          title: "Pilot data — out of date",
-          reason: safety.reason
+          title: "Historical asking evidence",
+          reason: "A current comparison needs new verified asking-rent checks."
         });
   }
   el.rentDecision.textContent = `${decisionOutcomeLabel(record)} for this area.`;
@@ -3779,7 +3809,7 @@ function renderPressurePanel() {
   el.pressureSignal.textContent = status.label;
   el.pressureGap.textContent = safety.current
     ? `${selectedRecord.gap > 0 ? "+" : ""}${selectedRecord.gap}%`
-    : "Paused";
+    : "Historical";
   el.pressureAsking.textContent = money(selectedRecord.asking);
   el.pressureFairRange.textContent = moneyRange(selectedRecord.fairRange);
   el.pressureGauge.style.setProperty("--fair-start", `${fairStart}%`);

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RentIntel Admin | Asking Feed Capture</title>
+    <link rel="icon" href="../../pulse-shared-transparent.png">
+    <link rel="stylesheet" href="../../styles.css?v=20260727-asking-capture">
+  </head>
+  <body>
+    <header class="site-header" aria-label="RentIntel asking-feed capture">
+      <div class="product-header-card">
+        <a class="brand" href="../../index.html" aria-label="RentIntel home">
+          <img src="../../pulse-shared-transparent.png" alt="" aria-hidden="true">
+          <span class="brand-product">
+            <strong>RentIntel</strong>
+            <em>Verified Asking Feed Capture</em>
+          </span>
+        </a>
+        <a class="members-login-button" href="../ops/">
+          <small>Admin</small>
+          <span>Ops Dashboard</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="asking-capture-page">
+      <section class="asking-capture-hero">
+        <div>
+          <p>Evidence Capture</p>
+          <h1>Prepare current asking-rent evidence without inventing a market update.</h1>
+          <span>
+            Add recent, permitted evidence for each area. RentIntel checks the dates, rent figures,
+            evidence references, and usage-rights confirmation before creating a release candidate.
+          </span>
+        </div>
+        <aside>
+          <strong id="askingCaptureMode">Checking release mode...</strong>
+          <p id="askingCaptureModeCopy">Loading the current validation settings.</p>
+        </aside>
+      </section>
+
+      <section class="asking-capture-steps" aria-label="Capture workflow">
+        <article>
+          <span>1</span>
+          <strong>Add current evidence</strong>
+          <p>Use evidence observed within the last seven days.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <strong>Run quality checks</strong>
+          <p>RentIntel rejects missing dates, invalid rents, and unsupported records.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <strong>Review before release</strong>
+          <p>A validated batch remains offline until its evidence is approved and published.</p>
+        </article>
+      </section>
+
+      <form class="asking-capture-form" id="askingCaptureForm">
+        <section class="asking-capture-panel">
+          <div class="asking-capture-panel-head">
+            <div>
+              <span>Batch Details</span>
+              <strong>Who checked the evidence and when?</strong>
+            </div>
+          </div>
+          <div class="asking-capture-fields">
+            <label>
+              Batch ID
+              <input id="askingCaptureBatchId" name="batchId" required maxlength="100">
+            </label>
+            <label>
+              Capture date
+              <input id="askingCaptureDate" name="capturedAt" type="date" required>
+            </label>
+            <label>
+              Source name
+              <input id="askingCaptureSource" name="sourceName" value="RentIntel verified manual capture" required>
+            </label>
+            <label>
+              Permission or capture-policy reference
+              <input
+                id="askingCaptureLicence"
+                name="licenseReference"
+                placeholder="Example: RentIntel manual capture policy 2026-07"
+                required
+              >
+            </label>
+          </div>
+          <label class="asking-capture-confirm">
+            <input id="askingCaptureTerms" type="checkbox" required>
+            <span>I confirm RentIntel is permitted to use the submitted evidence references for this review.</span>
+          </label>
+        </section>
+
+        <section class="asking-capture-panel">
+          <div class="asking-capture-panel-head">
+            <div>
+              <span>Area Evidence</span>
+              <strong>Add one reviewed record for every area being refreshed.</strong>
+            </div>
+            <button type="button" id="askingCaptureAddRecord">Add another area</button>
+          </div>
+          <div class="asking-capture-records" id="askingCaptureRecords"></div>
+        </section>
+
+        <section class="asking-capture-submit">
+          <div>
+            <strong>Validation does not publish anything.</strong>
+            <p>The current public result changes only after the generated feed receives a controlled release.</p>
+          </div>
+          <button type="submit" id="askingCaptureValidate">Validate Evidence</button>
+        </section>
+      </form>
+
+      <section class="asking-capture-result" id="askingCaptureResult" data-state="idle" aria-live="polite">
+        <div>
+          <span>Validation Result</span>
+          <strong id="askingCaptureResultTitle">No evidence checked yet</strong>
+          <p id="askingCaptureResultCopy">Complete the batch details and add current evidence to begin.</p>
+        </div>
+        <ul id="askingCaptureIssues"></ul>
+        <div class="asking-capture-result-actions">
+          <button type="button" id="askingCaptureDownloadBatch" disabled>Download Validated Batch</button>
+          <button type="button" id="askingCaptureDownloadFeed" disabled>Download Feed Candidate</button>
+        </div>
+      </section>
+    </main>
+
+    <template id="askingCaptureRecordTemplate">
+      <article class="asking-capture-record">
+        <div class="asking-capture-record-head">
+          <div>
+            <span>Area record</span>
+            <strong data-record-title>New area</strong>
+          </div>
+          <button type="button" data-remove-record>Remove</button>
+        </div>
+        <div class="asking-capture-record-grid">
+          <label>
+            RentIntel record ID
+            <input data-field="recordId" placeholder="macpherson-retail" required>
+          </label>
+          <label>
+            Current asking rent (S$/psf)
+            <input data-field="asking" type="number" min="0.5" max="500" step="0.1" required>
+          </label>
+          <label>
+            Asking median (S$/psf)
+            <input data-field="latestAskingMedian" type="number" min="0.5" max="500" step="0.1" required>
+          </label>
+          <label>
+            Fair range low (S$/psf)
+            <input data-field="fairRangeLow" type="number" min="0.5" max="500" step="0.1" required>
+          </label>
+          <label>
+            Fair range high (S$/psf)
+            <input data-field="fairRangeHigh" type="number" min="0.5" max="500" step="0.1" required>
+          </label>
+          <label>
+            Number of checked listings
+            <input data-field="listingCount" type="number" min="1" max="500" step="1" required>
+          </label>
+          <label class="asking-capture-wide">
+            Evidence references
+            <textarea
+              data-field="evidence"
+              rows="4"
+              placeholder="One permitted listing URL, reference number, or source note per line. Use at least three."
+              required
+            ></textarea>
+          </label>
+          <label class="asking-capture-wide">
+            Review note
+            <textarea
+              data-field="note"
+              rows="2"
+              placeholder="State the area covered, property type, and any important limits."
+            ></textarea>
+          </label>
+        </div>
+      </article>
+    </template>
+
+    <script src="../../auth-client.js?v=20260727-asking-capture"></script>
+    <script src="../../admin-asking-feed.js?v=20260727-asking-capture"></script>
+  </body>
+</html>
