@@ -7,6 +7,33 @@
   },
   "notes": [
     {
+      "slug": "one-below-ceiling-fallback-can-reset-the-negotiation",
+      "title": "One below-ceiling fallback can reset the negotiation",
+      "publishedAt": "2026-07-27",
+      "description": "This week's RentIntel note on using Jurong's $19.9 psf pm asking line below a $20.4 fair-range high to pressure-test above-range retail quotes.",
+      "summary": "Jurong is the only tracked pilot cluster still asking below its fair-range high, making it a useful control when other retail quotes arrive above benchmark.",
+      "lede": "Market Notes is the short weekly RentIntel release for people who want one fast read, not a long blog post. This week's note is about why one credible option inside its working range can do more for a negotiation than a long list of similarly stretched asks.",
+      "storyParagraphs": [
+        "The latest pilot capture puts Jurong suburban retail at $19.9 psf pm against a fair-range high of $20.4 psf pm. It is the only tracked cluster whose representative asking line remains below the top of its range: Chinatown, Orchard, Serangoon, Tampines, and Hougang Green are all asking above theirs. That does not make Jurong automatically cheap or interchangeable with every shortlist. It makes the cluster useful as a control.",
+        "A control changes the conversation because it shows that an available retail option can still sit inside its working benchmark. The comparison should be adjusted for catchment, format, frontage, trading pattern, handover condition, and operator fit, but it prevents an above-range quote from becoming normal simply because every option left on the shortlist tells the same premium story. One credible fallback can expose whether the preferred unit is earning its gap or merely benefiting from a narrow comparison set.",
+        "The decision cue this week is simple: keep the $19.9 psf pm Jurong line visible when testing a stretched suburban or mall quote, then write down what the preferred unit delivers that the fallback does not. If those advantages cannot be translated into revenue, operating flexibility, or lease value, the premium has not yet earned its place in the benchmark."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Use Jurong as a benchmark control, not a universal substitute; compare the exact catchment, format, frontage, and operating fit before treating the rent gap as savings."
+        },
+        {
+          "label": "Coverage update",
+          "text": "The current pilot comparison covers four Jurong East suburban mall and retail-cluster checks captured on 2026-06-24."
+        },
+        {
+          "label": "Decision cue",
+          "text": "Keep the $19.9 psf pm asking line and $20.4 fair-range high beside any above-range shortlist option until the preferred unit's extra value is specific enough to price."
+        }
+      ]
+    },
+    {
       "slug": "chinatown-asking-median-is-not-the-new-benchmark",
       "title": "A Chinatown asking median is not the new benchmark",
       "publishedAt": "2026-07-20",
