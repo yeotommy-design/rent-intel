@@ -1,7 +1,7 @@
 window.RENTINTEL_SOURCE_STATUS = {
-  "version": "source-status-2026-06-24",
-  "updatedAt": "2026-06-24",
-  "lastReviewedAt": "2026-06-24",
+  "version": "source-status-2026-07-27",
+  "updatedAt": "2026-07-27",
+  "lastReviewedAt": "2026-07-27",
   "weeklyReviewSchedule": "Monday 09:00 SGT",
   "environment": "prototype",
   "status": [
@@ -9,14 +9,18 @@ window.RENTINTEL_SOURCE_STATUS = {
       "sourceId": "ura-commercial-retail-rental-analysis",
       "label": "URA benchmark",
       "layer": "Official transaction benchmark",
-      "currentState": "contract-ready",
-      "prototypeState": "sample data only",
-      "productionNextStep": "Add authorised export or data-service ingestion for retail rental benchmark records.",
+      "currentState": "live-official-index-connected",
+      "prototypeState": "Official URA quarterly retail rental index connected",
+      "productionNextStep": "Add authorised granular retail rental-contract analysis when unit or area-level benchmark detail is required.",
       "refreshTarget": "Quarterly",
       "visibleTo": "Free and members",
-      "lastCompletedAt": null,
-      "timestampLabel": "No live ingest yet",
-      "weeklyReviewStep": "Monday review: confirm whether a new URA retail benchmark release is available; only ingest on a real quarterly change."
+      "lastCompletedAt": "2026-07-27T09:40:03+08:00",
+      "timestampLabel": null,
+      "weeklyReviewStep": "Automatic Monday check: import only when data.gov.sg publishes a real new URA retail-index quarter.",
+      "displayTimestamp": "Latest release: 2026 Q2",
+      "healthState": "fresh",
+      "latestPeriod": "2026-Q2",
+      "latestRetailIndex": 80.6
     },
     {
       "sourceId": "hdb-commercial-data",

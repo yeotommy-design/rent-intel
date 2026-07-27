@@ -42,12 +42,12 @@ Production asking-rent ingestion gate:
 
 ### URA benchmark
 - Target cadence: `Quarterly`
-- Current mode: `Contract-ready, sample-only`
-- What updates it: authorised benchmark export or data-service ingestion
+- Current mode: `Live official quarterly retail-index feed`
+- What updates it: data.gov.sg URA commercial rental index under the Singapore Open Data Licence
 - Weekly Monday review:
-  - confirm whether a new quarter or benchmark release is available
-  - ingest only when a real new benchmark batch exists
-  - otherwise keep the source marked as not yet live
+  - automatically check whether a new quarter is available
+  - import and deploy only when the official retail-index series changes
+  - keep this global trend index separate from S$/psf, area-level benchmarks, and current asking rents
 - Escalate when:
   - a new quarter is available but not yet ingested
   - benchmark logic and public card language drift out of sync

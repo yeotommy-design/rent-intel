@@ -409,6 +409,7 @@ function currentVerdictSafety(record, qa = sourceQaProfile(record)) {
 
 function sourceTimestampLabel(status, value) {
   if (value) return formatShortDate(value);
+  if (status?.displayTimestamp) return status.displayTimestamp;
   if (status?.lastCompletedAt) return formatShortDate(status.lastCompletedAt);
   return status?.timestampLabel || "Not live yet";
 }
@@ -427,7 +428,7 @@ function sourceRefreshRows(record) {
       timestamp: sourceTimestampLabel(status, options.timestamp || ""),
       target: status.refreshTarget || options.target || "Not set",
       workflow: status.weeklyReviewStep || options.workflow || "Weekly review pending.",
-      state: options.state || "watch"
+      state: options.state || status.healthState || "watch"
     };
   };
   return [
@@ -435,9 +436,7 @@ function sourceRefreshRows(record) {
       state: askingFreshness.state,
       timestamp: askingCapturedAt
     }),
-    buildRow("ura-commercial-retail-rental-analysis", {
-      state: "watch"
-    }),
+    buildRow("ura-commercial-retail-rental-analysis"),
     buildRow("hdb-commercial-data", {
       state: "watch"
     }),

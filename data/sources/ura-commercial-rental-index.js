@@ -1,0 +1,273 @@
+window.RENTINTEL_URA_RETAIL_INDEX = {
+  "version": "ura-commercial-rental-index-2026-q2",
+  "datasetId": "d_862c74b13138382b9f0c50c68d436b95",
+  "sourceName": "Urban Redevelopment Authority",
+  "sourceUrl": "https://data.gov.sg/datasets/d_862c74b13138382b9f0c50c68d436b95/view",
+  "licence": "Singapore Open Data Licence",
+  "licenceUrl": "https://data.gov.sg/open-data-licence",
+  "datasetName": "COMMERCIAL RENTAL INDEX (BASE QUARTER 1998-Q4 = 100), QUARTERLY",
+  "definition": "Quarterly retail rental index compiled from tenancy agreement data. Base quarter 1998-Q4 = 100.",
+  "safeUse": "Official national trend context only. This index is not S$/psf and must not be presented as a unit-level asking or transacted rent.",
+  "latestPeriod": "2026-Q2",
+  "latestRetailIndex": 80.6,
+  "previousPeriod": "2026-Q1",
+  "previousRetailIndex": 80.1,
+  "quarterChangePercent": 0.6,
+  "priorYearPeriod": "2025-Q2",
+  "priorYearRetailIndex": 79.4,
+  "yearChangePercent": 1.5,
+  "sourceLastUpdatedAt": "2026-07-27T09:40:03+08:00",
+  "coverageEnd": "2026-06-30T08:00:00+08:00",
+  "syncedAt": "2026-07-27T08:40:00.132Z",
+  "sourceFingerprint": "3acd6a548ee38d086fc256be519cd4e44792c2c8e3d28d17134886845195ef9b",
+  "records": [
+    {
+      "quarter": "2011-Q1",
+      "index": 115.7
+    },
+    {
+      "quarter": "2011-Q2",
+      "index": 117.2
+    },
+    {
+      "quarter": "2011-Q3",
+      "index": 117.9
+    },
+    {
+      "quarter": "2011-Q4",
+      "index": 118.9
+    },
+    {
+      "quarter": "2012-Q1",
+      "index": 118.6
+    },
+    {
+      "quarter": "2012-Q2",
+      "index": 118.5
+    },
+    {
+      "quarter": "2012-Q3",
+      "index": 118.2
+    },
+    {
+      "quarter": "2012-Q4",
+      "index": 118.3
+    },
+    {
+      "quarter": "2013-Q1",
+      "index": 117
+    },
+    {
+      "quarter": "2013-Q2",
+      "index": 115.6
+    },
+    {
+      "quarter": "2013-Q3",
+      "index": 117.1
+    },
+    {
+      "quarter": "2013-Q4",
+      "index": 117.3
+    },
+    {
+      "quarter": "2014-Q1",
+      "index": 117
+    },
+    {
+      "quarter": "2014-Q2",
+      "index": 117.7
+    },
+    {
+      "quarter": "2014-Q3",
+      "index": 117.8
+    },
+    {
+      "quarter": "2014-Q4",
+      "index": 118.4
+    },
+    {
+      "quarter": "2015-Q1",
+      "index": 118
+    },
+    {
+      "quarter": "2015-Q2",
+      "index": 117.4
+    },
+    {
+      "quarter": "2015-Q3",
+      "index": 115
+    },
+    {
+      "quarter": "2015-Q4",
+      "index": 113.5
+    },
+    {
+      "quarter": "2016-Q1",
+      "index": 111.3
+    },
+    {
+      "quarter": "2016-Q2",
+      "index": 107
+    },
+    {
+      "quarter": "2016-Q3",
+      "index": 105.4
+    },
+    {
+      "quarter": "2016-Q4",
+      "index": 104.1
+    },
+    {
+      "quarter": "2017-Q1",
+      "index": 101.1
+    },
+    {
+      "quarter": "2017-Q2",
+      "index": 99.9
+    },
+    {
+      "quarter": "2017-Q3",
+      "index": 99.7
+    },
+    {
+      "quarter": "2017-Q4",
+      "index": 99.2
+    },
+    {
+      "quarter": "2018-Q1",
+      "index": 99.3
+    },
+    {
+      "quarter": "2018-Q2",
+      "index": 98.2
+    },
+    {
+      "quarter": "2018-Q3",
+      "index": 97
+    },
+    {
+      "quarter": "2018-Q4",
+      "index": 98.2
+    },
+    {
+      "quarter": "2019-Q1",
+      "index": 98
+    },
+    {
+      "quarter": "2019-Q2",
+      "index": 96.5
+    },
+    {
+      "quarter": "2019-Q3",
+      "index": 98.7
+    },
+    {
+      "quarter": "2019-Q4",
+      "index": 101
+    },
+    {
+      "quarter": "2020-Q1",
+      "index": 98.7
+    },
+    {
+      "quarter": "2020-Q2",
+      "index": 95.2
+    },
+    {
+      "quarter": "2020-Q3",
+      "index": 90.9
+    },
+    {
+      "quarter": "2020-Q4",
+      "index": 86.2
+    },
+    {
+      "quarter": "2021-Q1",
+      "index": 82.4
+    },
+    {
+      "quarter": "2021-Q2",
+      "index": 82
+    },
+    {
+      "quarter": "2021-Q3",
+      "index": 79.8
+    },
+    {
+      "quarter": "2021-Q4",
+      "index": 80.3
+    },
+    {
+      "quarter": "2022-Q1",
+      "index": 80
+    },
+    {
+      "quarter": "2022-Q2",
+      "index": 79.6
+    },
+    {
+      "quarter": "2022-Q3",
+      "index": 79.3
+    },
+    {
+      "quarter": "2022-Q4",
+      "index": 78.4
+    },
+    {
+      "quarter": "2023-Q1",
+      "index": 78.2
+    },
+    {
+      "quarter": "2023-Q2",
+      "index": 78.4
+    },
+    {
+      "quarter": "2023-Q3",
+      "index": 78.8
+    },
+    {
+      "quarter": "2023-Q4",
+      "index": 78.7
+    },
+    {
+      "quarter": "2024-Q1",
+      "index": 78.4
+    },
+    {
+      "quarter": "2024-Q2",
+      "index": 78.4
+    },
+    {
+      "quarter": "2024-Q3",
+      "index": 78.6
+    },
+    {
+      "quarter": "2024-Q4",
+      "index": 79.1
+    },
+    {
+      "quarter": "2025-Q1",
+      "index": 78.7
+    },
+    {
+      "quarter": "2025-Q2",
+      "index": 79.4
+    },
+    {
+      "quarter": "2025-Q3",
+      "index": 80.1
+    },
+    {
+      "quarter": "2025-Q4",
+      "index": 80.6
+    },
+    {
+      "quarter": "2026-Q1",
+      "index": 80.1
+    },
+    {
+      "quarter": "2026-Q2",
+      "index": 80.6
+    }
+  ]
+};
