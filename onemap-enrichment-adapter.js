@@ -1,4 +1,6 @@
 (function initRentIntelOneMapAdapter() {
+  const liveCache = new Map();
+
   function normalizeText(value = "") {
     return String(value).trim().toLowerCase().replace(/\s+/g, " ");
   }
@@ -100,8 +102,67 @@
     return rows.map((record) => enrichRecord(record, dataset));
   }
 
+  function liveQueryForRecord(record = {}) {
+    return String(
+      record.oneMap?.postalCode ||
+      record.oneMap?.addressLine ||
+      record.address ||
+      record.title ||
+      record.area ||
+      ""
+    ).trim();
+  }
+
+  async function enrichRecordLive(record) {
+    if (!record || typeof record !== "object") return record;
+    const query = liveQueryForRecord(record);
+    if (query.length < 2) return record;
+    const cacheKey = normalizeText(query);
+    if (liveCache.has(cacheKey)) return liveCache.get(cacheKey);
+
+    const request = fetch(`/api/sources/onemap/search?query=${encodeURIComponent(query)}`, {
+      headers: { accept: "application/json" }
+    })
+      .then(async (response) => {
+        if (!response.ok) return record;
+        const payload = await response.json();
+        const match = Array.isArray(payload.results) ? payload.results[0] : null;
+        if (!payload.live || !match) return record;
+        const addressLine = match.address || match.searchValue || record.oneMap?.addressLine || "";
+        const postalCode = match.postalCode || record.oneMap?.postalCode || "";
+        return {
+          ...record,
+          aliases: uniqueStrings([
+            ...(Array.isArray(record.aliases) ? record.aliases : []),
+            match.searchValue,
+            addressLine,
+            postalCode
+          ]),
+          oneMap: {
+            ...(record.oneMap || {}),
+            sourceName: "OneMap live search",
+            addressLine,
+            postalCode,
+            latitude: match.latitude,
+            longitude: match.longitude,
+            x: match.x,
+            y: match.y,
+            live: true,
+            checkedAt: payload.checkedAt || new Date().toISOString()
+          },
+          map: match.x && match.y
+            ? { ...(record.map || {}), x: match.x, y: match.y, status: record.map?.status || "calm" }
+            : record.map
+        };
+      })
+      .catch(() => record);
+    liveCache.set(cacheKey, request);
+    return request;
+  }
+
   window.RentIntelOneMapAdapter = {
     enrichRecord,
+    enrichRecordLive,
     enrichRecords,
     findEntry
   };

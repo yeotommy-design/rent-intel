@@ -1,7 +1,7 @@
 {
-  "version": "source-status-2026-07-27",
-  "updatedAt": "2026-07-27",
-  "lastReviewedAt": "2026-07-27",
+  "version": "source-status-2026-08-01",
+  "updatedAt": "2026-08-01",
+  "lastReviewedAt": "2026-08-01",
   "weeklyReviewSchedule": "Monday 09:00 SGT",
   "environment": "prototype",
   "status": [
@@ -39,14 +39,14 @@
       "sourceId": "onemap-geospatial",
       "label": "OneMap",
       "layer": "Address and geospatial enrichment",
-      "currentState": "contract-ready",
-      "prototypeState": "static map coordinates only",
-      "productionNextStep": "Connect postal, address, and planning-area lookup to search records.",
+      "currentState": "live-api-ready-token-required",
+      "prototypeState": "Live lookup is implemented with a static address and map fallback",
+      "productionNextStep": "Set ONEMAP_API_EMAIL and ONEMAP_API_PASSWORD in Vercel to enable automatic token renewal and live search.",
       "refreshTarget": "On search with nightly cache",
       "visibleTo": "Free and members",
       "lastCompletedAt": null,
-      "timestampLabel": "On-search enrichment",
-      "weeklyReviewStep": "Monday review: verify address and planning-area lookups still resolve correctly, and confirm the nightly cache path is healthy."
+      "timestampLabel": "Live API ready; credentials required",
+      "weeklyReviewStep": "Monday review: test one token-authenticated address lookup and confirm the 24-hour cache and static fallback are healthy."
     },
     {
       "sourceId": "asking-rent-feed",

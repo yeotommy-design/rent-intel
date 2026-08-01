@@ -14,6 +14,7 @@ const {
   createStore: createAskingFeedStore,
   isConfigured: isAskingFeedStoreConfigured
 } = require("./supabase-asking-feed-store");
+const { createOneMapClient } = require("./onemap-live-client");
 
 const ROOT_DIR = __dirname;
 const HOST = "127.0.0.1";
@@ -61,6 +62,11 @@ const ALLOW_ASKING_FEED_PROMOTION = String(process.env.RENTINTEL_ALLOW_ASKING_FE
   .toLowerCase() === "true";
 const DURABLE_ASKING_FEED_STORAGE = isAskingFeedStoreConfigured();
 const askingFeedStore = createAskingFeedStore();
+const oneMapClient = createOneMapClient({
+  email: process.env.ONEMAP_API_EMAIL,
+  password: process.env.ONEMAP_API_PASSWORD,
+  directToken: process.env.ONEMAP_API_TOKEN
+});
 const execFileAsync = promisify(execFile);
 let contextSeedSyncPromise = null;
 let ensureSqliteDbPromise = null;
@@ -4913,6 +4919,45 @@ async function route(request, response) {
     }
     if (pathname === "/api/sources/asking-feed") {
       return await handleSourceAskingFeed(request, response);
+    }
+    if (pathname === "/api/sources/onemap/search") {
+      if (request.method !== "GET") return methodNotAllowed(response);
+      const requestUrl = new URL(request.url, `http://${request.headers.host}`);
+      const query = String(requestUrl.searchParams.get("query") || "").trim();
+      const readiness = oneMapClient.readiness();
+      if (!query) {
+        return json(response, 200, {
+          ok: true,
+          sourceName: "OneMap (Singapore Land Authority)",
+          ...readiness,
+          note: readiness.configured
+            ? "Live address lookup is ready. Results are cached for 24 hours."
+            : "Live credentials are not configured. RentIntel will keep using its static OneMap fallback."
+        });
+      }
+      if (query.length < 2 || query.length > 120) {
+        return json(response, 400, { ok: false, error: "Enter a OneMap query between 2 and 120 characters." });
+      }
+      try {
+        const result = await oneMapClient.search(query);
+        return json(response, 200, {
+          ok: true,
+          sourceName: "OneMap (Singapore Land Authority)",
+          fallback: !result.live,
+          note: result.live
+            ? "Live OneMap address check completed."
+            : "Static OneMap fallback remains active until live credentials are configured.",
+          ...result
+        });
+      } catch (error) {
+        console.warn(`[onemap] Live search failed: ${error.message}`);
+        return json(response, 502, {
+          ok: false,
+          live: false,
+          fallback: true,
+          error: "Live OneMap lookup is temporarily unavailable. Static location context remains active."
+        });
+      }
     }
     if (pathname === "/api/sources/ingestion-readiness") {
       return await handleAskingFeedIngestionReadiness(request, response);

@@ -12,6 +12,7 @@
     "test:asking-storage": "node ./scripts/test-supabase-asking-feed-store.mjs",
     "sync:ura-benchmark": "node ./scripts/sync-ura-commercial-rental-index.mjs",
     "test:ura-benchmark": "node ./scripts/test-ura-commercial-rental-index.mjs",
+    "test:onemap": "node ./scripts/test-onemap-live-client.mjs",
     "consolidate:sample-data": "node ./scripts/consolidate-sample-data.mjs",
     "draft:market-notes": "node ./scripts/generate-weekly-market-note.mjs",
     "test:market-notes-source": "node ./scripts/test-market-note-source-evidence.mjs",

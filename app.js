@@ -968,6 +968,15 @@ function enrichOneMapRecord(record) {
     : record;
 }
 
+async function refreshOneMapContext(record) {
+  if (window.location.protocol === "file:" || !window.RentIntelOneMapAdapter?.enrichRecordLive) return;
+  const enriched = await window.RentIntelOneMapAdapter.enrichRecordLive(record);
+  if (!enriched?.oneMap?.live || selectedRecord?.id !== record.id) return;
+  const recordIndex = rentRecords.findIndex((entry) => entry.id === record.id);
+  if (recordIndex >= 0) rentRecords[recordIndex] = enriched;
+  updateResult(enriched, { skipLiveOneMap: true });
+}
+
 const rentIntelSampleBatchJsonFiles = [];
 
 function mergeSamplePayloads(basePayload, batchPayloads = []) {
@@ -1686,7 +1695,7 @@ function publicEvidenceRows(record) {
       value: record.oneMap.planningArea || "Address enriched",
       detail: [record.oneMap.addressLine, record.oneMap.postalCode ? `Singapore ${record.oneMap.postalCode}` : ""]
         .filter(Boolean)
-        .join(" | ")
+        .join(" | ") + (record.oneMap.live ? " | Live OneMap check" : " | Static fallback")
     });
   }
   return rows;
@@ -2373,6 +2382,9 @@ function updateResult(record, options = {}) {
   syncToolbenchPreviewRecord(record);
   drawRentChart();
   renderPressurePanel();
+  if (!options.skipLiveOneMap) {
+    refreshOneMapContext(record).catch((error) => console.warn("OneMap enrichment skipped.", error));
+  }
 }
 
 function normalizedCoverageQuery(query) {
