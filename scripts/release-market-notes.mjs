@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { execFileSync } from "node:child_process";
+import { pathToFileURL } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const notesPath = path.join(projectRoot, "data", "market-notes.json");
@@ -21,6 +22,29 @@ function runStreaming(command, args) {
     stdio: "inherit",
     encoding: "utf8"
   });
+}
+
+export function pushRelease(branch, maxAttempts = 3, runCommand = runStreaming) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      runCommand("git", ["push", "origin", branch]);
+      return;
+    } catch (error) {
+      if (attempt === maxAttempts) throw error;
+      console.warn(`Release push lost a repository race. Rebasing and retrying (${attempt}/${maxAttempts - 1}).`);
+      runCommand("git", ["fetch", "origin", branch]);
+      try {
+        runCommand("git", ["rebase", `origin/${branch}`]);
+      } catch (rebaseError) {
+        try {
+          runCommand("git", ["rebase", "--abort"]);
+        } catch {
+          // The rebase may have failed before creating rebase state.
+        }
+        throw rebaseError;
+      }
+    }
+  }
 }
 
 function readLatestNote() {
@@ -92,7 +116,7 @@ function main() {
 
   const commitMessage = `Publish ${latest.publishedAt} Market Note`;
   runStreaming("git", ["commit", "-m", commitMessage]);
-  runStreaming("git", ["push", "origin", branch]);
+  pushRelease(branch);
 
   console.log(JSON.stringify({
     status: "published",
@@ -105,4 +129,6 @@ function main() {
   }, null, 2));
 }
 
-main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main();
+}

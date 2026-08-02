@@ -16,6 +16,7 @@
     "consolidate:sample-data": "node ./scripts/consolidate-sample-data.mjs",
     "draft:market-notes": "node ./scripts/generate-weekly-market-note.mjs",
     "test:market-notes-source": "node ./scripts/test-market-note-source-evidence.mjs",
+    "test:market-notes-release": "node ./scripts/test-market-notes-release-push.mjs",
     "write:market-notes:weekly": "node ./scripts/generate-weekly-market-note.mjs --write",
     "verify:production": "node ./scripts/spot-check-production.mjs",
     "build:market-notes": "node ./scripts/build-market-notes.mjs",
