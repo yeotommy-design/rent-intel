@@ -1105,8 +1105,8 @@ async function hydrateAskingFeedState() {
 }
 
 async function refreshAskingFeedState() {
-  if (!currentSession?.email || !window.RentIntelAuth?.refreshAskingFeed) return null;
-  const result = await window.RentIntelAuth.refreshAskingFeed();
+  if (!currentSession?.email || !window.RentIntelAuth?.fetchAskingFeed) return null;
+  const result = await window.RentIntelAuth.fetchAskingFeed();
   if (!result.ok || !result.data?.feed) return null;
   applyAskingFeedState(result.data.feed);
   return result.data.feed;
@@ -8218,7 +8218,7 @@ async function runPilotSourceSync(mode = "manual") {
     return;
   }
 
-  const refreshedFeed = await refreshAskingFeedState();
+  const reviewedFeed = await refreshAskingFeedState();
   const recordsChecked = rentRecordList().length;
   const source = approvedSources[0];
   const coverageTargets = approvedCoverageTargets().map((target) => ({
@@ -8233,7 +8233,7 @@ async function runPilotSourceSync(mode = "manual") {
     sourceName: sourceCandidateName(source),
     sourceType: source.type,
     sourceKey: sourceCandidateKey(source),
-    status: "pilot sync complete",
+    status: "source review complete; evidence unchanged",
     recordsChecked: recordsChecked + coverageTargets.length,
     benchmarkLayer: "URA benchmark sample",
     coverageTargets,
@@ -8272,13 +8272,13 @@ async function runPilotSourceSync(mode = "manual") {
   );
 
   accountEl.sourceSyncStatus.textContent =
-    `${sourceCandidateName(source)} pilot sync complete. ${syncRun.recordsChecked} checks including ${coverageTargets.length} coverage targets.${refreshedFeed?.updatedAt ? ` Feed refreshed ${refreshedFeed.updatedAt}.` : ""}`;
+    `${sourceCandidateName(source)} source review complete. ${syncRun.recordsChecked} records checked, including ${coverageTargets.length} coverage targets. No asking-rent value or capture date was changed.${reviewedFeed?.updatedAt ? ` Latest approved feed: ${reviewedFeed.updatedAt}.` : ""}`;
   renderCoverageRequests();
   renderSourceSyncPipeline();
   renderSourceStatus();
   renderAccountSourceQa();
   renderMemberCommandCenter();
-  recordActivity("Pilot source sync", `${sourceCandidateName(source)}: ${syncRun.recordsChecked} checks${refreshedFeed?.updatedAt ? `, feed refreshed ${refreshedFeed.updatedAt}` : ""}`);
+  recordActivity("Source review", `${sourceCandidateName(source)}: ${syncRun.recordsChecked} records checked; evidence unchanged${reviewedFeed?.updatedAt ? `; latest approved feed ${reviewedFeed.updatedAt}` : ""}`);
   return syncRun;
 }
 

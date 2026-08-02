@@ -37,7 +37,6 @@ const opsEl = {
 
 let latestReport = null;
 let currentAdminSession = null;
-let refreshFeedBusy = false;
 let coverageActionBusy = false;
 let releaseActionBusy = false;
 
@@ -109,7 +108,7 @@ function buildAttentionItems(report) {
       severity: breachState === "stale" ? "critical" : "warning",
       title: breachState === "stale" ? "Source freshness is stale" : "Source freshness needs review",
       copy: `${latestBreach.sourceName || "Source"} moved from ${latestBreach.previousFreshnessState || "unknown"} to ${latestBreach.freshnessState || "unknown"} on ${formatDate(latestBreach.breachAt)}.`,
-      actionLabel: "Refresh asking feed",
+      actionLabel: "Review new checks",
       actionType: "refresh-feed",
       href: "#source-ops"
     });
@@ -467,34 +466,7 @@ async function copyPayload() {
 }
 
 async function refreshAskingFeedNow() {
-  if (refreshFeedBusy) return;
-  refreshFeedBusy = true;
-  if (opsEl.refreshFeed) opsEl.refreshFeed.disabled = true;
-  opsEl.status.textContent = "Refreshing asking feed and logging a sync run...";
-  const refreshed = await window.RentIntelAuth.refreshAskingFeed();
-  if (!refreshed.ok || !refreshed.data?.feed) {
-    opsEl.status.textContent = "Could not refresh the asking feed.";
-    refreshFeedBusy = false;
-    if (opsEl.refreshFeed) opsEl.refreshFeed.disabled = false;
-    return;
-  }
-  const feed = refreshed.data.feed;
-  await window.RentIntelAuth.saveSourceSyncRun({
-    sourceName: feed.sourceName || "RentIntel asking-rent feed",
-    sourceType: feed.sourceType || "verified-daily-capture",
-    sourceKey: "asking-rent",
-    status: "admin refresh complete",
-    recordsChecked: Array.isArray(feed.records) ? feed.records.length : 0,
-    benchmarkLayer: "asking-rent",
-    coverageTargets: [],
-    varianceFlag: "",
-    at: new Date().toISOString(),
-    memberEmail: currentAdminSession?.email || ""
-  });
-  await loadDashboard();
-  opsEl.status.textContent = `Asking feed refreshed at ${formatDate(feed.updatedAt || new Date().toISOString())}.`;
-  refreshFeedBusy = false;
-  if (opsEl.refreshFeed) opsEl.refreshFeed.disabled = false;
+  window.location.assign("../asking-feed/");
 }
 
 async function requeueProblemDeliveries() {
