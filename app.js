@@ -14,9 +14,6 @@ let selectedRecord = null;
 let selectedRange = "5";
 let memberSession = null;
 let askingFeedState = null;
-let dailyTickerFrame = null;
-let dailyTickerLastTs = null;
-let dailyTickerPos = 0;
 let publicCompareRecordIds = [];
 let comparableReturnRecordId = "";
 
@@ -4123,46 +4120,6 @@ function renderCoverageHighlights() {
   });
 }
 
-function stopDailyInsightTicker() {
-  if (dailyTickerFrame) {
-    cancelAnimationFrame(dailyTickerFrame);
-    dailyTickerFrame = null;
-  }
-  dailyTickerLastTs = null;
-}
-
-function startDailyInsightTicker() {
-  const ticker = el.dailyInsight?.parentElement;
-  const text = el.dailyInsight;
-  if (!ticker || !text) return;
-
-  stopDailyInsightTicker();
-
-  const reset = () => {
-    dailyTickerPos = ticker.clientWidth;
-    text.style.left = `${dailyTickerPos}px`;
-  };
-
-  reset();
-
-  const step = (ts) => {
-    if (dailyTickerLastTs == null) {
-      dailyTickerLastTs = ts;
-    }
-    const dt = (ts - dailyTickerLastTs) / 1000;
-    dailyTickerLastTs = ts;
-
-    dailyTickerPos -= 110 * dt;
-    if (dailyTickerPos < -text.offsetWidth) {
-      dailyTickerPos = ticker.clientWidth;
-    }
-    text.style.left = `${dailyTickerPos}px`;
-    dailyTickerFrame = requestAnimationFrame(step);
-  };
-
-  dailyTickerFrame = requestAnimationFrame(step);
-}
-
 async function init() {
   sanitizeCoverageStorage();
   memberSession = loadStoredJson(memberSessionKey, null);
@@ -4181,8 +4138,7 @@ async function init() {
   const dailySafety = currentVerdictSafety(daily);
   el.dailyInsight.textContent = dailySafety.current
     ? daily.daily
-    : "Official rent benchmarks remain available. Recent asking-rent comparisons appear only where verified evidence is available.";
-  startDailyInsightTicker();
+    : `Today's area spotlight: ${daily.title}. Official median ${money(daily.official)}; benchmark range ${moneyRange(daily.fairRange)}. Verify the exact unit's current asking rent.`;
   el.dailyInsightLink.addEventListener("click", () => {
     trackAnalyticsEvent("daily_signal_click", {
       area_title: daily.title,
@@ -4191,8 +4147,6 @@ async function init() {
     updateResult(daily);
     el.input.value = daily.title;
   });
-  window.addEventListener("resize", startDailyInsightTicker);
-
   document.querySelectorAll("[data-query]").forEach((button) => {
     button.addEventListener("click", () => {
       const result = findRecord(button.dataset.query);

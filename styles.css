@@ -10825,22 +10825,18 @@ a {
 }
 
 .ticker {
-  position: relative;
   min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
   padding-right: 6px;
 }
 
 .ticker p {
-  position: relative;
-  display: inline-block;
+  display: block;
   margin: 0;
-  min-width: max-content;
   color: #07111c;
   font-size: 20px;
   font-weight: 850;
-  will-change: transform;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .insight-strip a {
@@ -16068,11 +16064,6 @@ button.workspace-v1-context-why-clause[data-active="true"] {
 
   .ticker {
     grid-column: 1 / -1;
-    white-space: nowrap;
-  }
-
-  .ticker p {
-    will-change: transform;
   }
 
   .hero,
