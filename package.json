@@ -9,6 +9,7 @@
     "monitor:sources": "node ./scripts/update-source-health.mjs",
     "test:source-health": "node ./scripts/test-source-health-monitor.mjs",
     "test:asking-ingestion": "node ./scripts/test-asking-feed-ingestion.mjs",
+    "test:asking-capture": "node ./scripts/test-asking-feed-capture-validator.js",
     "test:asking-storage": "node ./scripts/test-supabase-asking-feed-store.mjs",
     "sync:ura-benchmark": "node ./scripts/sync-ura-commercial-rental-index.mjs",
     "test:ura-benchmark": "node ./scripts/test-ura-commercial-rental-index.mjs",

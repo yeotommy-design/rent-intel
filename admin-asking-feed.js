@@ -149,8 +149,13 @@ function downloadJson(filename, value) {
 async function loadReadiness() {
   const result = await window.RentIntelAuth.fetchAskingFeedCaptureReadiness();
   if (!result.ok || !result.data?.capture) {
+    if (window.RentIntelAskingFeedCaptureValidator) {
+      captureEl.mode.textContent = "Controlled file release";
+      captureEl.modeCopy.textContent = "Evidence checks run safely in this browser. Nothing changes publicly until the reviewed file is deployed.";
+      return;
+    }
     captureEl.mode.textContent = "Validation unavailable";
-    captureEl.modeCopy.textContent = "The protected capture service could not be reached.";
+    captureEl.modeCopy.textContent = "The evidence checker could not be loaded.";
     return;
   }
   const capture = result.data.capture;
@@ -184,7 +189,22 @@ async function validateCapture(event) {
   captureEl.validate.disabled = true;
   captureEl.validate.textContent = "Checking evidence...";
   renderResult("working", "Running quality checks", "RentIntel is checking dates, figures, rights, and evidence references.");
-  const result = await window.RentIntelAuth.validateAskingFeedCapture(payload);
+  let result = await window.RentIntelAuth.validateAskingFeedCapture(payload);
+  if (!result.ok && [0, 401, 403, 404, 503].includes(result.status) && window.RentIntelAskingFeedCaptureValidator) {
+    const qa = window.RentIntelAskingFeedCaptureValidator.validate(payload);
+    result = qa.ok
+      ? {
+          ok: true,
+          status: 200,
+          data: {
+            qa,
+            batch: payload,
+            feed: window.RentIntelAskingFeedCaptureValidator.buildFeed(payload, qa),
+            promotionState: "validated-for-controlled-file-release"
+          }
+        }
+      : { ok: false, status: 422, data: { qa } };
+  }
   captureEl.validate.disabled = false;
   captureEl.validate.textContent = "Validate Evidence";
 
