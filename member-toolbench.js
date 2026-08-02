@@ -837,19 +837,19 @@ const toolbenchReviewPassMessages = {
     sourceStageSample: () => "Sample",
     sourceStagePilot: () => "Pilot",
     sourceStageQa: () => "QA",
-    sourceStageProduction: () => "Production",
+    sourceStageProduction: () => "Current asking comparison",
     sourceStageMonitor: () => "Monitor",
     sourceStageBenchmarkLoaded: () => "Benchmark series loaded",
     sourceStageBenchmarkPending: () => "Sample benchmark pending",
     sourceStageComparableOnly: () => "Comparable signal only",
     sourceStageProductionReady: () => "Source checks complete",
-    sourceStageProductionNotReady: () => "Not ready",
+    sourceStageProductionNotReady: () => "Recent checks unavailable",
     sourceStageMonitorReady: () => "Ready for release monitoring",
     sourceStageMonitorPending: () => "Monitor after production release",
     evidenceSourceChecks: ({ count = 0 } = {}) => `${count} asking checks captured.`,
     evidenceSourceMissing: () => "No direct asking feed connected.",
     evidenceProductionReady: () => "Ready for production evidence use.",
-    evidenceProductionPending: () => "Needs licensed feed or verified QA workflow.",
+    evidenceProductionPending: () => "Recent asking checks are unavailable; the official benchmark remains usable.",
     noteEmpty: () => "Search or select a benchmark to generate the decision note.",
     noteHeadingSummary: () => "Summary",
     noteHeadingPulse: () => "Pulse Summary",
@@ -920,7 +920,7 @@ const toolbenchReviewPassMessages = {
     scenarioDetailAggressiveNegotiation: () => "Aggressive negotiation",
     freshnessLabelFresh: () => "Fresh",
     freshnessLabelWatch: () => "Watch",
-    freshnessLabelStale: () => "Stale",
+    freshnessLabelStale: () => "Earlier asking data",
     freshnessDetailMissingCapture: () => "No captured date is connected.",
     freshnessDetailInvalidCapture: () => "Captured date format is invalid.",
     freshnessDetailFresh: ({ days = 0, maxDays = 0 } = {}) =>
@@ -928,14 +928,14 @@ const toolbenchReviewPassMessages = {
     freshnessDetailWatch: ({ days = 0 } = {}) =>
       `${days} days since the latest update. This data is getting old and should be refreshed soon.`,
     freshnessDetailStale: ({ days = 0, watchMaxDays = 0 } = {}) =>
-      `${days} days since the latest update. This data is out of date because it is more than ${watchMaxDays} days old.`,
+      `Latest verified asking-rent capture: ${days} days ago. A recent comparison needs evidence no more than ${watchMaxDays} days old.`,
     sourceQaComparableStatus: () => "Comparable estimate",
     sourceQaCapturedMissing: () => "Not connected",
-    sourceQaProductionNotReady: () => "Not ready",
-    sourceQaWarningComparable: () => "Direct asking-rent source is not connected for this comparable estimate. Request source coverage before relying on it.",
+    sourceQaProductionNotReady: () => "Recent checks unavailable",
+    sourceQaWarningComparable: () => "The official benchmark remains available. Verify the exact unit's asking rent directly because no recent comparison is connected.",
     sourceQaStatusPilotManual: () => "Pilot manual feed",
     sourceQaStatusDefault: () => "Asking feed",
-    sourceQaProductionReady: () => "Ready",
+    sourceQaProductionReady: () => "Recent checks available",
     sourceTimestampNotLive: () => "Not live yet",
     sourceRefreshTargetFallback: () => "Not set",
     sourceRefreshWorkflowFallback: () => "Weekly review pending.",
@@ -1224,8 +1224,10 @@ const toolbenchEl = {
   pulseToolbenchCopy: document.getElementById("pulseToolbenchCopy"),
   official: document.getElementById("toolbenchOfficialMetric"),
   asking: document.getElementById("toolbenchAskingMetric"),
+  askingLabel: document.getElementById("toolbenchAskingMetricLabel"),
   fairRange: document.getElementById("toolbenchFairRangeMetric"),
   gap: document.getElementById("toolbenchGapMetric"),
+  gapLabel: document.getElementById("toolbenchGapMetricLabel"),
   actionLabel: document.getElementById("toolbenchActionLabel"),
   actionCopy: document.getElementById("toolbenchActionCopy"),
   sourceCopy: document.getElementById("toolbenchSourceCopy"),
@@ -1348,6 +1350,7 @@ const toolbenchEl = {
   chartKicker: document.getElementById("memberChartKicker"),
   chartTitle: document.getElementById("memberChartTitle"),
   chartFairRangeMetric: document.getElementById("chartFairRangeMetric"),
+  chartGapMetricLabel: document.getElementById("chartGapMetricLabel"),
   chartGapMetric: document.getElementById("chartGapMetric"),
   chartReadMetric: document.getElementById("chartReadMetric"),
   chartContextNote: document.getElementById("chartContextNote"),
@@ -3949,7 +3952,7 @@ function sourceQaProfile(record) {
     ready: productionReady,
     warning: productionReady
       ? `${freshness.detail} Asking-rent source is production-ready; still verify unit-specific lease terms, GST, service charge, and permitted use.`
-      : `${freshness.detail} Pilot manual asking feed is connected, but production still needs licensed feed or a verified daily capture workflow with QA logs. Target sync is daily, but actual freshness depends on the latest completed capture.`
+      : `${freshness.detail} The official benchmark remains available. RentIntel adds a recent asking comparison only when permitted evidence can be verified.`
   };
 }
 
@@ -3966,10 +3969,10 @@ function workspaceVerdictSafety(record, qa = sourceQaProfile(record)) {
   const hasChecks = Number(qa.checks || 0) > 0;
   const current = Boolean(source && hasChecks && Number.isFinite(ageDays) && ageDays <= 14);
   const reason = !source || !hasChecks
-    ? "No approved direct asking-rent checks are connected for this result."
+    ? "A recent asking-rent comparison is not available for this area."
     : !Number.isFinite(ageDays)
       ? "The asking-rent capture date is missing or invalid."
-      : `The latest asking-rent capture is ${ageDays} days old. Current verdicts pause after 14 days.`;
+      : `The latest verified asking-rent capture is ${ageDays} days old, so it is shown only as an earlier comparison.`;
   return { current, ageDays, reason };
 }
 
@@ -3992,14 +3995,15 @@ function sourceRefreshRows(record) {
       label: status.label || options.label || sourceId,
       timestamp: sourceTimestampLabel(status, options.timestamp || ""),
       target: status.refreshTarget || options.target || toolbenchReviewPassMessages.workspace.sourceRefreshTargetFallback(),
-      workflow: status.weeklyReviewStep || options.workflow || toolbenchReviewPassMessages.workspace.sourceRefreshWorkflowFallback(),
+      workflow: options.workflow || status.weeklyReviewStep || toolbenchReviewPassMessages.workspace.sourceRefreshWorkflowFallback(),
       state: options.state || "watch"
     };
   };
   return [
     buildRow("asking-rent-feed", {
       state: askingFreshness.state,
-      timestamp: askingCapturedAt
+      timestamp: askingCapturedAt,
+      workflow: "Recent asking comparisons require verified evidence. The official benchmark remains available without them."
     }),
     buildRow("ura-commercial-retail-rental-analysis", {
       state: "watch"
@@ -10568,13 +10572,13 @@ function pulseSummaryForRecord(record) {
 
   if (!safety.current) {
     return {
-      label: "Source warning",
+      label: "Available information",
       tone: "warning",
-      title: "Current verdict paused",
-      summary: safety.reason,
-      warning: "The figures remain visible as historical context, not as today's market position.",
-      nextStep: "Refresh the asking-rent evidence before preparing an offer or negotiation note.",
-      caveat: "Do not use the historical asking gap as a current rent recommendation."
+      title: "Official benchmark available",
+      summary: `${safety.reason} Use the official benchmark for area context.`,
+      warning: "The asking figure and gap are earlier comparisons, not today's market prices.",
+      nextStep: "Verify the exact unit's current asking rent and lease terms directly.",
+      caveat: "Do not use the earlier asking gap as a current rent recommendation."
     };
   }
 
@@ -10631,21 +10635,23 @@ function renderDecisionSpine(record) {
   const fairLow = record.fairRange?.low || record.official;
   const safety = workspaceVerdictSafety(record);
 
-  toolbenchEl.spineConfidenceTitle.textContent = safety.current ? confidence.title : "Historical context";
+  toolbenchEl.spineConfidenceTitle.textContent = safety.current ? confidence.title : "Official benchmark available";
   toolbenchEl.spineConfidenceCopy.textContent = safety.current ? confidence.copy : safety.reason;
-  toolbenchEl.spineBenchmarkTrust.textContent = sourceTrust.title;
-  toolbenchEl.spineBenchmarkCopy.textContent = `${trust.officialLayer}; ${trust.askingLayer}. ${sourceTrust.reason}`;
+  toolbenchEl.spineBenchmarkTrust.textContent = safety.current ? sourceTrust.title : "Official benchmark";
+  toolbenchEl.spineBenchmarkCopy.textContent = safety.current
+    ? `${trust.officialLayer}; ${trust.askingLayer}. ${sourceTrust.reason}`
+    : `${trust.officialLayer}. Recent asking-rent evidence is not available, so the earlier asking figure is context only.`;
   toolbenchEl.spineNegotiationPosition.textContent = safety.current
     ? toolbenchReviewPassMessages.workspace.spineNegotiationTarget({
         range: moneyRange(record.fairRange)
       })
-    : "Offer guidance paused";
+    : "Verify the exact unit before offering";
   toolbenchEl.spineNegotiationCopy.textContent = safety.current
     ? toolbenchReviewPassMessages.workspace.spineNegotiationCopy({
         fairLow: money(fairLow),
         fairHigh: money(fairHigh)
       })
-    : "Refresh the asking-rent evidence before setting an offer or walk-away line.";
+    : "Use the official benchmark for area context, then confirm the landlord's current asking price before setting an offer or walk-away line.";
   toolbenchEl.spineMemberAccess.textContent = toolbenchReviewPassMessages.workspace.spineFreeToolsActive();
   toolbenchEl.spineMemberCopy.textContent = toolbenchReviewPassMessages.workspace.spineFreeToolsCopy();
   renderToolbenchPulse(record);
@@ -10685,13 +10691,13 @@ function renderWorkspaceEvidencePack(record) {
     ? toolbenchReviewPassMessages.workspace.evidencePackAction({
         fairHigh: money(fairHigh)
       })
-    : "Refresh evidence first";
+    : "Use the official benchmark";
   toolbenchEl.evidencePackActionCopy.textContent = safety.current
     ? toolbenchReviewPassMessages.workspace.evidencePackActionCopy({
         actionLabel: record.actionLabel,
         action: record.action
       })
-    : `${safety.reason} Do not turn this historical gap into an offer position.`;
+    : `${safety.reason} Verify the exact unit's asking price before turning the earlier gap into an offer position.`;
 }
 
 function renderWorkspaceSourceTimeline(record) {
@@ -12307,20 +12313,20 @@ function generateNote(record) {
   const safety = workspaceVerdictSafety(record);
   if (!safety.current) {
     return [
-      `RentIntel historical context note: ${record.title}`,
+      `RentIntel official benchmark note: ${record.title}`,
       `Generated: ${new Date().toLocaleString("en-SG", { dateStyle: "medium", timeStyle: "short" })}`,
       "",
-      "CURRENT STATUS",
-      "Current verdict paused.",
+      "AVAILABLE INFORMATION",
+      "Official benchmark available.",
       safety.reason,
       "",
-      "HISTORICAL FIGURES",
+      "OFFICIAL BENCHMARK AND EARLIER COMPARISON",
       `Official median: ${money(record.official)}`,
       `Earlier asking figure: ${money(record.asking)}`,
       `Earlier fair range: ${moneyRange(record.fairRange)}`,
       "",
       "NEXT STEP",
-      "Refresh the approved asking-rent evidence and recheck the exact unit before preparing an offer or negotiation position.",
+      "Use the official benchmark for area context, then verify the exact unit's asking price and lease terms before preparing an offer.",
       "",
       "RentIntel is decision support, not valuation advice. Verify source freshness, lease terms, GST, service charge, permitted use, and unit condition."
     ].join("\n");
@@ -12990,25 +12996,34 @@ function renderRecord(record) {
   const qa = sourceQaProfile(record);
   const safety = workspaceVerdictSafety(record, qa);
   toolbenchEl.input.value = record.title;
-  toolbenchEl.confidence.textContent = safety.current ? record.confidence : "Historical context";
+  toolbenchEl.confidence.textContent = safety.current ? record.confidence : "Official benchmark";
   toolbenchEl.resultTitle.textContent = record.title;
   toolbenchEl.decision.textContent = safety.current
     ? record.decision
-    : "Current verdict paused — asking evidence is too old.";
+    : "Official benchmark available; recent asking comparison unavailable.";
   toolbenchEl.reason.textContent = safety.current
     ? record.reason
-    : `${safety.reason} The figures remain available for historical comparison only.`;
+    : `${safety.reason} The official benchmark remains available; the asking figure is labelled as an earlier comparison.`;
   toolbenchEl.official.textContent = money(record.official);
   toolbenchEl.asking.textContent = money(record.asking);
   toolbenchEl.fairRange.textContent = moneyRange(record.fairRange);
   toolbenchEl.gap.textContent = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
-  toolbenchEl.actionLabel.textContent = safety.current ? record.actionLabel : "Refresh evidence first";
+  if (toolbenchEl.askingLabel) {
+    toolbenchEl.askingLabel.textContent = safety.current ? "Current asking" : "Earlier asking comparison";
+  }
+  if (toolbenchEl.gapLabel) {
+    toolbenchEl.gapLabel.textContent = safety.current ? "Current gap" : "Earlier comparison gap";
+  }
+  toolbenchEl.actionLabel.textContent = safety.current ? record.actionLabel : "Use the official benchmark";
   toolbenchEl.actionCopy.textContent = safety.current
     ? record.action
-    : "Wait for a new approved asking-rent capture before preparing an offer or negotiation position.";
+    : "Verify the exact unit's current asking price and lease terms before preparing an offer or negotiation position.";
+  const sourceSummary = safety.current
+    ? record.sourceSummary
+    : "Official benchmark and area context are available. The asking figure is an earlier pilot comparison, not today's asking price.";
   toolbenchEl.sourceCopy.textContent = record.oneMap?.planningArea
-    ? `${record.sourceSummary} OneMap context: ${record.oneMap.planningArea}${record.oneMap.postalCode ? `, Singapore ${record.oneMap.postalCode}` : ""}.`
-    : record.sourceSummary;
+    ? `${sourceSummary} OneMap location: ${record.oneMap.planningArea}${record.oneMap.postalCode ? `, Singapore ${record.oneMap.postalCode}` : ""}.`
+    : sourceSummary;
   if (toolbenchEl.sourceQaPanel) {
     toolbenchEl.sourceQaPanel.dataset.ready = qa.ready ? "true" : "false";
     toolbenchEl.sourceQaPanel.dataset.freshness = qa.freshnessState;
@@ -13038,15 +13053,18 @@ function renderRecord(record) {
   if (toolbenchEl.chartGapMetric) {
     toolbenchEl.chartGapMetric.textContent = `${record.gap > 0 ? "+" : ""}${record.gap}%`;
   }
+  if (toolbenchEl.chartGapMetricLabel) {
+    toolbenchEl.chartGapMetricLabel.textContent = safety.current ? "Current gap" : "Earlier comparison gap";
+  }
   if (toolbenchEl.chartReadMetric) {
     toolbenchEl.chartReadMetric.textContent = safety.current
       ? confidenceProfile(record).title
-      : "Historical only";
+      : "Official benchmark";
   }
   if (toolbenchEl.chartContextNote) {
     toolbenchEl.chartContextNote.textContent = safety.current
       ? `${record.actionLabel}: compare the asking line against the benchmark trend before accepting the rent.`
-      : "Historical chart only. Refresh the asking-rent evidence before treating the latest gap as current.";
+      : "Official benchmark history is available. The asking line is an earlier comparison, not today's asking price.";
   }
   toolbenchEl.noteLabel.textContent = hasToolbenchAccess()
     ? toolbenchReviewPassMessages.workspace.noteLabelReady()

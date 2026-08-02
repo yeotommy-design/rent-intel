@@ -248,7 +248,7 @@
               <dd id="toolbenchOfficialMetric">-</dd>
             </div>
             <div>
-              <dt>Current asking</dt>
+              <dt id="toolbenchAskingMetricLabel">Asking comparison</dt>
               <dd id="toolbenchAskingMetric">-</dd>
             </div>
             <div>
@@ -256,7 +256,7 @@
               <dd id="toolbenchFairRangeMetric">-</dd>
             </div>
             <div>
-              <dt>Gap</dt>
+              <dt id="toolbenchGapMetricLabel">Comparison gap</dt>
               <dd id="toolbenchGapMetric">-</dd>
             </div>
           </dl>
@@ -280,7 +280,7 @@
               <strong id="chartFairRangeMetric">-</strong>
             </article>
             <article>
-              <span>Current gap</span>
+              <span id="chartGapMetricLabel">Comparison</span>
               <strong id="chartGapMetric">-</strong>
             </article>
             <article>
@@ -343,8 +343,8 @@
               <strong id="toolbenchSourceQaCaptured">Not connected</strong>
             </div>
             <div>
-              <span>Production</span>
-              <strong id="toolbenchSourceQaProduction">Not ready</strong>
+              <span>Asking comparison</span>
+              <strong id="toolbenchSourceQaProduction">Recent checks unavailable</strong>
             </div>
             <p id="toolbenchSourceQaWarning">Connect and QA the asking-rent source before using this as a final rent position.</p>
             <section class="source-health-monitor" data-source-health-monitor data-state="missing" aria-label="Automatic source refresh monitor">
@@ -1118,8 +1118,8 @@
 <script src="../../asking-feed-adapter.js?v=20260510-feedhardening"></script>
 <script src="../../onemap-enrichment-adapter.js?v=20260512-onemap"></script>
 <script src="../../source-trust.js?v=20260726-plain-language"></script>
-<script src="../../source-health-monitor.js?v=20260726-live-monitor"></script>
+<script src="../../source-health-monitor.js?v=20260802-source-specific-status"></script>
 <script src="../../auth-client.js?v=20260510-authcutover"></script>
-<script src="../../member-toolbench.js?v=20260726-plain-language"></script>
+<script src="../../member-toolbench.js?v=20260802-source-specific-status"></script>
 </body>
 </html>

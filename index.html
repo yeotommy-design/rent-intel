@@ -101,7 +101,7 @@
                 <strong id="heroBriefRange">S$11.80-S$14.60 psf</strong>
               </article>
               <article>
-                <span>Current gap</span>
+                <span id="heroBriefGapLabel">Comparison</span>
                 <strong id="heroBriefGap">+20%</strong>
               </article>
             </div>
@@ -129,7 +129,7 @@
               </div>
               <div class="pressure-metric-grid">
                 <article>
-                  <span>Current asking</span>
+                  <span id="pressureAskingLabel">Asking comparison</span>
                   <strong id="pressureAsking">S$15.40 psf</strong>
                 </article>
                 <article>
@@ -141,7 +141,7 @@
                 <div class="gauge-track">
                   <span class="gauge-fair-band" id="pressureFairBand"></span>
                   <i class="gauge-marker benchmark" id="pressureBenchmarkMarker"><b>Benchmark</b></i>
-                  <i class="gauge-marker asking" id="pressureAskingMarker"><b>Asking</b></i>
+                  <i class="gauge-marker asking" id="pressureAskingMarker"><b id="pressureAskingMarkerLabel">Asking</b></i>
                 </div>
               </div>
             </div>
@@ -183,7 +183,7 @@
           <ol class="coverage-flow" aria-label="Coverage request steps">
             <li><b>1</b><span>Requested</span></li>
             <li><b>2</b><span>Reviewing</span></li>
-            <li><b>3</b><span>Manual checks added</span></li>
+            <li><b>3</b><span>Asking checks reviewed</span></li>
           </ol>
           <div class="no-match-alternatives" id="noMatchAlternatives" aria-label="Suggested valid searches"></div>
           <form id="coverageRequestForm" class="coverage-request-form">
@@ -245,20 +245,20 @@
         <div class="public-trust-guide" id="publicTrustGuide" data-active="pilot" aria-label="Public trust badge guide">
           <div>
             <span>Public trust</span>
-            <strong id="publicTrustGuideSummary">Manual checks added: asking-rent evidence is connected.</strong>
+            <strong id="publicTrustGuideSummary">The answer shows which rent information is currently available.</strong>
           </div>
           <div class="public-trust-guide-grid">
             <article data-level="sample">
-              <span>Sample</span>
-              <p>Prototype or comparable only.</p>
+              <span>Benchmark only</span>
+              <p>Official area benchmark without a recent asking comparison.</p>
             </article>
             <article data-level="pilot">
-              <span>Manual checks added</span>
-              <p>Asking-rent evidence has been checked manually.</p>
+              <span>Asking checked</span>
+              <p>Recent asking-rent evidence has been reviewed.</p>
             </article>
             <article data-level="production">
-              <span>Source checks complete</span>
-              <p>Source and quality checks are connected.</p>
+              <span>Recent comparison available</span>
+              <p>Recent asking evidence and quality checks are available.</p>
             </article>
           </div>
         </div>
@@ -293,8 +293,7 @@
               </div>
             </aside>
             <p id="rentReason">
-              Current asking rent is estimated around 20% above the latest transaction-backed benchmark.
-              Negotiate unless the unit has unusually strong frontage, F&B approval, or fit-out value.
+              The official benchmark is available for this area. A recent verified asking comparison is required before RentIntel presents a current gap.
             </p>
             <div class="answer-evidence-row">
               <div class="public-trust-badge" id="publicTrustBadge" data-level="pilot">
@@ -321,11 +320,11 @@
                 <dd id="officialMetric">S$12.80 psf</dd>
               </div>
               <div>
-                <dt>Current asking</dt>
+                <dt id="askingMetricLabel">Asking comparison</dt>
                 <dd id="askingMetric">S$15.40 psf</dd>
               </div>
               <div>
-                <dt>Gap</dt>
+                <dt id="gapMetricLabel">Comparison gap</dt>
                 <dd id="gapMetric">+20%</dd>
               </div>
               <div>
@@ -380,8 +379,8 @@
                 <strong id="sourceQaCaptured">Not connected</strong>
               </div>
               <div>
-                <span>Production</span>
-                <strong id="sourceQaProduction">Not ready</strong>
+                <span>Asking comparison</span>
+                <strong id="sourceQaProduction">Recent checks unavailable</strong>
               </div>
               <p id="sourceQaWarning">Connect and QA the asking-rent source before using this as a final rent position.</p>
               <div class="source-refresh-list" aria-label="Source timestamps and refresh workflow">
@@ -410,7 +409,7 @@
             </div>
             <div class="conversion-prompt">
               <strong>See the chart and source context behind the answer.</strong>
-              <span>Use the chart context when you want more benchmark detail, source structure, and historical context.</span>
+              <span>Use the chart context for benchmark history, source structure, and clearly dated earlier asking comparisons.</span>
             </div>
             <button class="secondary-button" id="togglePaid" type="button">View Chart Context</button>
           </article>
@@ -478,8 +477,8 @@
               </article>
             </div>
             <div class="decision-note-copy">
-              <p id="decisionNotePreviewLead">Current asking rent sits above the fair range, so the decision note should anchor negotiation on benchmark evidence rather than landlord sentiment alone.</p>
-              <p id="decisionNotePreviewBody">RentIntel would tell the user to confirm frontage quality, permitted use, and the latest asking source before accepting the premium. If those factors are ordinary, the note should support a lower counter position.</p>
+              <p id="decisionNotePreviewLead">Use the official benchmark as the starting point, then confirm the exact unit's asking rent before deciding whether a premium is justified.</p>
+              <p id="decisionNotePreviewBody">RentIntel keeps the official benchmark separate from asking evidence so an older comparison is not mistaken for today's market position.</p>
               <p id="decisionNotePreviewNext">Use this preview as a public reasoning layer. Open the chart context if you want a deeper read on benchmark movement and source structure.</p>
             </div>
             <div class="decision-note-angles" aria-label="Decision note angles">
@@ -541,12 +540,12 @@
       <section class="rent-movers-section" aria-label="Latest area updates and rent movers">
         <div class="section-heading compact">
           <p>Latest Area Updates</p>
-          <h2>See which retail areas are running hot, looking under-value, or needing review.</h2>
+          <h2>See available official benchmarks and where recent asking-rent checks exist.</h2>
         </div>
         <div class="rent-movers-grid">
           <article class="rent-movers-card">
             <div class="card-label">
-              <span>Top Rent Movers</span>
+              <span>Official Benchmark Areas</span>
               <strong id="rentMoversSummary">Loading movers</strong>
             </div>
             <div class="rent-movers-list" id="rentMoversList">
@@ -555,7 +554,7 @@
           </article>
           <article class="rent-movers-card">
             <div class="card-label">
-              <span>Freshness Watch</span>
+              <span>Asking Evidence Dates</span>
               <strong id="freshnessWatchSummary">Loading freshness</strong>
             </div>
             <div class="rent-movers-list" id="freshnessWatchList">
@@ -564,7 +563,7 @@
           </article>
           <article class="rent-movers-card">
             <div class="card-label">
-              <span>Under-Value Watch</span>
+              <span>Current Asking Opportunities</span>
               <strong id="underValueSummary">Scanning for below-range areas</strong>
             </div>
             <button type="button" id="clearUnderValuePin" class="under-value-clear-button" hidden>Clear quick focus</button>
@@ -644,11 +643,11 @@
                 <strong id="coveragePendingMetric">0</strong>
               </article>
               <article>
-                <span>Manual checks added</span>
+                <span>Asking checks reviewed</span>
                 <strong id="coverageApprovedMetric">0</strong>
               </article>
               <article>
-                <span>Production</span>
+                <span>Published answers</span>
                 <strong id="coverageProductionMetric">0</strong>
               </article>
             </div>
@@ -690,9 +689,9 @@
             <p>Normal queries now open a direct result, comparable estimate, or coverage request path.</p>
           </article>
           <article>
-            <span>Trust badge</span>
-            <strong>Sample / Pilot / Production</strong>
-            <p>The answer says how far the evidence has moved through source review.</p>
+            <span>Information status</span>
+            <strong>Benchmark only / Asking checked / Recent comparison</strong>
+            <p>The answer clearly says which rent information is currently available.</p>
           </article>
           <article>
             <span>Decision</span>
@@ -757,8 +756,8 @@
             <p>RentIntel separates official benchmark rent from current asking-rent signals. The official benchmark stays distinct from the asking layer so you can see where the answer is grounded and where it is estimated.</p>
           </article>
           <article>
-            <strong>What does “Manual checks added” mean?</strong>
-            <p>It means the answer has benchmark support and manually checked asking-rent evidence, but the full source review is not complete yet.</p>
+            <strong>What does “Asking checked” mean?</strong>
+            <p>It means recent asking-rent evidence has been reviewed and can be compared with the separate official benchmark.</p>
           </article>
           <article>
             <strong>Why can an asking rent look high?</strong>
@@ -809,7 +808,7 @@
         <article>
           <span>2</span>
           <strong>Asking signal</strong>
-          <p>Listing feeds or verified manual capture estimate current asking rent. This stays separate from official rent.</p>
+          <p>Listing feeds or verified manual checks can provide a recent asking comparison when evidence is available. This stays separate from the official benchmark.</p>
         </article>
         <article>
           <span>3</span>
@@ -883,7 +882,7 @@
     <script src="./asking-feed-adapter.js?v=20260510-feedhardening"></script>
     <script src="./onemap-enrichment-adapter.js?v=20260801-onemap-live-ready"></script>
     <script src="./source-trust.js?v=20260726-plain-language"></script>
-    <script src="./source-health-monitor.js?v=20260726-live-monitor"></script>
-    <script src="./app.js?v=20260801-onemap-live-ready"></script>
+    <script src="./source-health-monitor.js?v=20260802-source-specific-status"></script>
+    <script src="./app.js?v=20260802-source-specific-status"></script>
   </body>
 </html>

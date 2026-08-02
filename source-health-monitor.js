@@ -36,9 +36,24 @@
       const checked = monitor.querySelector("[data-source-health-checked]");
       const captured = monitor.querySelector("[data-source-health-captured]");
       const next = monitor.querySelector("[data-source-health-next]");
-      if (label) label.textContent = health.monitorLabel || "Status unavailable";
-      if (summary) summary.textContent = health.summary || "The automated source check has not recorded a result yet.";
-      if (action) action.textContent = health.action || "Check the source workflow before relying on current rent signals.";
+      const recentAskingUnavailable = state === "overdue" || state === "missing";
+      if (label) {
+        label.textContent = recentAskingUnavailable
+          ? "Recent asking checks unavailable"
+          : health.monitorLabel || "Status unavailable";
+      }
+      if (summary) {
+        summary.textContent = recentAskingUnavailable
+          ? health.captureAgeDays === null || health.captureAgeDays === undefined
+            ? "No recent verified asking-rent comparison is available. Official benchmarks remain available."
+            : `The latest verified asking-rent comparison is ${health.captureAgeDays} days old. Official benchmarks remain available.`
+          : health.summary || "The automated source check has not recorded a result yet.";
+      }
+      if (action) {
+        action.textContent = recentAskingUnavailable
+          ? "Use the official benchmark for area context and verify the exact unit's asking rent directly."
+          : health.action || "Check the exact unit and lease terms before relying on the asking-rent comparison.";
+      }
       if (checked) checked.textContent = formatDateTime(health.lastCheckedAt);
       if (captured) captured.textContent = formatCapture(health.latestCaptureAt);
       if (next) next.textContent = formatDateTime(health.nextCheckAt);

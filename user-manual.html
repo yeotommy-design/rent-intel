@@ -83,12 +83,12 @@
         <h2>How to read the source update status</h2>
         <div class="info-list">
           <p><strong>Working normally:</strong> the latest asking-rent capture is no more than seven days old.</p>
-          <p><strong>Refresh soon:</strong> the capture is eight to fourteen days old and should be updated before it becomes overdue.</p>
-          <p><strong>Historical only:</strong> the capture is more than fourteen days old or no approved checks cover the selected area. The official benchmark remains available, but RentIntel does not show the asking-rent gap as a current verdict.</p>
+          <p><strong>Recent asking comparison:</strong> verified asking-rent evidence is no more than fourteen days old.</p>
+          <p><strong>Official benchmark available:</strong> the official area benchmark remains usable, but a recent asking-rent comparison is not available. Any older asking figure is labelled as an earlier comparison.</p>
           <p><strong>Latest verified capture:</strong> the date of the newest reviewed asking-rent evidence.</p>
           <p><strong>URA benchmark release:</strong> the latest official quarterly retail rental index imported from data.gov.sg. It shows the broad market direction, not S$/psf for a particular unit.</p>
           <p><strong>OneMap address check:</strong> confirms an address, postal code, and map position when live access is available. RentIntel keeps its saved location details as a fallback if OneMap cannot be reached.</p>
-          <p><strong>What OneMap does not do:</strong> OneMap improves location accuracy. It does not supply current asking rent and cannot remove a Historical only label.</p>
+          <p><strong>What OneMap does not do:</strong> OneMap improves location accuracy. It does not supply asking prices or turn an earlier asking comparison into a recent one.</p>
           <p><strong>Separate update clocks:</strong> a fresh URA benchmark does not make an older asking-rent capture current. RentIntel displays and checks these two sources separately.</p>
           <p><strong>Important:</strong> RentIntel never changes an asking-rent date or value merely to make a result look current.</p>
         </div>
@@ -144,9 +144,10 @@
         <h2>How to interpret a RentIntel answer</h2>
         <div class="info-list">
           <p><strong>Official median:</strong> the transaction-backed benchmark layer.</p>
-          <p><strong>Current asking:</strong> the best current asking-rent estimate available for the area.</p>
-          <p><strong>Gap:</strong> how far the asking layer sits above or below the official benchmark.</p>
-          <p><strong>Public trust:</strong> Sample, Pilot Verified, or Production Verified tells you how mature the evidence is.</p>
+          <p><strong>Current asking:</strong> shown only when recent verified asking-rent evidence is available for that area.</p>
+          <p><strong>Earlier asking comparison:</strong> a clearly dated pilot figure that may help with context but is not today's asking price.</p>
+          <p><strong>Comparison gap:</strong> how far the asking layer sits above or below the official benchmark. It is current only when the asking evidence is recent.</p>
+          <p><strong>Information status:</strong> Benchmark only, Asking checked, or Recent comparison tells you exactly which rent information is currently available.</p>
         </div>
       </section>
       <section class="info-cta-panel" aria-label="Continue exploring RentIntel">
