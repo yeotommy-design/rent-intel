@@ -7,6 +7,33 @@
   },
   "notes": [
     {
+      "slug": "a-40-day-old-capture-cannot-carry-a-new-premium",
+      "title": "A 40-day-old capture cannot carry a new premium",
+      "publishedAt": "2026-08-03",
+      "description": "This week's RentIntel note on why the 2026-06-24 pilot capture can preserve a comparison frame but cannot validate a new retail asking premium on 2026-08-03.",
+      "summary": "A 40-day-old asking-rent capture can keep an old benchmark visible, but every new premium now needs current unit-level proof.",
+      "lede": "Market Notes is the short weekly RentIntel release for people who want one fast read, not a long blog post. This week's note is about the point where source age changes the job of the evidence: an older capture can still frame the questions, but it cannot answer them for a new quote.",
+      "storyParagraphs": [
+        "RentIntel's latest approved pilot asking-rent capture is dated 2026-06-24, which makes it 40 days old on this note's publish date. The six tracked clusters still provide a useful comparison frame: Jurong was the only representative asking line inside its fair-range high, while Chinatown, Orchard, Serangoon, Tampines, and Hougang Green were above theirs. But those relationships describe the approved capture, not today's clearing market. They should not be reused as proof that a newly quoted premium is current or justified.",
+        "Source age changes the burden of proof. A team can keep the old range beside a new quote to see where the conversation starts, but the decision has to move toward current evidence: the exact unit's availability, frontage, approvals, condition, lease structure, and at least one live comparable checked on a known date. If the landlord's premium only looks persuasive because the older capture is the last number on screen, the comparison set is doing too much work.",
+        "The decision cue this week is simple: label the 2026-06-24 capture as historical context, not a current verdict. Before accepting any new above-range quote, record one dated live comparable and the unit-level facts that explain the gap. Until that evidence exists, preserve optionality and negotiate from uncertainty rather than pretending the benchmark has refreshed itself."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Do not infer a new cluster move from the 2026-06-24 pilot capture; use it only to identify where a fresh comparison check is needed."
+        },
+        {
+          "label": "Coverage update",
+          "text": "The approved pilot layer still covers six clusters and 34 checks, but its latest capture is now 40 days old and is not a current market verdict."
+        },
+        {
+          "label": "Decision cue",
+          "text": "Require one dated live comparable plus unit-specific proof before a new premium replaces the historical range as the working anchor."
+        }
+      ]
+    },
+    {
       "slug": "one-below-ceiling-fallback-can-reset-the-negotiation",
       "title": "One below-ceiling fallback can reset the negotiation",
       "publishedAt": "2026-07-27",
