@@ -42,6 +42,7 @@ function escapeHtml(value) {
 
 function formatDisplayDate(value) {
   return new Date(`${value}T00:00:00+08:00`).toLocaleDateString("en-SG", {
+    timeZone: "Asia/Singapore",
     day: "numeric",
     month: "long",
     year: "numeric"
