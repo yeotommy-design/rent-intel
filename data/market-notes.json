@@ -7,6 +7,33 @@
   },
   "notes": [
     {
+      "slug": "a-daily-refresh-target-needs-a-dated-receipt",
+      "title": "A daily refresh target needs a dated receipt",
+      "publishedAt": "2026-08-10",
+      "description": "This week's RentIntel note on why a daily asking-rent refresh target is not evidence of freshness when the approved capture still reads 2026-06-24.",
+      "summary": "A feed can carry a daily refresh target and still be stale; the dated capture, not the schedule label, decides how much confidence it earns.",
+      "lede": "Market Notes is the short weekly RentIntel release for people who want one fast read, not a long blog post. This week's note is about the gap between a refresh promise and a refresh receipt: a schedule can describe the intended process, but only a dated approved capture can support a current market claim.",
+      "storyParagraphs": [
+        "RentIntel's source register gives the asking-rent feed a daily refresh target, but the latest approved pilot capture still reads 2026-06-24. On this note's publish date, that evidence is 47 days old. The distinction matters because a target describes how often the layer should move; it does not prove that a refresh completed, passed review, or changed the comparison set. Without a newer dated receipt, the six-cluster pilot remains historical context.",
+        "This is an operational signal as much as a market one. When the schedule label looks current but the underlying timestamp does not, teams can accidentally grant fresh confidence to old numbers. The safe response is to separate process status from evidence status: keep the old ranges visible for orientation, flag the missed freshness expectation, and require a current unit-level comparable before treating any new asking premium as market-backed.",
+        "The decision cue this week is simple: read the receipt before the promise. For every premium under review, record the capture date, approval state, and exact comparable that supports it. If the source cannot produce those three items, do not let a daily refresh label upgrade the quote; keep the benchmark provisional and negotiate with the uncertainty exposed."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Do not infer a fresh move in Chinatown, Orchard, Serangoon, Tampines, Jurong, or Hougang Green from a daily target when the approved capture is still dated 2026-06-24."
+        },
+        {
+          "label": "Coverage update",
+          "text": "The pilot comparison still contains 34 checks across six clusters, but no newer approved dated capture is present in the current source files."
+        },
+        {
+          "label": "Decision cue",
+          "text": "Require a capture date, approval state, and one exact live comparable before an above-range quote earns current-market status."
+        }
+      ]
+    },
+    {
       "slug": "a-40-day-old-capture-cannot-carry-a-new-premium",
       "title": "A 40-day-old capture cannot carry a new premium",
       "publishedAt": "2026-08-03",
