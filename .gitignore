@@ -6,3 +6,5 @@ backend/data/prototype-db.json
 backend/data/alert-deliveries/
 
 *.log
+.vercel
+.env.local

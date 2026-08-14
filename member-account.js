@@ -2973,7 +2973,7 @@ function renderDeliveryMessageFilters() {
 function deliveryMessagePreviewText(message) {
   if (!message) return "No delivery message selected.";
   return [
-    `From: ${message.fromEmail || "alerts@rent-intel.local"}`,
+    `From: ${message.fromEmail || "rent@verse-intel.com"}`,
     `To: ${message.memberEmail || "member email pending"}`,
     `Transport: ${message.transportMode || "file"}`,
     `Run: ${message.runId || "not captured"}`,
@@ -3054,7 +3054,7 @@ function renderDeliveredMessages() {
 
     const meta = document.createElement("small");
     meta.textContent =
-      `${message.trigger || "Trigger pending"} | ${message.cadence || "Daily"} | From ${message.fromEmail || "alerts@rent-intel.local"} | Delivered ${formatDateTime(message.deliveredAt)} | Artifact ${message.artifactFile || "not captured"}`;
+      `${message.trigger || "Trigger pending"} | ${message.cadence || "Daily"} | From ${message.fromEmail || "rent@verse-intel.com"} | Delivered ${formatDateTime(message.deliveredAt)} | Artifact ${message.artifactFile || "not captured"}`;
 
     const path = document.createElement("code");
     path.textContent = message.artifactPath || "";

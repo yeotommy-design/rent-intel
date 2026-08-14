@@ -120,7 +120,7 @@ Current alert-delivery transport:
 - Default mode is local file delivery with JSON and `.eml` artifacts in `backend/data/alert-deliveries/`
 - Set `RENTINTEL_EMAIL_TRANSPORT=smtp` and `RENTINTEL_SMTP_URL` to enable real SMTP delivery
 - Optional SMTP auth: `RENTINTEL_SMTP_USER`, `RENTINTEL_SMTP_PASS`
-- Sender identity: `RENTINTEL_EMAIL_FROM`
+- Sender identity: `RENTINTEL_EMAIL_FROM`; production RentIntel mail should use `rent@verse-intel.com` after the sending domain is verified
 - `GET /api/health` now reports the active email transport mode
 
 Current source-ops persistence:
