@@ -7,6 +7,33 @@
   },
   "notes": [
     {
+      "slug": "a-rising-national-index-is-context-not-a-unit-verdict",
+      "title": "A rising national index is context, not a unit verdict",
+      "publishedAt": "2026-08-17",
+      "description": "This week's RentIntel note on using the URA 2026 Q2 retail rental index as national direction without turning it into a unit-level rent verdict.",
+      "summary": "URA's retail rental index rose 0.6% quarter-on-quarter, but a national trend still cannot price the exact unit in front of you.",
+      "lede": "Market Notes is the short weekly RentIntel release for people who want one fast read, not a long blog post. This week's note is about keeping two evidence layers in their proper roles: the official index can describe national direction, while the unit decision still needs a local comparison set.",
+      "storyParagraphs": [
+        "URA's official retail rental index reached 80.6 in 2026 Q2, up from 80.1 in 2026 Q1. That is a 0.6% quarter-on-quarter rise and a 1.5% increase from 2025 Q2. The move is useful national context: retail rental pressure has edged upward rather than disappearing. But the index is not expressed in dollars per square foot, and it does not tell a tenant what one shophouse, HDB shop, suburban mall unit, or Orchard frontage should cost.",
+        "The distinction matters most when a landlord uses a broad market story to defend a specific premium. A rising national index can justify checking the quote carefully; it cannot explain the exact gap. That work still belongs to current comparables and unit facts such as frontage, usable floor plate, approvals, condition, trading hours, lease structure, and handover obligations. If those details do not carry the premium, the national direction should not carry it for them.",
+        "The decision cue this week is simple: use the index to set the temperature, then use unit evidence to set the price. Record the 0.6% quarterly move as context, but keep the working range and one credible fallback beside the quote until the landlord can show which unit-level advantages convert a broad trend into occupier value."
+      ],
+      "useIt": [
+        {
+          "label": "Area watch",
+          "text": "Treat the 2026 Q2 rise as national retail context; do not infer that every cluster or format moved by the same amount."
+        },
+        {
+          "label": "Coverage update",
+          "text": "The official URA layer now covers 2026 Q2 at an index level of 80.6, up 0.6% quarter-on-quarter and 1.5% year-on-year."
+        },
+        {
+          "label": "Decision cue",
+          "text": "Ask which current comparable and unit-specific advantage supports the exact premium before allowing the national index to influence the working rent."
+        }
+      ]
+    },
+    {
       "slug": "a-daily-refresh-target-needs-a-dated-receipt",
       "title": "A daily refresh target needs a dated receipt",
       "publishedAt": "2026-08-10",
